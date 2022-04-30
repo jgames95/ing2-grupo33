@@ -1,0 +1,123 @@
+{% extends "layout.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block head %}
+{{ super() }}
+<script src="{{url_for('static', filename='jquery.js')}}"></script>
+
+<script>
+  function confirmation(mensaje) {
+    if (confirm(mensaje)) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+</script>
+{% endblock %}
+{% block content %}
+<h1>Usuarios</h1>
+<div>
+  <h3>Filtros</h3>
+  <form method='POST' action="{{ url_for('user_search')}}">
+    <div class="row">
+      <div class="col-25">
+        <label for="search_username">Por nombre de usuario: </label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="search_username" name="search_username" placeholder="Ingrese un nombre de usuario">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="active">Por estado: </label>
+      </div>
+      <div class="col-75">
+        <select id="active" name='active'>
+          <option value='none'>--</option>
+          <option value='Bloqueado'>Bloqueado</option>
+          <option value='Activo'>Activo</option>
+        </select></p>
+      </div>
+    </div>
+    <p><button type='submit' name='search' class='btn btn-light'>Filtrar</button></p>
+  </form>
+</div>
+
+<h3>Lista de usuarios registrados</h3>
+<div class="table-responsive  table-bordered">
+  <table class="table" id="users">
+    <thead>
+      <tr>
+        <th scope="col">Correo</th>
+        <th scope="col">Usuario</th>
+        <th scope="col">Nombre</th>
+        <th scope="col">Apellido</th>
+        <th scope="col">Estado</th>
+        <th scope="col">Roles</th>
+        <th scope="col">Acciones</th>
+    
+      </tr>
+    </thead>
+    <tbody>
+      {% for user in users %}
+      <tr>
+        <td>{{ user.email }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.first_name }}</td>
+        <td>{{ user.last_name }}</td>
+        {% if user.active == True and user.roles != [] %}
+        <td>Activo</td>
+        {% elif user.active == False and user.roles != [] %}
+        <td>Bloqueado</td>
+        {% else %}
+        <td>Esperando asignacion de rol</td>
+        {% endif %}
+        <td>
+          {% for role in user.roles %}
+            {{  role.name }}-
+          {% endfor %}
+        </td>
+        <td>
+          <ul>
+            {% if session["user_id"] != user.id %}
+            <li>
+              <form method='GET' action="{{ url_for('users_edit', user_id=user.id) }}">
+                <button type="submit" id="user_modify">
+                  <i class="material-icons" style="font-size:20px;">create</i>
+                </button>
+              </form>
+            </li>
+            {% endif %}
+            {% if is_admin(session["user_id"]) %}
+            {% if not is_admin(user.id) %}
+            {% endif %}
+            {% endif %}
+          </ul>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+{% if prev_url %}
+<button type='submit' name='search' class='btn btn-light'><a href="{{ prev_url }}"
+    style="text-decoration:none">Anterior</a></button>
+{% endif %}
+{% if next_url %}
+<button type='submit' name='search' class='btn btn-light'><a href="{{ next_url }}"
+    style="text-decoration:none">Proximo</a></button>
+{% endif %}
+<button type='submit' name='search' class='btn btn-light'><a href="{{ url_for('home') }}"
+    style="text-decoration:none">Volver</a></button>
+{% if is_admin(session["user_id"]) %}
+<button type='submit' name='search' class='btn btn-light'><a href="{{ url_for('user_new') }}"
+    style="text-decoration:none">Nuevo</a></button>
+{% endif %}
+
+
+  {% endblock %}
+  {% block footer %}
+  {{ super() }}
+  {% endblock %}

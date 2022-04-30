@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Perfil{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+
+  <h1>Perfil</h1>
+
+  <div class="container">
+    <div class="card-container">
+      <div class="header">
+        <p class="center">
+          <i class="material-icons center" style="font-size:70px;color:black;" alt="imagen de perfil">account_circle</i>
+        </p>
+      </div>
+      <div class="description">
+            
+            <p> <strong> Nombre:</strong> <i> {{ user.first_name }}</i></p>
+            <p> <strong> Apellido:</strong> <i> {{ user.last_name }}</i></p>
+            <p> <strong> Email:</strong> <i> {{ user.email }}</i></p>
+            <p> <strong> Roles:</strong>{% for role in user.roles %}
+                  {{role.name}}
+
+              {% endfor %}
+                
+                
+                
+                <i> </i></p>
+            
+        </div>
+
+    </div>
+  </div>
+
+{% endblock %}

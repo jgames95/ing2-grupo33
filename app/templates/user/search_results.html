@@ -1,0 +1,50 @@
+{% extends "layout.html" %}
+{% block title %}Resultado de búsqueda{% endblock %}
+{% block head %}
+{{ super() }}
+{% endblock %}
+{% block content %}
+<h1>Resultado de búsqueda</h1>
+<div class="table-responsive  table-bordered">
+  <table class="table" id="users">
+      <thead>
+        <tr>
+          <th scope="col">Correo</th>
+          <th scope="col">Usuario</th>
+          <th scope="col">Nombre</th>
+          <th scope="col">Apellido</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+            <tr>
+              <td>{{ user.email }}</td>
+              <td>{{ user.username }}</td>
+              <td>{{ user.first_name }}</td>
+              <td>{{ user.last_name }}</td>
+              {% if user.active == True %}
+                <td>Activo</td>
+              {% else %}
+                <td>Bloqueado</td>
+              {% endif %}
+              <td><ul>
+                
+            </ul></td>
+          </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% if prev_url %}
+<button type='submit' name='search' class='btn btn-light'><a href="{{ prev_url }}" style="text-decoration:none">Anterior</a></button>
+{% endif %}
+{% if next_url %}
+<button type='submit' name='search' class='btn btn-light'><a href="{{ next_url }}" style="text-decoration:none">Proximo</a></button>
+{% endif %}
+<button type='submit' name='search' class='btn btn-light'><a href="{{ url_for('user_index') }}" style="text-decoration:none">Volver</a></button>
+{% if is_admin(session["user_id"]) %}
+<button type='submit' name='search' class='btn btn-light'><a href="{{ url_for('user_new') }}" style="text-decoration:none">Nuevo</a></button>
+{% endif %}
+{% endblock %}

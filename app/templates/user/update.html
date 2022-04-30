@@ -1,0 +1,31 @@
+{% extends "layout.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block topnav %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h1> Modificar usuario </h1>
+  <form action="{{ url_for('users_update') }}" method="POST">
+    <div class="row">
+      <div class="col-25">
+        <label for="first_name">Nombre</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="first_name" name="first_name" placeholder="Ingrese su nombre" required value={{user.first_name}}>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-25">
+        <label for="last_name">Apellido</label>
+      </div>
+      <div class="col-75">
+        <input type="text" id="last_name" name="last_name" placeholder="Ingrese su apellido" required value={{user.last_name}}>
+      </div>
+    </div>
+    <input type="submit" value="Modificar">
+  </form>
+  <button type='submit' name='search' class='btn btn-light'><a href="{{ url_for('user_index') }}" style="text-decoration:none">Volver</a></button>
+{% endblock %}
