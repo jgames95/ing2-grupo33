@@ -30,15 +30,9 @@ def index():
         roles=roles,
     )
 
-
-@login_required
-@has_permission("user_new")
 def new():
     return render_template("user/new.html")
 
-
-@login_required
-@has_permission("user_create")
 def create():
     message = []
     condition = validate(request.form["email"], "Correo", required=True, email=True)
@@ -61,6 +55,24 @@ def create():
     )
     if condition is not True:
         message.append(condition)
+
+    condition = validate(
+        request.form["dni"], "DNI", required=True, min_length=8
+    )
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["telephone"], "Telefono", required=True
+    )
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["date_birth"], "Fecha de Nacimiento", required=True
+    )
+    if condition is not True:
+        message.append(condition)
     
     if valid_mail is True and not User.valid_email(request.form["email"]):
         message.append(
@@ -73,7 +85,7 @@ def create():
             flash(mssg)
         return render_template("user/new.html")
 
-    new_user = User.create(**request.form)
+    User.create_pacient(**request.form)
     return redirect(url_for("user_index"))
 
 

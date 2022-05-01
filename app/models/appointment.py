@@ -1,5 +1,5 @@
 from datetime import date
-from sqlalchemy import Column, Integer, DateTime
+from sqlalchemy import Column, Integer, Date
 from app.db import db
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
@@ -14,8 +14,8 @@ class Appointment(db.Model):
     vaccine = relationship(Vaccine)
     state_id = Column(Integer, ForeignKey("states.id"))
     state = relationship(State)
-    creation_date = Column(DateTime)
-    closed_date = Column(DateTime)
+    creation_date = Column(Date)
+    closed_date = Column(Date)
 
     def __init__(self, name=None, vaccine_id=None):
         self.name = name

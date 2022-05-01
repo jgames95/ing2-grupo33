@@ -1,9 +1,10 @@
 from app.db import db
-from sqlalchemy import Column, Integer, String, Boolean, DateTime
+from sqlalchemy import Column, Integer, String, Boolean, Date
 from sqlalchemy.sql.schema import ForeignKey
 from app.models.role import Role
 from app.models.permission import Permission
 from app.models.appointment import Appointment
+from app.models.vaccine import Vaccine
 from sqlalchemy.orm import relationship
 import hashlib
 #import random
@@ -22,7 +23,7 @@ class User(db.Model):
     role_id = Column(Integer, ForeignKey("roles.id"))
     role = relationship(Role)
     #Only Pacients
-    date_of_birth = Column(DateTime)
+    date_of_birth = Column(Date)
     list_vaccines = db.relationship(
         "Vaccines", secondary="user_vaccines", lazy="dynamic"
     )
@@ -60,7 +61,7 @@ class User(db.Model):
     def create_pacient(cls, **kwargs):
         user = User(active=False, role_id=2, **kwargs)
         '''rol = Role.query.filter_by(id=2).first()
-        user.roles.append(rol)'''
+        user.role = rol'''
         db.session.add(user)
         db.session.commit()
 
@@ -72,7 +73,9 @@ class User(db.Model):
 
     @classmethod
     def create_nurse(cls, **kwargs):
-        user = User(active=True, role_id=3, **kwargs)
+        user = User(active=True, **kwargs)
+        rol = Role.query.filter_by(id=3).first()
+        user.role = rol
         db.session.add(user)
         db.session.commit()
 
@@ -203,8 +206,12 @@ class UserVaccines(db.Model):
     vaccine_id = db.Column(
         db.Integer(), db.ForeignKey("vaccines.id", ondelete="CASCADE")
     )
-    applicated = Column(Boolean)
-    applicated_date = Column(DateTime)
+    applicated_date = Column(Date)
+
+    def __init__(cls, user_id=None, vaccine_id=None, applicated_date=None):
+        cls.user_id = user_id
+        cls.vaccine_id = vaccine_id
+        cls.applicated_date = applicated_date
 
 class UserAppointments(db.Model):
     __tablename__ = "user_appointments"
