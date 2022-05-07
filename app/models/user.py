@@ -3,11 +3,12 @@ from sqlalchemy import Column, Integer, String, Boolean, Date
 from sqlalchemy.sql.schema import ForeignKey
 from app.models.role import Role
 from app.models.permission import Permission
-from app.models.appointment import Appointment
+from app.models.state import State
 from app.models.vaccine import Vaccine
+from app.models.appointment import Appointment
 from sqlalchemy.orm import relationship
 import hashlib
-#import random
+import random
 
 
 class User(db.Model):
@@ -24,12 +25,9 @@ class User(db.Model):
     role = relationship(Role)
     #Only Pacients
     date_of_birth = Column(Date)
-    list_vaccines = db.relationship(
-        "Vaccines", secondary="user_vaccines", lazy="dynamic"
-    )
-    list_appointments = db.relationship(
-        "Appointments", secondary="user_appointments", lazy="dynamic"
-    )
+    list_vaccines = db.relationship("Vaccine")
+    list_appointments = db.relationship("Appointment")
+    token = Column(Integer)
 
     def __init__(
         self,
@@ -41,9 +39,8 @@ class User(db.Model):
         date_of_birth=None,
         dni=None,
         telephone=None,
-        list_vaccines=None,
-        list_appointments=None,
-        role_id=None
+        role_id=None,
+        token=None
     ):
         self.email = email
         self.password = hashlib.sha256(password.encode("utf-8")).hexdigest()
@@ -53,23 +50,27 @@ class User(db.Model):
         self.date_of_birth=date_of_birth,
         self.dni=dni,
         self.telephone=telephone,
-        self.list_vaccines=list_vaccines,
-        self.role_id=role_id
-        self.list_appointments=list_appointments
+        self.role_id=role_id,
+        self.token=token
 
     @classmethod
     def create_pacient(cls, **kwargs):
-        user = User(active=False, role_id=2, **kwargs)
-        '''rol = Role.query.filter_by(id=2).first()
-        user.role = rol'''
+        token = random.randrange(1,500)
+        user = User(active=False, role_id=2, token=token, **kwargs)
+        #Mandar email con el token
         db.session.add(user)
         db.session.commit()
 
     @classmethod
-    def confirm_account(cls, user_id):
+    def activate_account(cls, user_id):
         user = User.query.filter_by(id=user_id).first()
         user.active = True
         db.session.commit()
+
+    @classmethod
+    def is_active(cls, user_id):
+        user = User.query.filter_by(id=user_id).first()
+        return user.active
 
     @classmethod
     def create_nurse(cls, **kwargs):
@@ -83,11 +84,21 @@ class User(db.Model):
     def search_user_by_id(cls, user_id):
         usuario = User.query.filter_by(id=user_id).first()
         return usuario
+
+    @classmethod
+    def search_user_by_email(cls, user_email):
+        usuario = User.query.filter_by(email=user_email).first()
+        return usuario
+
+    @classmethod
+    def get_token(cls, user_id):
+        user = User.query.filter_by(id=user_id).first()
+        return user.token
     
     @classmethod
     def get_role(cls, user_id):
         user = cls.search_user_by_id(user_id)
-        return user.role
+        return user.role_id
 
     '''@classmethod
     def create_pending_user(cls, email, name, id):
@@ -198,25 +209,3 @@ class User(db.Model):
                 )
 
         return users'''
-
-class UserVaccines(db.Model):
-    __tablename__ = "user_vaccines"
-    id = db.Column(db.Integer(), primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey("users.id", ondelete="CASCADE"))
-    vaccine_id = db.Column(
-        db.Integer(), db.ForeignKey("vaccines.id", ondelete="CASCADE")
-    )
-    applicated_date = Column(Date)
-
-    def __init__(cls, user_id=None, vaccine_id=None, applicated_date=None):
-        cls.user_id = user_id
-        cls.vaccine_id = vaccine_id
-        cls.applicated_date = applicated_date
-
-class UserAppointments(db.Model):
-    __tablename__ = "user_appointments"
-    id = db.Column(db.Integer(), primary_key=True)
-    user_id = db.Column(db.Integer(), db.ForeignKey("users.id", ondelete="CASCADE"))
-    appointment_id = db.Column(
-        db.Integer(), db.ForeignKey("appointments.id", ondelete="CASCADE")
-    )

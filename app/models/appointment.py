@@ -6,7 +6,6 @@ from sqlalchemy.sql.schema import ForeignKey
 from app.models.vaccine import Vaccine
 from app.models.state import State
 
-
 class Appointment(db.Model):
     __tablename__ = "appointments"
     id = Column(Integer, primary_key=True)
@@ -16,6 +15,7 @@ class Appointment(db.Model):
     state = relationship(State)
     creation_date = Column(Date)
     closed_date = Column(Date)
+    user_id = Column(Integer, ForeignKey("users.id"))
 
     def __init__(self, name=None, vaccine_id=None):
         self.name = name

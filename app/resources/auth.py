@@ -15,15 +15,19 @@ def authenticate():
         User.email == params["email"],
         User.password == hashlib.sha256(params["password"].encode("utf-8")).hexdigest(),
     ).first()
+
     if not user:
         flash("Correo y/o clave incorrecto.")
         return redirect(url_for("auth_login"))
+    
+    session["user_id"] = user.id
+    
     if int(user.active) != 1:
         flash("Necesita confirmar su cuenta")
-        return redirect(url_for("auth_login"))
-    session["user_id"] = user.id
-    flash("La sesión se inició correctamente.")
-    return redirect(url_for("home"))
+        return redirect(url_for("user_confirm"))
+    else:
+        flash("La sesión se inició correctamente.")
+        return redirect(url_for("home"))
 
 
 def logout():

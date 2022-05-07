@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block topnav %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h2>Registrarse</h2>
+  <form action="{{ url_for('user_confirmation') }}" method="POST">
+    <div class="form-group add_padding">
+      <label for="token">Token</label>
+      <input class="form-control" type="text" id="token" name="token" placeholder="Ingrese el token" required>
+    </div>
+    
+    <input type="submit" class="btn btn-success change_color" value="Confirmar">
+    <button type="reset" class="btn btn-success change_color" >LIMPIAR</button>
+  </form>
+{% endblock %}

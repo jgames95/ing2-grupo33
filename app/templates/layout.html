@@ -27,7 +27,7 @@
         </a>
         <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
           {% if is_authenticated(session) %}
-          {% if is_pacient(session["user_id"]) %}
+          {% if is_pacient(session["user_id"]) and is_active(session["user_id"]) %}
           <li><button class="dropdown-item" type="button"><a href="{{ url_for('user_profile') }}" style="text-decoration:none" >PERFIL</a></button></li>
           {% endif %}
           <li><button class="dropdown-item" type="button"><a href="{{ url_for('auth_logout') }}" style="text-decoration:none" >CERRAR SESION</a></button></li>
@@ -53,21 +53,12 @@
           </li>
           {% endif %} 
           
-          {% if is_pacient(session["user_id"]) %}
+          {% if is_pacient(session["user_id"]) and is_active(session["user_id"]) %}
           <li class="nav-item">
-            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('') }}" style="text-decoration:none" >TURNOS</a></button>
+            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('home') }}" style="text-decoration:none" >TURNOS</a></button>
           </li>
           {% endif %}
 
-          <li class="nav-item">
-            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('') }}" style="text-decoration:none" ></a></button>
-          </li>
-          <li class="nav-item">
-            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('') }}" style="text-decoration:none" ></a></button>
-          </li>
-          <li class="nav-item">
-            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('') }}" style="text-decoration:none" ></a></button>
-          </li>
         </ul>
       </div>
       {% endif %}
