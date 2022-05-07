@@ -19,8 +19,13 @@
             <p> <strong> Nombre:</strong> <i> {{ user.first_name }}</i></p>
             <p> <strong> Apellido:</strong> <i> {{ user.last_name }}</i></p>
             <p> <strong> Email:</strong> <i> {{ user.email }}</i></p>
-            <p> <strong> Roles:</strong>{% for role in user.roles %}
-                  {{role.name}}
+            <p> <strong> DNI:</strong> <i> {{ user.dni }}</i></p>
+            <p> <strong> Teléfono:</strong> <i> {{ user.telephone }}</i></p>
+            <p> <strong> Vacunas Aplicadas:</strong>{% for vaccine in vaccines_from_user(user.id) %}
+                  {{vaccine.name}}
+                  -
+                  {{vaccine.application_date}}
+                  |
 
               {% endfor %}
                 

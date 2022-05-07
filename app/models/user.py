@@ -56,7 +56,16 @@ class User(db.Model):
     @classmethod
     def create_pacient(cls, **kwargs):
         token = random.randrange(1,500)
-        user = User(active=False, role_id=2, token=token, **kwargs)
+        user = User(active=False, 
+            role_id=2, 
+            token=token,
+            email=kwargs["email"],
+            password=kwargs["password"],
+            first_name=kwargs["first_name"],
+            last_name=kwargs["last_name"],
+            date_of_birth=kwargs["date_of_birth"],
+            dni=kwargs["dni"],
+            telephone=kwargs["telephone"])
         #Mandar email con el token
         db.session.add(user)
         db.session.commit()

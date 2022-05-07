@@ -9,9 +9,10 @@ class Vaccine(db.Model):
     application_date = Column(Date)
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    def __init__(self, name=None, application_date=None):
+    def __init__(self, name=None, application_date=None, user_id=None):
         self.name = name
         self.application_date = application_date
+        self.user_id = user_id
 
     @classmethod
     def get_id(cls, name):
@@ -19,7 +20,14 @@ class Vaccine(db.Model):
         return state.id
 
     @classmethod
-    def create(cls, **kwargs):
-        vaccine = Vaccine(**kwargs)
+    def create(cls, name, date, user_id):
+        vaccine = Vaccine(name=name,
+        application_date=date,
+        user_id=user_id)
         db.session.add(vaccine)
         db.session.commit()
+
+    @classmethod
+    def get_vaccines(cls, user_id):
+        list = Vaccine.query.filter_by(user_id=user_id).all()
+        return list
