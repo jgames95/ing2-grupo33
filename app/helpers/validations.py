@@ -116,5 +116,16 @@ def validate(input_value, input_name, **kwargs):
                 return "Elija una fecha para la que falten minimo 7 dias"
         else:
             return "La fecha no puede estar en el pasado"
+    if "lessthanayear" in kwargs and kwargs["lessthanayear"] is True:
+        format = "%Y-%m-%d" 
+        date = datetime.datetime.strptime(input_value, format).date()
+        difference = abs(datetime.date.today() - date)
+        if (date <= datetime.date.today()):
+            if (difference.days < 365):
+                pass
+            else:
+                return "Solo ingrese Si, si se aplicó la vacuna hace menos de un año"
+        else:
+            return "El valor de " + input_name + " no puede estar en el futuro"
 
     return True

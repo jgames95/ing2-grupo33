@@ -36,3 +36,9 @@ class Vaccine(db.Model):
     def get_vaccines(cls, user_id):
         list = Vaccine.query.filter_by(user_id=user_id).all()
         return list
+
+    @classmethod
+    def get_vaccines_names(cls, user_id):
+        list = Vaccine.query.filter_by(user_id=user_id).all()
+        list_names = list(map(lambda v: v.name, list))
+        return list_names
