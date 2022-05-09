@@ -14,6 +14,7 @@ __init__.py       # Instancia de la aplicación y ruteo
 
 set "FLASK_ENV=development"
 python run.py
+change
 
 - [ ] Usar una hoja de estilos simple para que quede de ejemplo.
 

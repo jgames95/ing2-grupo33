@@ -1,6 +1,7 @@
 from flask import redirect, render_template, request, url_for, session, flash, Flask
 from app.models.user import User
 from app.models.role import Role
+from app.models.vaccine import Vaccine
 from app.helpers.validations import validate
 from app.helpers.decorators import login_required, has_permission
 import json
@@ -88,11 +89,56 @@ def create():
         message.append(condition)
 
     condition = validate(
-        request.form["date_of_birth"], "Fecha de Nacimiento", required=True
+        request.form["date_of_birth"], "Fecha de Nacimiento", required=True, date=True
     )
     if condition is not True:
         message.append(condition)
+
+    if (request.form["covid1"]=="Si"):
+        condition = validate(
+        request.form["covid1_date"], "Fecha de aplicación de vacuna - primera dosis Covid19", required=True, date=True
+    )
+        if condition is not True:
+            message.append(condition)
+
+    if (request.form["covid2"]=="Si"):
+        condition = validate(
+        request.form["covid2_date"], "Fecha de aplicación de vacuna - segunda dosis Covid19", required=True, date=True
+    )
+        if condition is not True:
+            message.append(condition)
+
+    if (request.form["gripe"]=="Si"):
+        condition = validate(
+        request.form["gripe_date"], "Fecha de aplicación de vacuna - Gripe", required=True, date=True
+    )
+        if condition is not True:
+            message.append(condition)
+
+    if (request.form["fiebre"]=="Si"):
+        condition = validate(
+        request.form["covid2_date"], "Fecha de aplicación de vacuna - Fiebre Amarilla", required=True, date=True
+    )
+        if condition is not True:
+            message.append(condition)
+
+    if (request.form["covid1"]=="Si") and (request.form["covid2"]=="Si"):
+        data = {
+            "date1": request.form["covid1_date"],
+            "date2": request.form["covid2_date"]
+        }
+        condition = validate(
+        data, "dosis de Covid19", coviddate=True
+    )
+        if condition is not True:
+            message.append(condition)
     
+    if (request.form["covid1"]=="No") and (request.form["covid2"]=="Si"):
+        message.append(
+            "No puede tener aplicada solo la segunda dosis de Covid19, por favor\
+            seleccione Si en la primera dosis de Covid19 e ingrese la fecha de aplicación"
+        )
+
     if valid_mail is True and not User.valid_email(request.form["email"]):
         message.append(
             "Ya existe un usuario con ese email, por favor\
@@ -104,21 +150,18 @@ def create():
             flash(mssg)
         return render_template("user/new.html")
 
-    print("////////////////////////////////////")
-    print(request.form)
-    print("////////////////////////////////////")
-    '''print(request.form["covid1"])
-    print(request.form["covid1_date"])
-    print(request.form["covid2"])
-    print(request.form["covid2_date"])
-    print(request.form["gripe"])
-    print(request.form["gripe_date"])
-    print(request.form["fiebre"])
-    print(request.form["fiebre_date"])
-    print("////////////////////////////////////")'''
-
     User.create_pacient(**request.form)
-    #user = User.search_user_by_email(request.form["email"])
+    
+    user = User.search_user_by_email(request.form["email"])
+    if (request.form["covid1"]=="Si"):
+        Vaccine.create("Covid 19 Primera Dosis", request.form["covid1_date"], user.id)
+    if (request.form["covid2"]=="Si"):
+        Vaccine.create("Covid 19 Segunda Dosis", request.form["covid2_date"], user.id)
+    if (request.form["gripe"]=="Si"):
+        Vaccine.create("Gripe", request.form["gripe_date"], user.id)
+    if (request.form["fiebre"]=="Si"):
+        Vaccine.create("Fiebre Amarilla", request.form["fiebre_date"], user.id)
+    
     return redirect(url_for("auth_login"))
 
 
@@ -216,3 +259,7 @@ def is_nurse(user_id):
 def is_active(user_id):
     consulta = User.is_active(user_id)
     return consulta
+
+def vaccines_from_user(user_id):
+    list = Vaccine.get_vaccines(user_id)
+    return list

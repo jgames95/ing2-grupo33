@@ -1,4 +1,5 @@
 import re
+import datetime 
 
 
 def validate(input_value, input_name, **kwargs):
@@ -63,5 +64,37 @@ def validate(input_value, input_name, **kwargs):
         match = re.search(emailRegex, input_value)
         if not match:
             return "El campo email no es valido"
+
+    if "coviddate" in kwargs and kwargs["coviddate"] is True:
+        # date2 - date1 >= 15 dias
+        format = "%Y-%m-%d" 
+        date1 = datetime.datetime.strptime(input_value["date1"], format).date()
+        date2 = datetime.datetime.strptime(input_value["date2"], format).date()
+        if (date2 > date1):
+            difference = abs(date2 - date1)
+            if (difference.days >= 15):
+                pass
+            else:
+                return "Tiene que haber pasado por lo menos 15 dias entre " + input_name
+        else:
+            return "La fecha de segunda " + input_name + " tiene que ser mayor a la fecha de la primera" + input_name
+
+    if "date" in kwargs and kwargs["date"] is True:
+        # date <= date.today
+        format = "%Y-%m-%d" 
+        date = datetime.datetime.strptime(input_value, format).date()
+        if (date <= datetime.date.today()):
+            pass
+        else:
+            return "El valor de " + input_name + " no puede estar en el futuro"
+
+    if "futuredate" in kwargs and kwargs["futuredate"] is True:
+        # date > date.today
+        format = "%Y-%m-%d" 
+        date = datetime.datetime.strptime(input_value, format).date()
+        if (date > datetime.date.today()):
+            pass
+        else:
+            return "El valor de " + input_name + " no puede estar en el pasado"
 
     return True
