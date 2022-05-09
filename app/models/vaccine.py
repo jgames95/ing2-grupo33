@@ -28,6 +28,11 @@ class Vaccine(db.Model):
         db.session.commit()
 
     @classmethod
+    def search_vaccine(cls, name, user_id):
+        resul = Vaccine.query.filter_by(name=name,user_id = user_id).first()
+        return resul
+
+    @classmethod
     def get_vaccines(cls, user_id):
         list = Vaccine.query.filter_by(user_id=user_id).all()
         return list

@@ -17,16 +17,18 @@ class Appointment(db.Model):
     closed_date = Column(Date)
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    def __init__(self, name=None, vaccine_id=None):
-        self.name = name
+    def __init__(self, user_id=None, vaccine_id=None, creation_date=None):
+        self.user_id = user_id
         self.vaccine_id = vaccine_id
         self.state_id = 1
-        self.creation_date = date.today()
+        self.creation_date = creation_date
 
     @classmethod
-    def create(cls, **kwargs):
-        appointment = Appointment(**kwargs)
-        if (appointment.vaccine_id != 1):
+    def create(cls, vac, user_id, **kwargs):
+        appointment = Appointment(vaccine_id = vac.id,  
+            creation_date = kwargs["date"],
+            user_id = user_id)
+        if (kwargs["vaccine"] != "Fiebre Amarilla"):
             appointment.state_id = 2
         db.session.add(appointment)
         db.session.commit()

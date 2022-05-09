@@ -12,9 +12,15 @@ def validate(input_value, input_name, **kwargs):
         number
         max_length
         min_length
-        decimal (acepta negativos)
+        decimal (acepta negativos) ??
         integer( acepta negativos)
         natural_number (no acepta negativos)
+        text
+        email
+        coviddate (15 dias de dif)
+        date (no puede estar en el futuro)
+        futuredate (no puede estar en el pasado)
+        appointmentdate (minimo 7 dias antes)
     """
     if (
         "required" in kwargs
@@ -96,5 +102,19 @@ def validate(input_value, input_name, **kwargs):
             pass
         else:
             return "El valor de " + input_name + " no puede estar en el pasado"
+
+    if "appointmentdate" in kwargs and kwargs["appointmentdate"] is True:
+        # appointmentdate - date >= 7 dias
+        format = "%Y-%m-%d"
+        date = datetime.datetime.strptime(input_value, format).date()
+        date2 = datetime.date.today()
+        if (date > date2):
+            difference = abs(date - date2)
+            if (difference.days >= 7):
+                pass
+            else:
+                return "Elija una fecha para la que falten minimo 7 dias"
+        else:
+            return "La fecha no puede estar en el pasado"
 
     return True

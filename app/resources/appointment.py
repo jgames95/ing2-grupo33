@@ -1,6 +1,8 @@
 from flask import redirect, render_template, request, url_for, session, flash, Flask
+from app.models.appointment import Appointment
 from app.models.user import User
 from app.models.role import Role
+from app.models.vaccine import Vaccine
 from app.helpers.validations import validate
 from app.helpers.decorators import login_required, has_permission
 import json
@@ -17,69 +19,25 @@ def index():
 
 def create():
     message = []
-    condition = validate(request.form["email"], "Correo", required=True, email=True)
-    valid_mail = condition
-    if condition is not True:
-        message.append(condition)
-
-    condition = validate(
-        request.form["password"], "Clave", required=True, min_length="6"
-    )
-    if condition is not True:
-        message.append(condition)
-
-    condition = validate(request.form["first_name"], "Nombre", required=True, text=True)
-    if condition is not True:
-        message.append(condition)
-
-    condition = validate(
-        request.form["last_name"], "Apellido", required=True, text=True
-    )
-    if condition is not True:
-        message.append(condition)
-
-    condition = validate(
-        request.form["dni"], "DNI", required=True, min_length=8
-    )
-    if condition is not True:
-        message.append(condition)
-
-    condition = validate(
-        request.form["telephone"], "Telefono", required=True
-    )
-    if condition is not True:
-        message.append(condition)
-
-    condition = validate(
-        request.form["date_of_birth"], "Fecha de Nacimiento", required=True
-    )
-    if condition is not True:
-        message.append(condition)
+    condition = validate(request.form["vaccine"], "Vacuna", required=True)
     
-    if valid_mail is True and not User.valid_email(request.form["email"]):
-        message.append(
-            "Ya existe un usuario con ese email, por favor\
-            ingrese uno nuevo"
-        )
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["date"], "Fecha", required=True, futuredate=True, appointmentdate=True
+    )
+    if condition is not True:
+        message.append(condition)
 
     if message:
         for mssg in message:
             flash(mssg)
-        return render_template("user/new.html")
+        return render_template("appointment/new.html")
 
-    print("////////////////////////////////////")
-    print(request.form)
-    print("////////////////////////////////////")
-    '''print(request.form["covid1"])
-    print(request.form["covid1_date"])
-    print(request.form["covid2"])
-    print(request.form["covid2_date"])
-    print(request.form["gripe"])
-    print(request.form["gripe_date"])
-    print(request.form["fiebre"])
-    print(request.form["fiebre_date"])
-    print("////////////////////////////////////")'''
+    user_id = session["user_id"]
+    Vaccine.create(request.form["vaccine"], request.form["date"], user_id)
+    vac = Vaccine.search_vaccine(request.form["vaccine"], user_id)
 
-    User.create_pacient(**request.form)
-    #user = User.search_user_by_email(request.form["email"])
-    return redirect(url_for("auth_login"))
+    Appointment.create(vac, user_id, **request.form)
+    return redirect(url_for("appointments"))
