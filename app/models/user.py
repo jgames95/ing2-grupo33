@@ -9,6 +9,7 @@ from app.models.appointment import Appointment
 from sqlalchemy.orm import relationship
 import hashlib
 import random
+import datetime 
 
 
 class User(db.Model):
@@ -108,6 +109,47 @@ class User(db.Model):
     def get_role(cls, user_id):
         user = cls.search_user_by_id(user_id)
         return user.role_id
+
+    @classmethod
+    def get_age(cls, user_id):
+        user = cls.search_user_by_id(user_id)
+        date = user.date_of_birth
+        today = datetime.date.today()
+        one_or_zero = ((today.month, today.day) < (date.month, date.day))
+        difference = today - date
+        age = difference - one_or_zero
+        return age
+
+    @classmethod
+    def add_vaccines(cls, dict, user):
+        #user = cls.search_user_by_email(dict["email"])
+        if (dict["covid1"]=="Si"):
+            Vaccine.create("Covid 19 Primera Dosis", dict["covid1_date"], user.id)
+        if (dict["covid2"]=="Si"):
+            Vaccine.create("Covid 19 Segunda Dosis", dict["covid2_date"], user.id)
+        if (dict["gripe"]=="Si"):
+            Vaccine.create("Gripe", dict["gripe_date"], user.id)
+        if (dict["fiebre"]=="Si"):
+            Vaccine.create("Fiebre Amarilla", dict["fiebre_date"], user.id)
+
+    @classmethod
+    def add_automatic_appointments(cls, user):
+        #user = cls.search_user_by_email(dict["email"])
+        age = cls.get_age(user.id)
+        vaccines = Vaccine.get_vaccines_names(user.id)
+        if (age >= 15):
+            if ("Covid 19 Primera Dosis" in vaccines):
+                if ("Covid 19 Segunda Dosis" in vaccines):
+                    pass
+                else:
+                    print("Turno Automatico para segunda dosis de covid19")
+            else:
+                print("Turno Automatico para primera dosis de covid19")
+        elif (age >= 60):
+            if ("Gripe" in vaccines):
+                pass
+            else:
+                print("Turno automatico para gripe")
 
     '''@classmethod
     def create_pending_user(cls, email, name, id):
