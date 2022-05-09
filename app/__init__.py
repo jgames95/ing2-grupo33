@@ -69,6 +69,11 @@ def create_app(environment="development"):
     )'''
     app.add_url_rule("/usuario/perfil", "user_profile", user.profile)
 
+    # Rutas de Turnos
+    app.add_url_rule("/turnos/nuevo", "appointment_new", appointment.new)
+    app.add_url_rule("/turnos", "appointment_create", appointment.create, methods=["POST"])
+    app.add_url_rule("/turnos", "appointments", appointment.index)
+
     # Ruta para el Home (usando decorator)
     @app.route("/")
     def home():

@@ -55,7 +55,7 @@
           
           {% if is_pacient(session["user_id"]) and is_active(session["user_id"]) %}
           <li class="nav-item">
-            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('home') }}" style="text-decoration:none" >TURNOS</a></button>
+            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointments') }}" style="text-decoration:none" >TURNOS</a></button>
           </li>
           {% endif %}
 
