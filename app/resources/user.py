@@ -89,39 +89,56 @@ def create():
         message.append(condition)
 
     condition = validate(
-        request.form["date_of_birth"], "Fecha de Nacimiento", required=True
+        request.form["date_of_birth"], "Fecha de Nacimiento", required=True, date=True
     )
     if condition is not True:
         message.append(condition)
 
     if (request.form["covid1"]=="Si"):
         condition = validate(
-        request.form["covid1_date"], "Fecha de aplicación de vacuna - primera dosis Covid19", required=True
+        request.form["covid1_date"], "Fecha de aplicación de vacuna - primera dosis Covid19", required=True, date=True
     )
         if condition is not True:
             message.append(condition)
 
     if (request.form["covid2"]=="Si"):
         condition = validate(
-        request.form["covid2_date"], "Fecha de aplicación de vacuna - segunda dosis Covid19", required=True
+        request.form["covid2_date"], "Fecha de aplicación de vacuna - segunda dosis Covid19", required=True, date=True
     )
         if condition is not True:
             message.append(condition)
 
     if (request.form["gripe"]=="Si"):
         condition = validate(
-        request.form["gripe_date"], "Fecha de aplicación de vacuna - Gripe", required=True
+        request.form["gripe_date"], "Fecha de aplicación de vacuna - Gripe", required=True, date=True
     )
         if condition is not True:
             message.append(condition)
 
     if (request.form["fiebre"]=="Si"):
         condition = validate(
-        request.form["covid2_date"], "Fecha de aplicación de segunda dosis - vacuna Fiebre Amarilla", required=True
+        request.form["covid2_date"], "Fecha de aplicación de vacuna - Fiebre Amarilla", required=True, date=True
+    )
+        if condition is not True:
+            message.append(condition)
+
+    if (request.form["covid1"]=="Si") and (request.form["covid2"]=="Si"):
+        data = {
+            "date1": request.form["covid1_date"],
+            "date2": request.form["covid2_date"]
+        }
+        condition = validate(
+        data, "dosis de Covid19", coviddate=True
     )
         if condition is not True:
             message.append(condition)
     
+    if (request.form["covid1"]=="No") and (request.form["covid2"]=="Si"):
+        message.append(
+            "No puede tener aplicada solo la segunda dosis de Covid19, por favor\
+            seleccione Si en la primera dosis de Covid19 e ingrese la fecha de aplicación"
+        )
+
     if valid_mail is True and not User.valid_email(request.form["email"]):
         message.append(
             "Ya existe un usuario con ese email, por favor\
