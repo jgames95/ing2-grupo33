@@ -42,6 +42,8 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(is_pacient=user.is_pacient)
     app.jinja_env.globals.update(is_active=user.is_active)
     app.jinja_env.globals.update(vaccines_from_user=user.vaccines_from_user)
+    app.jinja_env.globals.update(get_vaccines_names=vaccine.get_vaccines_names)
+    app.jinja_env.globals.update(have_vaccine=vaccine.have_vaccine)
 
     # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)

@@ -39,6 +39,14 @@ class Vaccine(db.Model):
 
     @classmethod
     def get_vaccines_names(cls, user_id):
-        list = Vaccine.query.filter_by(user_id=user_id).all()
-        list_names = list(map(lambda v: v.name, list))
+        list_vac = Vaccine.query.filter_by(user_id=user_id).all()
+        list_names = list(map(lambda v: v.name, list_vac))
         return list_names
+    
+    @classmethod
+    def have_vaccine(cls, user_id, vaccine_name):
+        list_vac = cls.get_vaccines_names(user_id)
+        resul = False
+        if vaccine_name in list_vac:
+            resul = True
+        return resul

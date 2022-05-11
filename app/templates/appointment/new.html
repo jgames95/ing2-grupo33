@@ -14,10 +14,20 @@
         <div class="form-group col">
           <label class="normal_font" for="vaccine">Vacuna contra:</label>
           <select class="form-control" id="vaccine" name='vaccine'>
+            {% if not have_vaccine(session["user_id"], "Fiebre Amarilla") %}
             <option value="Fiebre Amarilla">Fiebre amarilla</option>
+            {% endif %}
+            {% if not have_vaccine(session["user_id"], "Gripe") %}
             <option value="Gripe">Gripe</option>
+            {% endif %}
+            {% if not have_vaccine(session["user_id"], "Covid (Primera Dosis)") %}
             <option value="Covid 19 Primera Dosis">Covid (Primera dosis)</option>
+            {% endif %}
+            {% if not have_vaccine(session["user_id"], "Covid (Segunda Dosis)") %}
+            {% if have_vaccine(session["user_id"], "Covid (Primera Dosis)") %}
             <option value="Covid 19 Segunda Dosis">Covid (Segunda dosis)</option>
+            {% endif %}
+            {% endif %}
           </select>
         </div>
         <div class="form-group col">
