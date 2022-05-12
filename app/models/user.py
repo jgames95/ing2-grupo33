@@ -9,7 +9,8 @@ from app.models.appointment import Appointment
 from sqlalchemy.orm import relationship
 import hashlib
 import random
-import datetime 
+import datetime
+import smtplib, ssl
 
 
 class User(db.Model):
@@ -136,24 +137,39 @@ class User(db.Model):
     def add_automatic_appointments(cls, user):
         #user = cls.search_user_by_email(dict["email"])
         vaccines = Vaccine.get_vaccines_names(user.id)
+        dict = {
+            "date": cls.twoweeks_fromnow()
+        }
         if (cls.is_elder(user.id)):
             if ("Gripe" in vaccines):
                 pass
             else:
                 print("Turno automatico para gripe")
-        else:
-            if ("Covid 19 Primera Dosis" in vaccines):
-                if ("Covid 19 Segunda Dosis" in vaccines):
-                    pass
-                else:
-                    print("Turno Automatico para segunda dosis de covid19")
+                dict["vaccine"] = "Gripe"
+                Vaccine.create(dict["vaccine"], dict["date"], user.id)
+                vac = Vaccine.search_vaccine(dict["vaccine"], user.id)
+                Appointment.create(vac=vac, user_id=(user.id), **dict)
+        if ("Covid 19 Primera Dosis" in vaccines):
+            if ("Covid 19 Segunda Dosis" in vaccines):
+                pass
             else:
-                print("Turno Automatico para primera dosis de covid19")
+                print("Turno Automatico para segunda dosis de covid19")
+                dict["vaccine"] = "Covid 19 Segunda Dosis"
+                Vaccine.create(dict["vaccine"], dict["date"], user.id)
+                vac = Vaccine.search_vaccine(dict["vaccine"], user.id)
+                Appointment.create(vac=vac, user_id=(user.id), **dict)
+        else:
+            print("Turno Automatico para primera dosis de covid19")
+            dict["vaccine"] = "Covid 19 Primera Dosis"
+            Vaccine.create(dict["vaccine"], dict["date"], user.id)
+            vac = Vaccine.search_vaccine(dict["vaccine"], user.id)
+            Appointment.create(vac=vac, user_id=(user.id), **dict)
             
-
+    @classmethod
     def twoweeks_fromnow(cls):
         today = datetime.date.today()
         after_15days = today + datetime.timedelta(days = 15)
+        print(after_15days)
         return after_15days
 
     @classmethod
@@ -251,3 +267,15 @@ class User(db.Model):
         if (age >= 60):
             consulta = True
         return consulta
+
+    @classmethod
+    def send_plaintext_email(cls, receiver_email, message):
+        sender_email = "infinityloop_33@hotmail.com"
+        password = "Grupo33ing2"
+        conn = smtplib.SMTP('smtp-mail.outlook.com',587)  
+        type(conn)  
+        conn.ehlo()  
+        conn.starttls()  
+        conn.login(sender_email,password)  
+        conn.sendmail(sender_email,receiver_email,message)  
+        conn.quit()

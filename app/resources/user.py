@@ -153,33 +153,14 @@ def create():
     User.create_pacient(**request.form)
     
     user = User.search_user_by_email(request.form["email"])
-    '''if (request.form["covid1"]=="Si"):
-        Vaccine.create("Covid 19 Primera Dosis", request.form["covid1_date"], user.id)
-    if (request.form["covid2"]=="Si"):
-        Vaccine.create("Covid 19 Segunda Dosis", request.form["covid2_date"], user.id)
-    if (request.form["gripe"]=="Si"):
-        Vaccine.create("Gripe", request.form["gripe_date"], user.id)
-    if (request.form["fiebre"]=="Si"):
-        Vaccine.create("Fiebre Amarilla", request.form["fiebre_date"], user.id)'''
+
+    message = 'Subject: Confirmar tu cuenta de Vacunassist\n\n Token de confirmación: ' + str(user.token)
+
+    User.send_plaintext_email(request.form["email"], message)
+    
     User.add_vaccines(request.form, user)
 
-    '''age = User.get_age(user.id)
-    vaccines = Vaccine.get_vaccines_names(user.id)
-    if (age >= 15):
-        if ("Covid 19 Primera Dosis" in vaccines):
-            if ("Covid 19 Segunda Dosis" in vaccines):
-                pass
-            else:
-                print("Turno Automatico para segunda dosis de covid19")
-        else:
-            print("Turno Automatico para primera dosis de covid19")
-    elif (age >= 60):
-        if ("Gripe" in vaccines):
-            pass
-        else:
-            print("Turno automatico para gripe")'''
-
-    #User.add_automatic_appointments(user)
+    User.add_automatic_appointments(user)
     
     return redirect(url_for("auth_login"))
 
@@ -275,6 +256,10 @@ def is_active(user_id):
 
 def vaccines_from_user(user_id):
     list = Vaccine.get_vaccines(user_id)
+    return list
+
+def applicatedvac_from_user(user_id):
+    list = Vaccine.get_applicatedvaccines(user_id)
     return list
 
 def is_elder(user_id):

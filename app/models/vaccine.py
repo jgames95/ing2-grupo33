@@ -2,6 +2,7 @@ import datetime
 from app.db import db
 from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.sql.schema import ForeignKey
+import datetime 
 
 class Vaccine(db.Model):
     __tablename__ = "vaccines"
@@ -37,6 +38,13 @@ class Vaccine(db.Model):
     def get_vaccines(cls, user_id):
         list = Vaccine.query.filter_by(user_id=user_id).all()
         return list
+
+    @classmethod
+    def get_applicatedvaccines(cls, user_id):
+        today = datetime.date.today()
+        list_vac = cls.get_vaccines(user_id)
+        applicated = list(filter(lambda v: v.application_date<today, list_vac))
+        return applicated
 
     @classmethod
     def get_vaccines_names(cls, user_id):
