@@ -55,16 +55,14 @@ def create_app(environment="development"):
     app.add_url_rule("/confirmacion", "user_confirm", user.confirm)
 
     # Rutas de Usuarios
-    #app.add_url_rule("/usuarios", "user_index", user.index)
-    #app.add_url_rule("/usuarios", "user_test", user.test)
     app.add_url_rule("/usuario", "user_create", user.create, methods=["POST"])
     app.add_url_rule("/usuario/nuevo", "user_new", user.new)
 
-    '''app.add_url_rule("/usuarios/editar/<int:user_id>", "users_edit", user.edit)
+    app.add_url_rule("/usuario/editar/<int:user_id>", "users_edit", user.edit)
     app.add_url_rule(
-        "/usuarios/actualizar", "users_update", user.update, methods=["POST", "GET"]
+        "/usuario/actualizar", "users_update", user.update, methods=["POST", "GET"]
     )
-    app.add_url_rule(
+    '''app.add_url_rule(
         "/usuarios/results", "user_search", user.search, methods=["POST", "GET"]
     )'''
     app.add_url_rule("/usuario/perfil", "user_profile", user.profile)

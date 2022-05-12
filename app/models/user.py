@@ -151,20 +151,10 @@ class User(db.Model):
             else:
                 print("Turno automatico para gripe")
 
-    '''@classmethod
-    def create_pending_user(cls, email, name, id):
-        if not cls.valid_email(email):
-            return False
-        auxname = name.strip(" ")
-        while not cls.valid_username(auxname):
-            auxname = auxname + str(random.randint(0, 9))
-        user = User(
-            email=email, active=True, username=auxname, first_name=name, password=id
-        )
-        db.session.add(user)
-        db.session.commit()
-
-        return user'''
+    def twoweeks_fromnow(cls):
+        today = datetime.date.today()
+        after_15days = today + datetime.timedelta(days = 15)
+        return after_15days
 
     @classmethod
     def has_permission(cls, user_id, permission):
@@ -188,20 +178,13 @@ class User(db.Model):
         exist = User.query.filter_by(email=email).scalar()
         return exist is None
 
-    '''@classmethod
-    def valid_email_modify(cls, email, user_id):
-
-        exist = User.query.filter_by(email=email).first()
-        if not (exist is None) and (int(exist.id) == int(user_id)):
-            return True
-        return exist is None'''
-
     @classmethod
     def update(cls, user_id, kwargs):
         user = User.query.filter_by(id=user_id).first_or_404()
         form = kwargs
         user.first_name = form.get("first_name", user.first_name)
         user.last_name = form.get("last_name", user.last_name)
+        user.telephone = form.get("telephone", user.telephone)
         db.session.commit()
 
     '''@classmethod

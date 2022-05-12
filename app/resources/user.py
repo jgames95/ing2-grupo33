@@ -183,26 +183,15 @@ def create():
     
     return redirect(url_for("auth_login"))
 
-'''@login_required
-@has_permission("user_activate")
-def activate(user_id, activate):
-    if activate == "1":
-        activate = True
-    else:
-        activate = False
-    usuario = User.activate(user_id, activate)
-    return redirect(url_for("user_index"))'''
 
-'''@login_required
-@has_permission("user_edit")'''
-'''def edit(user_id):
+@login_required
+def edit(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
-    return render_template("user/update.html", user=user)'''
+    return render_template("user/update.html", user=user)
 
 
-'''@login_required
-@has_permission("user_update")'''
-'''def update():
+@login_required
+def update():
     message = []
     condition = validate(request.form["first_name"], "Nombre", required=True, text=True)
     if condition is not True:
@@ -213,14 +202,20 @@ def activate(user_id, activate):
     )
     if condition is not True:
         message.append(condition)
+    
+    condition = validate(
+        request.form["telephone"], "Telefono", required=True
+    )
+    if condition is not True:
+        message.append(condition)
 
     if message:
         for mssg in message:
             flash(mssg)
         return render_template("user/update.html", user=request.form)
 
-    User.update(user_id=request.form["id"], kwargs=request.form)
-    return redirect(url_for("user_index"))'''
+    User.update(user_id=session["user_id"], kwargs=request.form)
+    return redirect(url_for("user_profile"))
 
 
 '''@login_required
