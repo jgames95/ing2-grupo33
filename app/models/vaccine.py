@@ -1,3 +1,4 @@
+import datetime
 from app.db import db
 from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.sql.schema import ForeignKey
@@ -28,6 +29,11 @@ class Vaccine(db.Model):
         db.session.commit()
 
     @classmethod
+    def search_vaccine(cls, name, user_id):
+        resul = Vaccine.query.filter_by(name=name,user_id = user_id).first()
+        return resul
+
+    @classmethod
     def get_vaccines(cls, user_id):
         list = Vaccine.query.filter_by(user_id=user_id).all()
         return list
@@ -37,3 +43,32 @@ class Vaccine(db.Model):
         list_vac = Vaccine.query.filter_by(user_id=user_id).all()
         list_names = list(map(lambda v: v.name, list_vac))
         return list_names
+    
+    @classmethod
+    def have_vaccine(cls, user_id, vaccine_name):
+        list_vac = cls.get_vaccines_names(user_id)
+        resul = False
+        if vaccine_name in list_vac:
+            resul = True
+        return resul
+    
+    @classmethod
+    def have_gripe_thisyear(cls, user_id):
+        consulta = False
+        today = datetime.date.today()
+        vac = cls.search_vaccine("Gripe",user_id)
+        if (vac != None):
+            if (vac.application_date.year==today.year):
+                consulta = True
+        return consulta
+    
+    @classmethod
+    def covid2_avalaible(cls, user_id):
+        consulta = True
+        today = datetime.date.today()
+        vac = cls.search_vaccine("Covid 19 Primera Dosis",user_id)
+        if (vac != None):
+            diff = today - vac.application_date
+            if(diff.days < 21):
+                consulta = False
+        return consulta

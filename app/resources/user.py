@@ -77,7 +77,7 @@ def create():
         message.append(condition)
 
     condition = validate(
-        request.form["dni"], "DNI", required=True, min_length=8
+        request.form["dni"], "DNI", required=True, min_length=7
     )
     if condition is not True:
         message.append(condition)
@@ -276,3 +276,7 @@ def is_active(user_id):
 def vaccines_from_user(user_id):
     list = Vaccine.get_vaccines(user_id)
     return list
+
+def is_elder(user_id):
+    consulta = User.is_elder(user_id)
+    return consulta

@@ -8,5 +8,40 @@
 {% endblock %}
 {% block content %}
   <h2>Solicite un Turno</h2>
-  <form></form>
+  <form action="{{ url_for('appointment_create') }}" method="POST">
+    <div class="form-group add_padding box">
+      <div class="row">
+        <div class="form-group col">
+          <label class="normal_font" for="vaccine">Vacuna contra:</label>
+          <select class="form-control" id="vaccine" name='vaccine'>
+            {% if not is_elder(session["user_id"]) %}
+            {% if not have_vaccine(session["user_id"], "Fiebre Amarilla") %}
+            <option value="Fiebre Amarilla">Fiebre amarilla</option>
+            {% endif %}
+            {% endif %}
+            {% if not have_gripe_thisyear(session["user_id"]) %}
+            <option value="Gripe">Gripe</option>
+            {% endif %}
+            {% if not have_vaccine(session["user_id"], "Covid 19 Primera Dosis") %}
+            <option value="Covid 19 Primera Dosis">Covid (Primera dosis)</option>
+            {% endif %}
+            {% if not have_vaccine(session["user_id"], "Covid 19 Segunda Dosis") %}
+            {% if have_vaccine(session["user_id"], "Covid 19 Primera Dosis") %}
+            {% if covid2_avalaible(session["user_id"]) %}
+            <option value="Covid 19 Segunda Dosis">Covid 19 (Segunda dosis)</option>
+            {% endif %}
+            {% endif %}
+            {% endif %}
+          </select>
+        </div>
+        <div class="form-group col">
+          <label class="normal_font" for="date">Ingrese la fecha deseada</label>
+          <input type="date" class="form-control" id="date" name="date" value="">
+        </div>
+      </div>
+    </div>
+    <br>
+    <input type="submit" class="btn btn-success change_color" value="Crear">
+  
+  </form>
 {% endblock %}

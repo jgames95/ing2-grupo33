@@ -115,8 +115,8 @@ class User(db.Model):
         user = cls.search_user_by_id(user_id)
         date = user.date_of_birth
         today = datetime.date.today()
-        one_or_zero = ((today.month, today.day) < (date.month, date.day))
-        difference = today - date
+        one_or_zero = int ((today.month, today.day) < (date.month, date.day))
+        difference = today.year - date.year
         age = difference - one_or_zero
         return age
 
@@ -135,9 +135,13 @@ class User(db.Model):
     @classmethod
     def add_automatic_appointments(cls, user):
         #user = cls.search_user_by_email(dict["email"])
-        age = cls.get_age(user.id)
         vaccines = Vaccine.get_vaccines_names(user.id)
-        if (age >= 15):
+        if (cls.is_elder(user.id)):
+            if ("Gripe" in vaccines):
+                pass
+            else:
+                print("Turno automatico para gripe")
+        else:
             if ("Covid 19 Primera Dosis" in vaccines):
                 if ("Covid 19 Segunda Dosis" in vaccines):
                     pass
@@ -145,11 +149,7 @@ class User(db.Model):
                     print("Turno Automatico para segunda dosis de covid19")
             else:
                 print("Turno Automatico para primera dosis de covid19")
-        elif (age >= 60):
-            if ("Gripe" in vaccines):
-                pass
-            else:
-                print("Turno automatico para gripe")
+            
 
     def twoweeks_fromnow(cls):
         today = datetime.date.today()
@@ -243,3 +243,11 @@ class User(db.Model):
                 )
 
         return users'''
+
+    @classmethod
+    def is_elder(cls, user_id):
+        age = cls.get_age(user_id)
+        consulta = False
+        if (age >= 60):
+            consulta = True
+        return consulta
