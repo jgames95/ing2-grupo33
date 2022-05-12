@@ -14,18 +14,22 @@
         <div class="form-group col">
           <label class="normal_font" for="vaccine">Vacuna contra:</label>
           <select class="form-control" id="vaccine" name='vaccine'>
+            {% if not is_elder(session["user_id"]) %}
             {% if not have_vaccine(session["user_id"], "Fiebre Amarilla") %}
             <option value="Fiebre Amarilla">Fiebre amarilla</option>
             {% endif %}
-            {% if not have_vaccine(session["user_id"], "Gripe") %}
+            {% endif %}
+            {% if not have_gripe_thisyear(session["user_id"]) %}
             <option value="Gripe">Gripe</option>
             {% endif %}
-            {% if not have_vaccine(session["user_id"], "Covid (Primera Dosis)") %}
+            {% if not have_vaccine(session["user_id"], "Covid 19 Primera Dosis") %}
             <option value="Covid 19 Primera Dosis">Covid (Primera dosis)</option>
             {% endif %}
-            {% if not have_vaccine(session["user_id"], "Covid (Segunda Dosis)") %}
-            {% if have_vaccine(session["user_id"], "Covid (Primera Dosis)") %}
-            <option value="Covid 19 Segunda Dosis">Covid (Segunda dosis)</option>
+            {% if not have_vaccine(session["user_id"], "Covid 19 Segunda Dosis") %}
+            {% if have_vaccine(session["user_id"], "Covid 19 Primera Dosis") %}
+            {% if covid2_avalaible(session["user_id"]) %}
+            <option value="Covid 19 Segunda Dosis">Covid 19 (Segunda dosis)</option>
+            {% endif %}
             {% endif %}
             {% endif %}
           </select>

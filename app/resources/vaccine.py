@@ -10,3 +10,11 @@ def get_vaccines_names(user_id):
 def have_vaccine(user_id, vaccine_name):
     consulta = Vaccine.have_vaccine(user_id, vaccine_name)
     return consulta
+
+def have_gripe_thisyear(user_id):
+    consulta = Vaccine.have_gripe_thisyear(user_id)
+    return consulta
+
+def covid2_avalaible(user_id):
+    consulta = Vaccine.covid2_avalaible(user_id)
+    return consulta
