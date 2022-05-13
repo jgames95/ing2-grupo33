@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 logging.basicConfig()
 logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 
+
 def create_app(environment="development"):
     # Configuración inicial de la app
     app = Flask(__name__)
@@ -42,11 +43,13 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(is_pacient=user.is_pacient)
     app.jinja_env.globals.update(is_active=user.is_active)
     app.jinja_env.globals.update(vaccines_from_user=user.vaccines_from_user)
-    app.jinja_env.globals.update(applicatedvac_from_user=user.applicatedvac_from_user)
+    app.jinja_env.globals.update(
+        applicatedvac_from_user=user.applicatedvac_from_user)
     app.jinja_env.globals.update(is_elder=user.is_elder)
     app.jinja_env.globals.update(get_vaccines_names=vaccine.get_vaccines_names)
     app.jinja_env.globals.update(have_vaccine=vaccine.have_vaccine)
-    app.jinja_env.globals.update(have_gripe_thisyear=vaccine.have_gripe_thisyear)
+    app.jinja_env.globals.update(
+        have_gripe_thisyear=vaccine.have_gripe_thisyear)
     app.jinja_env.globals.update(covid2_avalaible=vaccine.covid2_avalaible)
 
     # Autenticación
@@ -75,10 +78,13 @@ def create_app(environment="development"):
 
     # Rutas de Turnos
     app.add_url_rule("/turnos/nuevo", "appointment_new", appointment.new)
-    app.add_url_rule("/turnos", "appointment_create", appointment.create, methods=["POST"])
+    app.add_url_rule("/turnos", "appointment_create",
+                     appointment.create, methods=["POST"])
     app.add_url_rule("/turnos", "appointments", appointment.index)
+    app.add_url_rule("/turnos", "appointment_download", appointment.download)
 
     # Ruta para el Home (usando decorator)
+
     @app.route("/")
     def home():
         return render_template("home.html")
