@@ -41,17 +41,32 @@ class Appointment(db.Model):
             appointment.closed_date = date.today()
         db.session.commit()
 
+    @classmethod
     def approve_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 2)
 
+    @classmethod
     def reject_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 3)
 
+    @classmethod
     def cancel_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 4)
     
+    @classmethod
     def close_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 5)
+
+    @classmethod
+    def get_listof_appointments(cls, user_id):
+        list_appointments = (
+            db.session.query(Appointment, State, Vaccine)
+            .join(Appointment.state_id)
+            .join(Appointment.vaccine_id)
+            .where(Appointment.user_id == user_id)
+            .all()
+        )
+        return list_appointments
 
     
 
