@@ -43,14 +43,13 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(is_pacient=user.is_pacient)
     app.jinja_env.globals.update(is_active=user.is_active)
     app.jinja_env.globals.update(vaccines_from_user=user.vaccines_from_user)
-    app.jinja_env.globals.update(
-        applicatedvac_from_user=user.applicatedvac_from_user)
+    app.jinja_env.globals.update(applicatedvac_from_user=user.applicatedvac_from_user)
     app.jinja_env.globals.update(is_elder=user.is_elder)
     app.jinja_env.globals.update(get_vaccines_names=vaccine.get_vaccines_names)
     app.jinja_env.globals.update(have_vaccine=vaccine.have_vaccine)
-    app.jinja_env.globals.update(
-        have_gripe_thisyear=vaccine.have_gripe_thisyear)
+    app.jinja_env.globals.update(have_gripe_thisyear=vaccine.have_gripe_thisyear)
     app.jinja_env.globals.update(covid2_avalaible=vaccine.covid2_avalaible)
+    app.jinja_env.globals.update(appoint_list=appointment.appoint_list)
 
     # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)

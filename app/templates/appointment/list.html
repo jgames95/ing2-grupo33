@@ -7,8 +7,30 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-  <h2>Lista de Turnos</h2>
   <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_new') }}" style="text-decoration:none" >PEDIR TURNO</a></button>
-  <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_download') }}" style="text-decoration:none" >DESCARGAR COMPROBANTE</a></button>
-  <form></form>
+  <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_download') }}" style="text-decoration:none" >DESCARGAR COMPROBANTE</a></button> 
+  <h2>Lista de Turnos</h2>
+  <form>Filtro</form>
+  <div class="table-responsive  table-bordered">
+    <table class="table" id="users">
+      <thead>
+        <tr>
+          <th scope="col">Vacuna</th>
+          <th scope="col">Fecha</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Comprobante</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appoint in appoint_list(session["user_id"]) %}
+        <tr>
+          <td>{{ appoint.vaccine.name }}</td>
+          <td>{{ appoint.appointment.creation_date }}</td>
+          <td>{{ appoint.state.name }}</td>
+          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_download') }}" style="text-decoration:none" >DESCARGAR COMPROBANTE</a></button> </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 {% endblock %}

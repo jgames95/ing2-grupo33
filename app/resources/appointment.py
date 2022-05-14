@@ -44,10 +44,14 @@ def create():
 
     Appointment.create(vac, user_id, **request.form)
     if (request.form["vaccine"] != "Fiebre Amarilla"):
-        flash("Su solicitud de turno ha sido registrada.")
+        flash("Su turno ha sido registrado.")
     else:
-        flash("Su solicitud de turno ha sido registrada, aguardando aprobación de los administradores.")
+        flash("Su solicitud de turno ha sido registrada, los administradores se comunicarán con usted a la brevedad.")
     return redirect(url_for("appointments"))
+
+def appoint_list(user_id):
+    consulta = Appointment.appoint_list(user_id)
+    return consulta
 
 
 def download():
