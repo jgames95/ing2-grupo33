@@ -41,15 +41,19 @@ class Appointment(db.Model):
             appointment.closed_date = date.today()
         db.session.commit()
 
+    @classmethod
     def approve_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 2)
 
+    @classmethod
     def reject_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 3)
 
+    @classmethod
     def cancel_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 4)
     
+    @classmethod
     def close_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 5)
 
