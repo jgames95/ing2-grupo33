@@ -3,3 +3,4 @@ PyMySQL==1.0.2
 Flask-Session==0.4
 SQLAlchemy==1.4.25
 Flask-SQLAlchemy==2.5.1
+fpdf2==2.5.4
