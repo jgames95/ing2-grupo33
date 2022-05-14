@@ -33,11 +33,15 @@ app = Flask(__name__)
         roles=roles,
     )'''
 
-#@login_required
+# @login_required
+
+
 def confirm():
     return render_template("user/confirm.html")
 
-#@login_required
+# @login_required
+
+
 def confirm_account():
     user_input = request.form["token"]
     user_logged_id = session["user_id"]
@@ -50,12 +54,15 @@ def confirm_account():
         flash("El token ingresado es incorrecto")
         return render_template("user/confirm.html")
 
+
 def new():
     return render_template("user/new.html")
 
+
 def create():
     message = []
-    condition = validate(request.form["email"], "Correo", required=True, email=True)
+    condition = validate(
+        request.form["email"], "Correo", required=True, email=True)
     valid_mail = condition
     if condition is not True:
         message.append(condition)
@@ -66,7 +73,8 @@ def create():
     if condition is not True:
         message.append(condition)
 
-    condition = validate(request.form["first_name"], "Nombre", required=True, text=True)
+    condition = validate(
+        request.form["first_name"], "Nombre", required=True, text=True)
     if condition is not True:
         message.append(condition)
 
@@ -94,46 +102,46 @@ def create():
     if condition is not True:
         message.append(condition)
 
-    if (request.form["covid1"]=="Si"):
+    if (request.form["covid1"] == "Si"):
         condition = validate(
-        request.form["covid1_date"], "Fecha de aplicación de vacuna - primera dosis Covid19", required=True, date=True
-    )
+            request.form["covid1_date"], "Fecha de aplicación de vacuna - primera dosis Covid19", required=True, date=True
+        )
         if condition is not True:
             message.append(condition)
 
-    if (request.form["covid2"]=="Si"):
+    if (request.form["covid2"] == "Si"):
         condition = validate(
-        request.form["covid2_date"], "Fecha de aplicación de vacuna - segunda dosis Covid19", required=True, date=True
-    )
+            request.form["covid2_date"], "Fecha de aplicación de vacuna - segunda dosis Covid19", required=True, date=True
+        )
         if condition is not True:
             message.append(condition)
 
-    if (request.form["gripe"]=="Si"):
+    if (request.form["gripe"] == "Si"):
         condition = validate(
-        request.form["gripe_date"], "Fecha de aplicación de vacuna - Gripe", required=True, lessthanayear=True
-    )
+            request.form["gripe_date"], "Fecha de aplicación de vacuna - Gripe", required=True, lessthanayear=True
+        )
         if condition is not True:
             message.append(condition)
 
-    if (request.form["fiebre"]=="Si"):
+    if (request.form["fiebre"] == "Si"):
         condition = validate(
-        request.form["covid2_date"], "Fecha de aplicación de vacuna - Fiebre Amarilla", required=True, date=True,
-    )
+            request.form["covid2_date"], "Fecha de aplicación de vacuna - Fiebre Amarilla", required=True, date=True,
+        )
         if condition is not True:
             message.append(condition)
 
-    if (request.form["covid1"]=="Si") and (request.form["covid2"]=="Si"):
+    if (request.form["covid1"] == "Si") and (request.form["covid2"] == "Si"):
         data = {
             "date1": request.form["covid1_date"],
             "date2": request.form["covid2_date"]
         }
         condition = validate(
-        data, "dosis de Covid19", coviddate=True
-    )
+            data, "dosis de Covid19", coviddate=True
+        )
         if condition is not True:
             message.append(condition)
-    
-    if (request.form["covid1"]=="No") and (request.form["covid2"]=="Si"):
+
+    if (request.form["covid1"] == "No") and (request.form["covid2"] == "Si"):
         message.append(
             "No puede tener aplicada solo la segunda dosis de Covid19, por favor\
             seleccione Si en la primera dosis de Covid19 e ingrese la fecha de aplicación"
@@ -151,17 +159,18 @@ def create():
         return render_template("user/new.html")
 
     User.create_pacient(**request.form)
-    
+
     user = User.search_user_by_email(request.form["email"])
 
-    message = 'Subject: Confirmar tu cuenta de Vacunassist\n\n Token de confirmación: ' + str(user.token)
+    message = 'Subject: Confirmar tu cuenta de Vacunassist\n\n Token de confirmación: ' + \
+        str(user.token)
 
-    User.send_plaintext_email(request.form["email"], message)
-    
+    #User.send_plaintext_email(request.form["email"], message)
+
     User.add_vaccines(request.form, user)
 
     User.add_automatic_appointments(user)
-    
+
     return redirect(url_for("auth_login"))
 
 
@@ -174,16 +183,17 @@ def edit(user_id):
 @login_required
 def update():
     message = []
-    condition = validate(request.form["first_name"], "Nombre", required=True, text=True)
+    condition = validate(
+        request.form["first_name"], "Nombre", required=True, text=True)
     if condition is not True:
         message.append(condition)
-    
+
     condition = validate(
         request.form["last_name"], "Apellido", required=True, text=True
     )
     if condition is not True:
         message.append(condition)
-    
+
     condition = validate(
         request.form["telephone"], "Telefono", required=True
     )
@@ -240,27 +250,33 @@ def profile():
 
 def is_admin(user_id):
     consulta = User.get_role(user_id)
-    return (consulta==1)
+    return (consulta == 1)
+
 
 def is_pacient(user_id):
     consulta = User.get_role(user_id)
-    return (consulta==2)
+    return (consulta == 2)
+
 
 def is_nurse(user_id):
     consulta = User.get_role(user_id)
-    return (consulta==3)
+    return (consulta == 3)
+
 
 def is_active(user_id):
     consulta = User.is_active(user_id)
     return consulta
 
+
 def vaccines_from_user(user_id):
     list = Vaccine.get_vaccines(user_id)
     return list
 
+
 def applicatedvac_from_user(user_id):
     list = Vaccine.get_applicatedvaccines(user_id)
     return list
+
 
 def is_elder(user_id):
     consulta = User.is_elder(user_id)
