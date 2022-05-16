@@ -61,8 +61,9 @@ class Appointment(db.Model):
     def appoint_list(cls, user_id):
         appoint_list = (
             db.session.query(Appointment, State, Vaccine)
-            .join(Appointment.state_id)
-            .join(Appointment.vaccine_id)
+            .select_from(Appointment)
+            .join(State)
+            .join(Vaccine)
             .where(Appointment.user_id == user_id)
             .all()
         )
