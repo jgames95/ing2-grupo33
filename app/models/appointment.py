@@ -1,5 +1,5 @@
 from datetime import date
-from sqlalchemy import Column, Integer, Date
+from sqlalchemy import Column, Integer, Date, String
 from app.db import db
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
@@ -9,26 +9,24 @@ from app.models.state import State
 class Appointment(db.Model):
     __tablename__ = "appointments"
     id = Column(Integer, primary_key=True)
-    vaccine_id = Column(Integer, ForeignKey("vaccines.id"))
-    vaccine = relationship(Vaccine)
+    vaccine_name = Column(String(30))
     state_id = Column(Integer, ForeignKey("states.id"))
     state = relationship(State)
-    creation_date = Column(Date)
-    closed_date = Column(Date)
+    date = Column(Date)
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    def __init__(self, user_id=None, vaccine_id=None, creation_date=None):
+    def __init__(self, user_id=None, vaccine_name=None, date=None):
         self.user_id = user_id
-        self.vaccine_id = vaccine_id
+        self.vaccine_name = vaccine_name
         self.state_id = 1
-        self.creation_date = creation_date
+        self.date = date
 
     @classmethod
-    def create(cls, vac, user_id, **kwargs):
-        appointment = Appointment(vaccine_id = vac.id,  
-            creation_date = kwargs["date"],
+    def create(cls, vac_name, user_id, **kwargs):
+        appointment = Appointment(vaccine_name = vac_name,  
+            date = kwargs["date"],
             user_id = user_id)
-        if (kwargs["vaccine"] != "Fiebre Amarilla"):
+        if (vac_name != "Fiebre Amarilla"):
             appointment.state_id = 2
         db.session.add(appointment)
         db.session.commit()
@@ -60,15 +58,19 @@ class Appointment(db.Model):
     @classmethod
     def appoint_list(cls, user_id):
         appoint_list = (
-            db.session.query(Appointment, State, Vaccine)
+            db.session.query(Appointment, State)
             .select_from(Appointment)
             .join(State)
-            .join(Vaccine)
             .where(Appointment.user_id == user_id)
             .all()
         )
         return appoint_list
     
-
-
-
+    @classmethod
+    def have_active_appointment(cls, user_id, vac_name):
+        appoint_list = Appointment.query.filter_by(user_id=user_id, state_id=2).all()
+        list_names = list(map(lambda v: v.vaccine_name, appoint_list))
+        consulta = False
+        if (vac_name in list_names):
+            consulta = True
+        return consulta

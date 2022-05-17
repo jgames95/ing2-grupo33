@@ -50,6 +50,7 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(have_gripe_thisyear=vaccine.have_gripe_thisyear)
     app.jinja_env.globals.update(covid2_avalaible=vaccine.covid2_avalaible)
     app.jinja_env.globals.update(appoint_list=appointment.appoint_list)
+    app.jinja_env.globals.update(have_active_appointment=appointment.have_active_appointment)
 
     # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)

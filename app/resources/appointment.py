@@ -35,14 +35,7 @@ def create():
 
     user_id = session["user_id"]
 
-    if (request.form["vaccine"] == "Gripe"):
-        Vaccine.update_date(request.form["date"], user_id)
-    else:
-        Vaccine.create(request.form["vaccine"], request.form["date"], user_id)
-
-    vac = Vaccine.search_vaccine(request.form["vaccine"], user_id)
-
-    Appointment.create(vac, user_id, **request.form)
+    Appointment.create(request.form["vaccine"], user_id, **request.form)
     if (request.form["vaccine"] != "Fiebre Amarilla"):
         flash("Su turno ha sido registrado.")
     else:
@@ -53,6 +46,9 @@ def appoint_list(user_id):
     consulta = Appointment.appoint_list(user_id)
     return consulta
 
+def have_active_appointment(user_id, vac_name):
+    consulta = Appointment.have_active_appointment(user_id, vac_name)
+    return consulta
 
 def download():
     PDF.run()

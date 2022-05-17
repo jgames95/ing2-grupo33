@@ -29,10 +29,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `appointments` (
   `id` int(11) NOT NULL,
-  `vaccine_id` int(11) DEFAULT NULL,
+  `vaccine_name` varchar(30) DEFAULT NULL,
   `state_id` int(11) DEFAULT NULL,
-  `creation_date` date DEFAULT NULL,
-  `closed_date` date DEFAULT NULL,
+  `date` date DEFAULT NULL,
   `user_id` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
@@ -152,7 +151,6 @@ CREATE TABLE `vaccines` (
 --
 ALTER TABLE `appointments`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `vaccine_id` (`vaccine_id`),
   ADD KEY `state_id` (`state_id`),
   ADD KEY `user_id` (`user_id`);
 
@@ -254,7 +252,6 @@ ALTER TABLE `vaccines`
 -- Filtros para la tabla `appointments`
 --
 ALTER TABLE `appointments`
-  ADD CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`vaccine_id`) REFERENCES `vaccines` (`id`),
   ADD CONSTRAINT `appointments_ibfk_2` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`),
   ADD CONSTRAINT `appointments_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`);
 

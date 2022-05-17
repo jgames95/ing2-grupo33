@@ -16,19 +16,27 @@
           <select class="form-control" id="vaccine" name='vaccine'>
             {% if not is_elder(session["user_id"]) %}
             {% if not have_vaccine(session["user_id"], "Fiebre Amarilla") %}
+            {% if not have_active_appointment(session["user_id"], "Fiebre Amarilla") %}
             <option value="Fiebre Amarilla">Fiebre amarilla</option>
             {% endif %}
             {% endif %}
+            {% endif %}
             {% if not have_gripe_thisyear(session["user_id"]) %}
+            {% if not have_active_appointment(session["user_id"], "Gripe") %}
             <option value="Gripe">Gripe</option>
             {% endif %}
+            {% endif %}
             {% if not have_vaccine(session["user_id"], "Covid 19 Primera Dosis") %}
-            <option value="Covid 19 Primera Dosis">Covid (Primera dosis)</option>
+            {% if not have_active_appointment(session["user_id"], "Covid 19 Primera Dosis") %}
+            <option value="Covid 19 Primera Dosis">Covid 19 (Primera dosis)</option>
+            {% endif %}
             {% endif %}
             {% if not have_vaccine(session["user_id"], "Covid 19 Segunda Dosis") %}
+            {% if not have_active_appointment(session["user_id"], "Covid 19 Segunda Dosis") %}
             {% if have_vaccine(session["user_id"], "Covid 19 Primera Dosis") %}
             {% if covid2_avalaible(session["user_id"]) %}
             <option value="Covid 19 Segunda Dosis">Covid 19 (Segunda dosis)</option>
+            {% endif %}
             {% endif %}
             {% endif %}
             {% endif %}

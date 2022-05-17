@@ -22,10 +22,10 @@
         </tr>
       </thead>
       <tbody>
-        {% for appoint, state, vac in appoint_list(session["user_id"]) %}
+        {% for appoint, state in appoint_list(session["user_id"]) %}
         <tr>
-          <td>{{ vac.name }}</td>
-          <td>{{ appoint.creation_date }}</td>
+          <td>{{ appoint.vaccine_name }}</td>
+          <td>{{ appoint.date }}</td>
           <td>{{ state.name }}</td>
           {% if (appoint.state_id == 5) %}
           <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_download') }}" style="text-decoration:none" >DESCARGAR COMPROBANTE</a></button> </td>

@@ -125,7 +125,7 @@ def create():
 
     if (request.form["fiebre"] == "Si"):
         condition = validate(
-            request.form["covid2_date"], "Fecha de aplicación de vacuna - Fiebre Amarilla", required=True, date=True,
+            request.form["fiebre_date"], "Fecha de aplicación de vacuna - Fiebre Amarilla", required=True, date=True,
         )
         if condition is not True:
             message.append(condition)

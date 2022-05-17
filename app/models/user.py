@@ -145,26 +145,17 @@ class User(db.Model):
                 pass
             else:
                 print("Turno automatico para gripe")
-                dict["vaccine"] = "Gripe"
-                Vaccine.create(dict["vaccine"], dict["date"], user.id)
-                vac = Vaccine.search_vaccine(dict["vaccine"], user.id)
-                Appointment.create(vac=vac, user_id=(user.id), **dict)
+                Appointment.create("Gripe", user_id=(user.id), **dict) 
         if ("Covid 19 Primera Dosis" in vaccines):
             if ("Covid 19 Segunda Dosis" in vaccines):
                 pass
             else:
                 print("Turno Automatico para segunda dosis de covid19")
-                dict["vaccine"] = "Covid 19 Segunda Dosis"
-                Vaccine.create(dict["vaccine"], dict["date"], user.id)
-                vac = Vaccine.search_vaccine(dict["vaccine"], user.id)
-                Appointment.create(vac=vac, user_id=(user.id), **dict)
+                Appointment.create("Covid 19 Segunda Dosis", user_id=(user.id), **dict) 
         else:
             print("Turno Automatico para primera dosis de covid19")
-            dict["vaccine"] = "Covid 19 Primera Dosis"
-            Vaccine.create(dict["vaccine"], dict["date"], user.id)
-            vac = Vaccine.search_vaccine(dict["vaccine"], user.id)
-            Appointment.create(vac=vac, user_id=(user.id), **dict)
-            
+            Appointment.create("Covid 19 Primera Dosis", user_id=(user.id), **dict) 
+        
     @classmethod
     def twoweeks_fromnow(cls):
         today = datetime.date.today()
