@@ -10,7 +10,22 @@
   <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_new') }}" style="text-decoration:none" >PEDIR TURNO</a></button>
   <hr>
   <h2>Lista de turnos</h2>
-  <form>Filtro</form>
+  <!--Filtro-->
+  <form method='POST' action="{{ url_for('appointment_filter')}}">
+    <div class="row">
+      <div class="col-25">
+        <p>
+        <label for="estado">Filtrar por estado:</label>
+        <select id="estado" name='estado'>
+          <option value='Todos'>Todos</option>
+          <option value='Aceptado'>Aceptado</option>
+          <option value='Solicitado'>Solicitado</option>
+        </select>
+        <input type="submit" class="btn btn-outline-dark btn-sm" value="Filtrar">
+        </p>
+      </div>
+    </div>
+  </form>
   <div class="table-responsive  table-bordered">
     <table class="table" id="users">
       <thead>
@@ -22,7 +37,7 @@
         </tr>
       </thead>
       <tbody>
-        {% for appoint, state in appoint_list(session["user_id"]) %}
+        {% for appoint, state in appoint_list %}
         <tr>
           <td>{{ appoint.vaccine_name }}</td>
           <td>{{ appoint.date }}</td>

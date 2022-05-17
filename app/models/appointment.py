@@ -68,9 +68,28 @@ class Appointment(db.Model):
     
     @classmethod
     def have_active_appointment(cls, user_id, vac_name):
-        appoint_list = Appointment.query.filter_by(user_id=user_id, state_id=2).all()
-        list_names = list(map(lambda v: v.vaccine_name, appoint_list))
+        appoint_list = Appointment.query.filter_by(user_id=user_id).all()
         consulta = False
-        if (vac_name in list_names):
-            consulta = True
+        for ap in appoint_list:
+            if (ap.vaccine_name == vac_name and (ap.state_id == 2 or ap.state_id == 1)):
+                consulta = True
         return consulta
+
+    @classmethod
+    def appoint_list_filter(cls, form, user_id):
+
+        appointments = Appointment.appoint_list(user_id)
+        lista = list()
+
+        if form["estado"] == "Aceptado":
+            for a, s in appointments:
+                if (a.state_id == 2):
+                    lista.append(a)
+        elif form["estado"] == "Solicitado":
+            for a in appointments:
+                if (a.state_id == 1):
+                    lista.append(a)
+        elif form["estado"] == "Todos":
+            lista = appointments
+        return lista
+            

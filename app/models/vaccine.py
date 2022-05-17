@@ -1,4 +1,4 @@
-import datetime
+from datetime import *
 from app.db import db
 from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.sql.schema import ForeignKey
@@ -61,12 +61,13 @@ class Vaccine(db.Model):
         return resul
     
     @classmethod
-    def have_gripe_thisyear(cls, user_id):
+    def have_gripe_lastyear(cls, user_id):
         consulta = False
         today = datetime.date.today()
+        lastyear = today - timedelta(365)
         vac = cls.search_vaccine("Gripe",user_id)
         if (vac != None):
-            if (vac.application_date.year==today.year):
+            if (vac.application_date>lastyear):
                 consulta = True
         return consulta
     

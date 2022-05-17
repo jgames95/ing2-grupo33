@@ -21,7 +21,7 @@
             {% endif %}
             {% endif %}
             {% endif %}
-            {% if not have_gripe_thisyear(session["user_id"]) %}
+            {% if not have_gripe_lastyear(session["user_id"]) %}
             {% if not have_active_appointment(session["user_id"], "Gripe") %}
             <option value="Gripe">Gripe</option>
             {% endif %}
