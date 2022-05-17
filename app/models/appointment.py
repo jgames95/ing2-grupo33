@@ -1,5 +1,5 @@
 from datetime import date
-from sqlalchemy import Column, Integer, Date, String
+from sqlalchemy import Column, Integer, Date, String, desc
 from app.db import db
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
@@ -62,6 +62,7 @@ class Appointment(db.Model):
             .select_from(Appointment)
             .join(State)
             .where(Appointment.user_id == user_id)
+            .order_by(Appointment.date.desc())
             .all()
         )
         return appoint_list
