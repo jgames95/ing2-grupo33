@@ -11,7 +11,7 @@
   <hr>
   <h2>Lista de turnos</h2>
   <!--Filtro-->
-  <form method='POST' action="{{ url_for('appointment_filter')}}">
+  <form action="{{ url_for('appointmentfilter') }}" method='POST'>
     <div class="row">
       <div class="col-25">
         <p>
@@ -21,7 +21,7 @@
           <option value='Aceptado'>Aceptado</option>
           <option value='Solicitado'>Solicitado</option>
         </select>
-        <input type="submit" class="btn btn-outline-dark btn-sm" value="Filtrar">
+        <button type="submit" name="filtrar" class="btn btn-outline-dark btn-sm" >Filtrar</button>
         </p>
       </div>
     </div>

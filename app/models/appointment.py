@@ -76,20 +76,20 @@ class Appointment(db.Model):
         return consulta
 
     @classmethod
-    def appoint_list_filter(cls, form, user_id):
+    def appoint_list_filter(cls, estado, user_id):
 
         appointments = Appointment.appoint_list(user_id)
-        lista = list()
+        lista = []
 
-        if form["estado"] == "Aceptado":
+        if estado == "Aceptado":
             for a, s in appointments:
                 if (a.state_id == 2):
-                    lista.append(a)
-        elif form["estado"] == "Solicitado":
-            for a in appointments:
+                    lista.append((a,s))
+        elif estado == "Solicitado":
+            for a, s in appointments:
                 if (a.state_id == 1):
-                    lista.append(a)
-        elif form["estado"] == "Todos":
+                    lista.append((a,s))
+        elif estado == "Todos":
             lista = appointments
         return lista
             

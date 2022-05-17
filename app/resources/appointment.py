@@ -47,7 +47,7 @@ def have_active_appointment(user_id, vac_name):
     return consulta
 
 def filter():
-    lista = Appointment.appoint_list_filter(request.form, session["user_id"])
+    lista = Appointment.appoint_list_filter(request.form["estado"], session["user_id"])
     return render_template("appointment/list.html", appoint_list=lista)
 
 def download():
