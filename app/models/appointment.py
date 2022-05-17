@@ -36,8 +36,6 @@ class Appointment(db.Model):
     def change_status(cls, appointment_id, state_id):
         appointment = Appointment.query.filter_by(id=appointment_id).first()
         appointment.state_id = state_id
-        if (state_id == 5):
-            appointment.closed_date = date.today()
         db.session.commit()
 
     @classmethod
