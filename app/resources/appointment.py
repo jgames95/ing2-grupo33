@@ -54,10 +54,10 @@ def filter():
         request.form["estado"], session["user_id"])
     return render_template("appointment/list.html", appoint_list=lista)
 
-
 def download():
     PDF.run()
 
 
-def cancel(appoint_id):
-    Appointment.cancel_appointment(appoint_id)
+def cancel(appointment_id):
+    Appointment.cancel_appointment(appointment_id)
+    return redirect(url_for("appointments"))
