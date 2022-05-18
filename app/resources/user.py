@@ -68,7 +68,7 @@ def create():
         message.append(condition)
 
     condition = validate(
-        request.form["password"], "Clave", required=True, min_length="6"
+        request.form["password"], "Clave", required=True, min_length='6'
     )
     if condition is not True:
         message.append(condition)
@@ -85,7 +85,7 @@ def create():
         message.append(condition)
 
     condition = validate(
-        request.form["dni"], "DNI", required=True, min_length=7
+        request.form["dni"], "DNI", required=True, min_length='7'
     )
     if condition is not True:
         message.append(condition)
@@ -162,10 +162,19 @@ def create():
 
     user = User.search_user_by_email(request.form["email"])
 
-    message = 'Subject: Confirmar tu cuenta de Vacunassist\n\n Token de confirmación: ' + \
-        str(user.token)
+    message = ('Subject: Confirmar tu cuenta de Vacunassist\n\n Hola ' + 
+    (user.first_name).capitalize() + ' ' + (user.last_name).capitalize()  + '. ' + 
+    'Ya creaste tu cuenta en Vacunassist. Ahora solo hay que confirmarla para poder utilizarla.\n\n' + 
+    'Cuando inicie sesion por primera vez le va a solicitar que ingrese un token para confirmar la cuenta. El numero que tiene que ingresar es el siguiente:\n\n'
+    'Token: ' + str(user.token) + 
+    '\n\nGracias,\nVacunassist' + '\n\n****' + 
+    '\nSi no creaste una cuenta en nuestro sitio, por favor ignore este e-mail.').encode('utf-8')
 
-    #User.send_plaintext_email(request.form["email"], message)
+    if (request.form["email"].endswith("@hotmail.com")):
+        User.send_plaintext_email(request.form["email"], message, "hotmail")
+    
+    if (request.form["email"].endswith("@gmail.com")):
+        User.send_plaintext_email(request.form["email"], message, "gmail")
 
     User.add_vaccines(request.form, user)
 

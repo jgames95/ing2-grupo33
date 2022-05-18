@@ -260,10 +260,13 @@ class User(db.Model):
         return consulta
 
     @classmethod
-    def send_plaintext_email(cls, receiver_email, message):
+    def send_plaintext_email(cls, receiver_email, message, email_type):
         sender_email = "infinityloop_33@hotmail.com"
         password = "Grupo33ing2"
-        conn = smtplib.SMTP('smtp-mail.outlook.com',587)  
+        if (email_type=="hotmail"):
+            conn = smtplib.SMTP('smtp-mail.outlook.com',587)
+        if (email_type=="gmail"):
+            conn = smtplib.SMTP('smtp.gmail.com',587)
         type(conn)  
         conn.ehlo()  
         conn.starttls()  
