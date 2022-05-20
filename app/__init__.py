@@ -20,7 +20,7 @@ logging.getLogger("sqlalchemy.engine").setLevel(logging.INFO)
 def create_app(environment="development"):
     # Configuración inicial de la app
     app = Flask(__name__)
-    #app.config["JSON_SORT_KEYS"] = False
+    # app.config["JSON_SORT_KEYS"] = False
 
     app.secret_key = environ.get("SECRET_KEY") or urandom(24)
 
@@ -83,16 +83,13 @@ def create_app(environment="development"):
                      appointment.create, methods=["POST"])
     app.add_url_rule("/turnos", "appointments", appointment.index)
     app.add_url_rule("/turnos", "appointment_download", appointment.download)
+    app.add_url_rule("/turnos/1", "appointment_preview", appointment.preview)
 
     # Ruta para el Home (usando decorator)
 
     @app.route("/")
     def home():
         return render_template("home.html")
-
-    @app.route("/", methods=["POST"])
-    def test_download():
-        return send_file('/ing2-grupo33/app/static/PDFs/out.pdf', attachment_filename='out.pdf')
 
     # Handlers
     app.register_error_handler(404, handler.not_found_error)

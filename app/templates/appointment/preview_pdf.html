@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block title %}Usuarios{% endblock %}
+{% block head %}
+  {{ super() }}
+    <script src="/js/pdfobject.js"></script>
+    <script>PDFObject.embed("\ing2-grupo33\app\static\PDFs\out.pdf", "#example1");</script>
+{% endblock %}
+{% block topnav %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+    <div id="example1"></div>
+{% endblock %}

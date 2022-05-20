@@ -1,7 +1,11 @@
-from flask import redirect, render_template, request, url_for, session, flash, Flask
+from io import BytesIO
+
+from flask import redirect, render_template, request, url_for, session, flash, Flask, send_file
+from sqlalchemy import true
 from app.models.appointment import Appointment
 from app.models.vaccine import Vaccine
 from app.helpers.validations import validate
+import urllib.request
 
 
 app = Flask(__name__)
@@ -50,5 +54,15 @@ def create():
     return redirect(url_for("appointments"))
 
 
+def preview():
+    return render_template("appointment/preview_pdf.html")
+
+
 def download():
-    app.test_download()
+
+    return send_file(BytesIO('/ing2-grupo33/app/static/PDFs/out.pdf'), attachment_filename='out.pdf', as_attachment=true)
+    '''pdf_path = "/ing2-grupo33/app/static/PDFs"
+    response = urllib.request.urlopen(pdf_path)
+    file = open("out" + ".pdf", 'wb')
+    file.write(response.read())
+    file.close()'''

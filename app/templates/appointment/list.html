@@ -9,6 +9,6 @@
 {% block content %}
   <h2>Lista de Turnos</h2>
   <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_new') }}" style="text-decoration:none" >PEDIR TURNO</a></button>
-  <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_download') }}" style="text-decoration:none" >DESCARGAR COMPROBANTE</a></button>
+  <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_preview') }}" style="text-decoration:none" >DESCARGAR COMPROBANTE</a></button>
   <form></form>
 {% endblock %}
