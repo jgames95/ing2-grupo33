@@ -2,7 +2,7 @@ from flask import redirect, render_template, request, url_for, session, flash, F
 from app.models.appointment import Appointment
 from app.models.vaccine import Vaccine
 from app.helpers.validations import validate
-import app.helpers.pag as pag
+
 
 app = Flask(__name__)
 
@@ -51,6 +51,4 @@ def create():
 
 
 def download():
-    var = pag.PDF
-    var.run()
-    print("llegue")
+    app.test_download()

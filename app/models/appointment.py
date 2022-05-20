@@ -5,6 +5,8 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from app.models.vaccine import Vaccine
 from app.models.state import State
+from ..helpers import pag
+
 
 class Appointment(db.Model):
     __tablename__ = "appointments"
@@ -25,9 +27,9 @@ class Appointment(db.Model):
 
     @classmethod
     def create(cls, vac, user_id, **kwargs):
-        appointment = Appointment(vaccine_id = vac.id,  
-            creation_date = kwargs["date"],
-            user_id = user_id)
+        appointment = Appointment(vaccine_id=vac.id,
+                                  creation_date=kwargs["date"],
+                                  user_id=user_id)
         if (kwargs["vaccine"] != "Fiebre Amarilla"):
             appointment.state_id = 2
         db.session.add(appointment)
@@ -49,11 +51,11 @@ class Appointment(db.Model):
 
     def cancel_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 4)
-    
+
     def close_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 5)
 
-    
-
-
-
+    @classmethod
+    def print_pdf():
+        pdf = pag.PDF
+        pdf.run()

@@ -1,5 +1,6 @@
+
 from os import path, environ, urandom
-from flask import Flask, render_template, Blueprint
+from flask import Flask, render_template, Blueprint, send_file, send_from_directory
 from flask_session import Session
 from config import config
 from app import db
@@ -88,6 +89,10 @@ def create_app(environment="development"):
     @app.route("/")
     def home():
         return render_template("home.html")
+
+    @app.route("/", methods=["POST"])
+    def test_download():
+        return send_file('/ing2-grupo33/app/static/PDFs/out.pdf', attachment_filename='out.pdf')
 
     # Handlers
     app.register_error_handler(404, handler.not_found_error)
