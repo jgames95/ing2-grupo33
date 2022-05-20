@@ -1,3 +1,4 @@
+
 from flask import redirect, render_template, request, url_for, session, flash, Flask
 from app.models.appointment import Appointment
 from app.models.vaccine import Vaccine
@@ -42,13 +43,21 @@ def create():
         flash("Su solicitud de turno ha sido registrada, los administradores se comunicarán con usted a la brevedad.")
     return redirect(url_for("appointments"))
 
+
 def have_active_appointment(user_id, vac_name):
     consulta = Appointment.have_active_appointment(user_id, vac_name)
     return consulta
 
+
 def filter():
-    lista = Appointment.appoint_list_filter(request.form["estado"], session["user_id"])
+    lista = Appointment.appoint_list_filter(
+        request.form["estado"], session["user_id"])
     return render_template("appointment/list.html", appoint_list=lista)
+
 
 def download():
     PDF.run()
+
+
+def cancel(appoint_id):
+    Appointment.cancel_appointment(appoint_id)

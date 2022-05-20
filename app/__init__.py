@@ -1,3 +1,4 @@
+
 from os import path, environ, urandom
 from flask import Flask, render_template, Blueprint
 from flask_session import Session
@@ -43,13 +44,16 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(is_pacient=user.is_pacient)
     app.jinja_env.globals.update(is_active=user.is_active)
     app.jinja_env.globals.update(vaccines_from_user=user.vaccines_from_user)
-    app.jinja_env.globals.update(applicatedvac_from_user=user.applicatedvac_from_user)
+    app.jinja_env.globals.update(
+        applicatedvac_from_user=user.applicatedvac_from_user)
     app.jinja_env.globals.update(is_elder=user.is_elder)
     app.jinja_env.globals.update(get_vaccines_names=vaccine.get_vaccines_names)
     app.jinja_env.globals.update(have_vaccine=vaccine.have_vaccine)
-    app.jinja_env.globals.update(have_gripe_lastyear=vaccine.have_gripe_lastyear)
+    app.jinja_env.globals.update(
+        have_gripe_lastyear=vaccine.have_gripe_lastyear)
     app.jinja_env.globals.update(covid2_avalaible=vaccine.covid2_avalaible)
-    app.jinja_env.globals.update(have_active_appointment=appointment.have_active_appointment)
+    app.jinja_env.globals.update(
+        have_active_appointment=appointment.have_active_appointment)
 
     # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
@@ -81,7 +85,10 @@ def create_app(environment="development"):
                      appointment.create, methods=["POST"])
     app.add_url_rule("/turnos", "appointments", appointment.index)
     app.add_url_rule("/turnos", "appointment_download", appointment.download)
-    app.add_url_rule("/turnos/filtro", "appointmentfilter", appointment.filter, methods=["POST", "GET"])
+    app.add_url_rule("/turnos", "appointment_cancel",
+                     appointment.cancel, methods=["POST"])
+    app.add_url_rule("/turnos/filtro", "appointmentfilter",
+                     appointment.filter, methods=["POST", "GET"])
 
     # Ruta para el Home (usando decorator)
 

@@ -34,6 +34,7 @@
           <th scope="col">Fecha</th>
           <th scope="col">Estado</th>
           <th scope="col">Comprobante</th>
+          <th scope="col">Cancelar Turno</th>
         </tr>
       </thead>
       <tbody>
@@ -44,6 +45,11 @@
           <td>{{ state.name }}</td>
           {% if (appoint.state_id == 5) %}
           <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_download') }}" style="text-decoration:none" >DESCARGAR COMPROBANTE</a></button> </td>
+          {% else %}
+          <td>No disponible</td>
+          {% endif %}
+          {% if ((appoint.state_id == 2) or (appoint.state_id == 1)) %}
+          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_cancel',appoint_id=[appoint.id]) }}" style="text-decoration:none" method="POST">CANCELAR</a></button> </td>
           {% else %}
           <td>No disponible</td>
           {% endif %}

@@ -6,6 +6,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from app.models.vaccine import Vaccine
 from app.models.state import State
 
+
 class Appointment(db.Model):
     __tablename__ = "appointments"
     id = Column(Integer, primary_key=True)
@@ -23,9 +24,9 @@ class Appointment(db.Model):
 
     @classmethod
     def create(cls, vac_name, user_id, **kwargs):
-        appointment = Appointment(vaccine_name = vac_name,  
-            date = kwargs["date"],
-            user_id = user_id)
+        appointment = Appointment(vaccine_name=vac_name,
+                                  date=kwargs["date"],
+                                  user_id=user_id)
         if (vac_name != "Fiebre Amarilla"):
             appointment.state_id = 2
         db.session.add(appointment)
@@ -50,7 +51,7 @@ class Appointment(db.Model):
     @classmethod
     def cancel_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 4)
-    
+
     @classmethod
     def close_appointment(cls, appointment_id):
         cls.change_status(appointment_id, 5)
@@ -66,7 +67,7 @@ class Appointment(db.Model):
             .all()
         )
         return appoint_list
-    
+
     @classmethod
     def have_active_appointment(cls, user_id, vac_name):
         appoint_list = Appointment.query.filter_by(user_id=user_id).all()
@@ -85,12 +86,11 @@ class Appointment(db.Model):
         if estado == "Aceptado":
             for a, s in appointments:
                 if (a.state_id == 2):
-                    lista.append((a,s))
+                    lista.append((a, s))
         elif estado == "Solicitado":
             for a, s in appointments:
                 if (a.state_id == 1):
-                    lista.append((a,s))
+                    lista.append((a, s))
         elif estado == "Todos":
             lista = appointments
         return lista
-            
