@@ -84,7 +84,7 @@ def create_app(environment="development"):
     app.add_url_rule("/turnos", "appointments", appointment.index)
     app.add_url_rule("/turnos", "appointment_download", appointment.download)
     app.add_url_rule("/turnos/1", "appointment_preview", appointment.preview)
-    app.add_url_rule("/turnos", "pdf_save", appointment.print_pdf)
+    app.add_url_rule("/usuario/perfil", "pdf_save", appointment.print_pdf)
 
     # Ruta para el Home (usando decorator)
 
