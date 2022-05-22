@@ -66,3 +66,7 @@ def download():
     file = open("out" + ".pdf", 'wb')
     file.write(response.read())
     file.close()'''
+
+
+def print_pdf():
+    Appointment.print_pdf()

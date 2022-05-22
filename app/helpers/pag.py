@@ -32,12 +32,12 @@ class PDF(FPDF):
         #pdf.cell(40, 10, 'Hello world!', ln=True)
         #pdf.cell(80, 10, 'Bye bro', border=1)
 
-        out = "../static/PDFs/comprobante.pdf"
+        out = "..//static/PDFs/prueba.pdf"
 
         # "out" tambien puede definirse con un nombre especifico por ejemplo: out = "../static/PDFs/"+var+".pdf" donde var representa el nombre.
 
         # Generate output
-        pdf.output("prueba.pdf")
+        pdf.output("..//static/PDFs/prueba.pdf")
 
 
 # si corres en consola este .py te guarda en la carpeta el pdf correctamente
