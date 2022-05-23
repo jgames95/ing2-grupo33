@@ -7,7 +7,6 @@ from app.models.vaccine import Vaccine
 from app.models.state import State
 from fpdf import FPDF
 
-
 class Appointment(db.Model):
     __tablename__ = "appointments"
     id = Column(Integer, primary_key=True)
@@ -24,7 +23,7 @@ class Appointment(db.Model):
         self.date = date
 
     @classmethod
-    def create(cls, vac_name, user_id, **kwargs):
+    def create(cls, vac_name, user_id, first_name, last_name, **kwargs):
         appointment = Appointment(vaccine_name=vac_name,
                                   date=kwargs["date"],
                                   user_id=user_id)
@@ -32,7 +31,7 @@ class Appointment(db.Model):
             appointment.state_id = 2
         db.session.add(appointment)
         unique_name = "usuario" + str(appointment.user_id) + "_vacuna" + appointment.vaccine_name + ".pdf"
-        cls.create_pdf(unique_name)
+        cls.create_pdf(unique_name, first_name, last_name)
         db.session.commit()
 
     @classmethod
@@ -102,7 +101,7 @@ class Appointment(db.Model):
         return lista
 
     @classmethod
-    def create_pdf(cls, name):
+    def create_pdf(cls, name, first_name, last_name):
         #path depende de donde tienen el repositorio localmente
         path = 'C:/Users/Jimena/Desktop/IS2/'
         
