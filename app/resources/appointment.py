@@ -57,11 +57,6 @@ def filter():
     lista = Appointment.appoint_list_filter(
         request.form["estado"], session["user_id"])
 
-    print('/////')
-    print(lista[0])
-    print(lista[1])
-    print(lista[2])
-
     return render_template("appointment/list.html", appoint_list=lista)
 
 
