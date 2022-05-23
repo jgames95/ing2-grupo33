@@ -37,6 +37,7 @@ def create():
     user_id = session["user_id"]
 
     Appointment.create(request.form["vaccine"], user_id, **request.form)
+
     if (request.form["vaccine"] != "Fiebre Amarilla"):
         flash("Su turno ha sido registrado.")
     else:
@@ -52,6 +53,12 @@ def have_active_appointment(user_id, vac_name):
 def filter():
     lista = Appointment.appoint_list_filter(
         request.form["estado"], session["user_id"])
+
+    print('/////')
+    print(lista[0])
+    print(lista[1])
+    print(lista[2]) 
+
     return render_template("appointment/list.html", appoint_list=lista)
 
 def download():

@@ -38,13 +38,13 @@
         </tr>
       </thead>
       <tbody>
-        {% for appoint, state in appoint_list %}
+        {% for (appoint, state, path) in appoint_list %}
         <tr>
           <td>{{ appoint.vaccine_name }}</td>
           <td>{{ appoint.date }}</td>
           <td>{{ state.name }}</td>
           {% if (appoint.state_id == 5) %}
-          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_download') }}" style="text-decoration:none" >DESCARGAR COMPROBANTE</a></button> </td>
+          <td><button type="button" class="btn btn-success change_color"><a href="{{ path }}"  download="Vacunassist_Comprobante">DESCARGAR COMPROBANTE</a></button></td>
           {% else %}
           <td>No disponible</td>
           {% endif %}
