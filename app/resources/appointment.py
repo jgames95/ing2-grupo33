@@ -3,7 +3,6 @@ from flask import redirect, render_template, request, url_for, session, flash, F
 from app.models.appointment import Appointment
 from app.models.vaccine import Vaccine
 from app.helpers.validations import validate
-from app.helpers.pag import PDF
 from app.models.user import User
 
 app = Flask(__name__)
@@ -55,14 +54,9 @@ def have_active_appointment(user_id, vac_name):
 
 def filter():
     lista = Appointment.appoint_list_filter(
-        request.form["estado"], session["user_id"])
+        request.form["estado"], session["user_id"]) 
 
     return render_template("appointment/list.html", appoint_list=lista)
-
-
-def download():
-    PDF.run()
-
 
 def cancel(appointment_id):
     Appointment.cancel_appointment(appointment_id)

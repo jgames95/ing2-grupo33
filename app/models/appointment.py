@@ -8,7 +8,6 @@ from app.models.state import State
 
 from fpdf import FPDF
 
-
 class Appointment(db.Model):
     __tablename__ = "appointments"
     id = Column(Integer, primary_key=True)
@@ -110,20 +109,22 @@ class Appointment(db.Model):
 
     @classmethod
     def create_pdf(cls, name, appointment, name_line):
-        # path depende de donde tienen el repositorio localmente
-        path = 'D:/Programas/aaIS2/Project/'
+        #path depende de donde tienen el repositorio localmente
+        path = 'C:/Users/Jimena/Desktop/IS2/'
+        
+        # logo
+        FPDF.image((path + 'ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png'), 10, 8, 25)
+        # font
+        FPDF.set_font('helvetica', 'B', 20)
+        # text color
+        FPDF.set_text_color(150, 206, 122)
+        # title
+        FPDF.cell(0, 25, 'Certificado De Vacunación',
+                  border=0, ln=1, align='C')
+        # line break
+        FPDF.ln(20)
 
-        class PDF(FPDF):
-            def header(self):
-                self.image(
-                    '..//ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png', 10, 8, 25)
-                self.set_font('helvetica', 'B', 25)
-                self.set_text_color(150, 206, 122)
-                self.cell(0, 25, 'Certificado de Vacunación',
-                          border=0, ln=1, align='C')
-                self.ln(20)
-
-        pdf = PDF('P', 'mm', 'A4')
+        pdf = FPDF('P', 'mm', 'A4')
 
         # Add a page
         pdf.add_page()

@@ -1,29 +1,28 @@
 from cmath import log
 from fpdf import FPDF
+from app.models.appointment import Appointment
+from app.models.user import User
 
 
-class PDF(FPDF):
-    def __init__(self):
-        super().__init__()
-
-    def header(self):
+class PDF():
+    @classmethod
+    def create_pdf(cls, name):
+        #path depende de donde tienen el repositorio localmente
+        path = 'C:/Users/Jimena/Desktop/IS2/'
+        
         # logo
-        self.image('Logo_VacunAssist_1_chico.png', 10, 8, 25)
+        FPDF.image((path + 'ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png'), 10, 8, 25)
         # font
-        self.set_font('helvetica', 'B', 20)
+        FPDF.set_font('helvetica', 'B', 20)
         # text color
-        self.set_text_color(150, 206, 122)
+        FPDF.set_text_color(150, 206, 122)
         # title
-        self.cell(0, 25, 'Certificado De Vacunación',
+        FPDF.cell(0, 25, 'Certificado De Vacunación',
                   border=0, ln=1, align='C')
         # line break
-        self.ln(20)
+        FPDF.ln(20)
 
-    def run():
-        # create a FPDF object
-        pdf = PDF('P', 'mm', 'A4')
-
-        pdf.header()
+        pdf = FPDF('P', 'mm', 'A4')
 
         # Add a page
         pdf.add_page()
@@ -34,11 +33,10 @@ class PDF(FPDF):
         # Add text
         #pdf.cell(40, 10, 'Hello world!', ln=True)
         #pdf.cell(80, 10, 'Bye bro', border=1)
-
+        
+        complete_path = path + "ing2-grupo33/app/static/uploads/"
         # Generate output
-        pdf.output('segundaPrueba.pdf')
-        pdf.output('descarga.pdf')
-        log("llegue")
+        pdf.output(dest='F', name=(complete_path + name))
 
 
 # si corres en consola este .py te guarda en la carpeta el pdf correctamente
