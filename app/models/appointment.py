@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from app.models.vaccine import Vaccine
 from app.models.state import State
+
 from fpdf import FPDF
 
 class Appointment(db.Model):
@@ -30,8 +31,11 @@ class Appointment(db.Model):
         if (vac_name != "Fiebre Amarilla"):
             appointment.state_id = 2
         db.session.add(appointment)
-        unique_name = "usuario" + str(appointment.user_id) + "_vacuna" + appointment.vaccine_name + ".pdf"
-        cls.create_pdf(unique_name, first_name, last_name)
+        unique_name = "usuario" + \
+            str(appointment.user_id) + "_vacuna" + \
+            appointment.vaccine_name + ".pdf"
+        name_line = first_name+" "+last_name
+        cls.create_pdf(unique_name, appointment, name_line)
         db.session.commit()
 
     @classmethod
@@ -86,7 +90,9 @@ class Appointment(db.Model):
         if estado == "Aceptado":
             for a, s in appointments:
                 if (a.state_id == 2):
-                    n = "..//static/uploads/" + "usuario" + str(a.user_id) + "_idturno" + str(a.id) + ".pdf"
+                    n = "..//static/uploads/" + "usuario" + \
+                        str(a.user_id) + "_vacuna" + \
+                        str(a.vaccine_name) + ".pdf"
                     lista.append((a, s, n))
         elif estado == "Solicitado":
             for a, s in appointments:
@@ -95,13 +101,14 @@ class Appointment(db.Model):
                     lista.append((a, s, n))
         elif estado == "Todos":
             for a, s in appointments:
-                n = "..//static/uploads/" + "usuario" + str(a.user_id) + "_idturno" + str(a.id) + ".pdf"
+                n = "..//static/uploads/" + "usuario" + \
+                    str(a.user_id) + "_vacuna" + str(a.vaccine_name) + ".pdf"
                 lista.append((a, s, n))
-        
+
         return lista
 
     @classmethod
-    def create_pdf(cls, name, first_name, last_name):
+    def create_pdf(cls, name, appointment, name_line):
         #path depende de donde tienen el repositorio localmente
         path = 'C:/Users/Jimena/Desktop/IS2/'
         
@@ -123,12 +130,16 @@ class Appointment(db.Model):
         pdf.add_page()
 
         # Specify font
-        pdf.set_font('times', '', 16)
+        pdf.set_font('times', '', 20)
+
+        line1 = "Se certifica que " + str(name_line)
+        line2 = "Recibio la vacuna " + \
+            str(appointment.vaccine_name)+" el dia: "+str(appointment.date)
 
         # Add text
-        #pdf.cell(40, 10, 'Hello world!', ln=True)
-        #pdf.cell(80, 10, 'Bye bro', border=1)
-        
+        pdf.cell(0, 10, line1, ln=True, align='C')
+        pdf.cell(0, 10, line2, align='C')
+
         complete_path = path + "ing2-grupo33/app/static/uploads/"
         # Generate output
         pdf.output(dest='F', name=(complete_path + name))

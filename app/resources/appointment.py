@@ -37,7 +37,8 @@ def create():
     user_id = session["user_id"]
     user = User.search_user_by_id(user_id)
 
-    Appointment.create(request.form["vaccine"], user_id, user.first_name, user.last_name, **request.form)
+    Appointment.create(request.form["vaccine"], user_id,
+                       user.first_name, user.last_name, **request.form)
 
     if (request.form["vaccine"] != "Fiebre Amarilla"):
         flash("Su turno ha sido registrado.")
