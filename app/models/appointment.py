@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from app.models.vaccine import Vaccine
 from app.models.state import State
+
 from fpdf import FPDF
 
 
@@ -31,8 +32,10 @@ class Appointment(db.Model):
         if (vac_name != "Fiebre Amarilla"):
             appointment.state_id = 2
         db.session.add(appointment)
-        unique_name = "usuario" + str(appointment.user_id) + "_vacuna" + appointment.vaccine_name + ".pdf"
-        cls.create_pdf(unique_name)
+        unique_name = "usuario" + \
+            str(appointment.user_id) + "_vacuna" + \
+            appointment.vaccine_name + ".pdf"
+        cls.create_pdf(unique_name, appointment)
         db.session.commit()
 
     @classmethod
@@ -87,7 +90,9 @@ class Appointment(db.Model):
         if estado == "Aceptado":
             for a, s in appointments:
                 if (a.state_id == 2):
-                    n = "..//static/uploads/" + "usuario" + str(a.user_id) + "_idturno" + str(a.id) + ".pdf"
+                    n = "..//static/uploads/" + "usuario" + \
+                        str(a.user_id) + "_vacuna" + \
+                        str(a.vaccine_name) + ".pdf"
                     lista.append((a, s, n))
         elif estado == "Solicitado":
             for a, s in appointments:
@@ -96,40 +101,43 @@ class Appointment(db.Model):
                     lista.append((a, s, n))
         elif estado == "Todos":
             for a, s in appointments:
-                n = "..//static/uploads/" + "usuario" + str(a.user_id) + "_idturno" + str(a.id) + ".pdf"
+                n = "..//static/uploads/" + "usuario" + \
+                    str(a.user_id) + "_vacuna" + str(a.vaccine_name) + ".pdf"
                 lista.append((a, s, n))
-        
+
         return lista
 
     @classmethod
-    def create_pdf(cls, name):
-        #path depende de donde tienen el repositorio localmente
-        path = 'C:/Users/Jimena/Desktop/IS2/'
-        
-        # logo
-        FPDF.image((path + 'ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png'), 10, 8, 25)
-        # font
-        FPDF.set_font('helvetica', 'B', 20)
-        # text color
-        FPDF.set_text_color(150, 206, 122)
-        # title
-        FPDF.cell(0, 25, 'Certificado De Vacunación',
-                  border=0, ln=1, align='C')
-        # line break
-        FPDF.ln(20)
+    def create_pdf(cls, name, appointment):
+        # path depende de donde tienen el repositorio localmente
+        path = 'D:/Programas/aaIS2/Project/'
 
-        pdf = FPDF('P', 'mm', 'A4')
+        class PDF(FPDF):
+            def header(self):
+                self.image(
+                    '..//ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png', 10, 8, 25)
+                self.set_font('helvetica', 'B', 25)
+                self.set_text_color(150, 206, 122)
+                self.cell(0, 25, 'Certificado de Vacunación',
+                          border=0, ln=1, align='C')
+                self.ln(20)
+
+        pdf = PDF('P', 'mm', 'A4')
 
         # Add a page
         pdf.add_page()
 
         # Specify font
-        pdf.set_font('times', '', 16)
+        pdf.set_font('times', '', 20)
+
+        line1 = "Se certifica que " + str(appointment.user_id)
+        line2 = "Recibio la vacuna " + \
+            str(appointment.vaccine_name)+" el dia: "+str(appointment.date)
 
         # Add text
-        #pdf.cell(40, 10, 'Hello world!', ln=True)
-        #pdf.cell(80, 10, 'Bye bro', border=1)
-        
+        pdf.cell(0, 10, line1, ln=True, align='C')
+        pdf.cell(0, 10, line2, align='C')
+
         complete_path = path + "ing2-grupo33/app/static/uploads/"
         # Generate output
         pdf.output(dest='F', name=(complete_path + name))
