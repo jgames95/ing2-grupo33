@@ -121,25 +121,27 @@ class Appointment(db.Model):
         #path depende de donde tienen el repositorio localmente
         path = 'C:/xampp/htdocs/'
         
-        # logo
-        FPDF.image((path + 'ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png'), 10, 8, 25)
-        # font
-        FPDF.set_font('helvetica', 'B', 20)
-        # text color
-        FPDF.set_text_color(150, 206, 122)
-        # title
-        FPDF.cell(0, 25, 'Certificado De Vacunación',
-                  border=0, ln=1, align='C')
-        # line break
-        FPDF.ln(20)
-
         pdf = FPDF('P', 'mm', 'A4')
-
+        
         # Add a page
         pdf.add_page()
 
+        # logo
+        pdf.image((path + 'ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png'), 10, 8, 25)
+        # font
+        pdf.set_font('helvetica', 'B', 20)
+        # text color
+        pdf.set_text_color(150, 206, 122)
+        # title
+        pdf.cell(0, 25, 'Certificado De Vacunación',
+                  border=0, ln=1, align='C')
+        # line break
+        pdf.ln(20)
+
+
         # Specify font
         pdf.set_font('times', '', 20)
+        pdf.set_text_color(10, 10, 10)
 
         line1 = "Se certifica que " + str(name_line)
         line2 = "Recibio la vacuna " + \
