@@ -87,16 +87,16 @@ class Appointment(db.Model):
         if estado == "Aceptado":
             for a, s in appointments:
                 if (a.state_id == 2):
-                    n = "..//static/uploads/" + "usuario" + str(a.user_id) + "_vacuna" + a.vaccine_name + "_estado" + str(s.state_id)
+                    n = "..//static/uploads/" + "usuario" + str(a.user_id) + "_idturno" + str(a.id) + ".pdf"
                     lista.append((a, s, n))
         elif estado == "Solicitado":
             for a, s in appointments:
                 if (a.state_id == 1):
-                    n = "..//static/uploads/" + "usuario" + str(a.user_id) + "_vacuna" + a.vaccine_name + "_estado" + str(s.state_id)
+                    n = ""
                     lista.append((a, s, n))
         elif estado == "Todos":
             for a, s in appointments:
-                n = "..//static/uploads/" + "usuario" + str(a.user_id) + "_vacuna" + a.vaccine_name + "_estado" + str(s.state_id)
+                n = "..//static/uploads/" + "usuario" + str(a.user_id) + "_idturno" + str(a.id) + ".pdf"
                 lista.append((a, s, n))
         
         return lista

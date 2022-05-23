@@ -13,7 +13,7 @@ def new():
 
 
 def index():
-    return render_template("appointment/list.html", appoint_list=Appointment.appoint_list(session["user_id"]))
+    return render_template("appointment/list.html", appoint_list=Appointment.appoint_list_filter("Todos", session["user_id"]))
 
 
 def create():
