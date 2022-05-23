@@ -31,7 +31,7 @@ class Appointment(db.Model):
         if (vac_name != "Fiebre Amarilla"):
             appointment.state_id = 2
         db.session.add(appointment)
-        unique_name = "usuario" + str(appointment.user_id) + "_vacuna" + appointment.vaccine_name + "_estado" + str(appointment.state_id)
+        unique_name = "usuario" + str(appointment.user_id) + "_vacuna" + appointment.vaccine_name + ".pdf"
         cls.create_pdf(unique_name)
         db.session.commit()
 
