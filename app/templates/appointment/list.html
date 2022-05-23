@@ -12,18 +12,17 @@
   <h2>Lista de turnos</h2>
   <!--Filtro-->
   <form action="{{ url_for('appointmentfilter') }}" method='POST'>
-    <div class="row">
-      <div class="col-25">
-        <p>
+    <div class="form-group add_padding">
+      <p>
         <label for="estado">Filtrar por estado:</label>
-        <select id="estado" name='estado'>
+        <select class="form-control" id="estado" name='estado'>
           <option value='Todos'>Todos</option>
           <option value='Aceptado'>Aceptado</option>
           <option value='Solicitado'>Solicitado</option>
         </select>
-        <button type="submit" name="filtrar" class="btn btn-outline-dark btn-sm" >Filtrar</button>
-        </p>
-      </div>
+        <br>
+        <button type="submit" name="filtrar" class="btn btn-success change_color" >FILTRAR</button>
+      </p>
     </div>
   </form>
   <div class="table-responsive  table-bordered">
