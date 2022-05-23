@@ -25,7 +25,7 @@ class Appointment(db.Model):
         self.date = date
 
     @classmethod
-    def create(cls, vac_name, user_id, **kwargs):
+    def create(cls, vac_name, user_id, first_name, last_name, **kwargs):
         appointment = Appointment(vaccine_name=vac_name,
                                   date=kwargs["date"],
                                   user_id=user_id)
@@ -35,7 +35,8 @@ class Appointment(db.Model):
         unique_name = "usuario" + \
             str(appointment.user_id) + "_vacuna" + \
             appointment.vaccine_name + ".pdf"
-        cls.create_pdf(unique_name, appointment)
+        name_line = first_name+" "+last_name
+        cls.create_pdf(unique_name, appointment, name_line)
         db.session.commit()
 
     @classmethod
@@ -108,7 +109,7 @@ class Appointment(db.Model):
         return lista
 
     @classmethod
-    def create_pdf(cls, name, appointment):
+    def create_pdf(cls, name, appointment, name_line):
         # path depende de donde tienen el repositorio localmente
         path = 'D:/Programas/aaIS2/Project/'
 
@@ -130,7 +131,7 @@ class Appointment(db.Model):
         # Specify font
         pdf.set_font('times', '', 20)
 
-        line1 = "Se certifica que " + str(appointment.user_id)
+        line1 = "Se certifica que " + str(name_line)
         line2 = "Recibio la vacuna " + \
             str(appointment.vaccine_name)+" el dia: "+str(appointment.date)
 
