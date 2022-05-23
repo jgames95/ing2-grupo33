@@ -87,17 +87,26 @@ class Appointment(db.Model):
         appointments = Appointment.appoint_list(user_id)
         lista = []
 
-        if estado == "Aceptado":
+        if estado == "Aceptados":
             for a, s in appointments:
                 if (a.state_id == 2):
                     n = "..//static/uploads/" + "usuario" + \
                         str(a.user_id) + "_vacuna" + \
                         str(a.vaccine_name) + ".pdf"
                     lista.append((a, s, n))
-        elif estado == "Solicitado":
+        elif estado == "Solicitados":
             for a, s in appointments:
                 if (a.state_id == 1):
-                    n = ""
+                    n = "..//static/uploads/" + "usuario" + \
+                        str(a.user_id) + "_vacuna" + \
+                        str(a.vaccine_name) + ".pdf"
+                    lista.append((a, s, n))
+        elif estado == "Cerrados":
+            for a, s in appointments:
+                if (a.state_id == 5):
+                    n = "..//static/uploads/" + "usuario" + \
+                        str(a.user_id) + "_vacuna" + \
+                        str(a.vaccine_name) + ".pdf"
                     lista.append((a, s, n))
         elif estado == "Todos":
             for a, s in appointments:
@@ -110,7 +119,7 @@ class Appointment(db.Model):
     @classmethod
     def create_pdf(cls, name, appointment, name_line):
         #path depende de donde tienen el repositorio localmente
-        path = 'C:/Users/Jimena/Desktop/IS2/'
+        path = 'C:/xampp/htdocs/'
         
         # logo
         FPDF.image((path + 'ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png'), 10, 8, 25)
