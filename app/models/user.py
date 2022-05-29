@@ -6,12 +6,12 @@ from app.models.permission import Permission
 from app.models.state import State
 from app.models.vaccine import Vaccine
 from app.models.appointment import Appointment
+from app.models.location import Location
 from sqlalchemy.orm import relationship
 import hashlib
 import random
 import datetime
 import smtplib, ssl
-
 
 
 class User(db.Model):
@@ -31,6 +31,8 @@ class User(db.Model):
     list_vaccines = db.relationship("Vaccine")
     list_appointments = db.relationship("Appointment")
     token = Column(Integer)
+    location_id = Column(Integer, ForeignKey("locations.id"))
+    location = relationship(Location)
 
     def __init__(
         self,
@@ -43,7 +45,8 @@ class User(db.Model):
         dni=None,
         telephone=None,
         role_id=None,
-        token=None
+        token=None,
+        location_id=None
     ):
         self.email = email
         self.password = hashlib.sha256(password.encode("utf-8")).hexdigest()
@@ -54,7 +57,8 @@ class User(db.Model):
         self.dni=dni,
         self.telephone=telephone,
         self.role_id=role_id,
-        self.token=token
+        self.token=token,
+        self.location_id=location_id
 
     @classmethod
     def create_pacient(cls, **kwargs):
@@ -68,7 +72,8 @@ class User(db.Model):
             last_name=kwargs["last_name"],
             date_of_birth=kwargs["date_of_birth"],
             dni=kwargs["dni"],
-            telephone=kwargs["telephone"])
+            telephone=kwargs["telephone"],
+            location_id=kwargs["location"])
         #Mandar email con el token
         db.session.add(user)
         db.session.commit()
@@ -146,16 +151,16 @@ class User(db.Model):
                 pass
             else:
                 print("Turno automatico para gripe")
-                Appointment.create("Gripe", user_id=(user.id), **dict) 
+                Appointment.create("Gripe", user_id=(user.id), location_id=(user.location_id), **dict) 
         if ("Covid 19 Primera Dosis" in vaccines):
             if ("Covid 19 Segunda Dosis" in vaccines):
                 pass
             else:
                 print("Turno Automatico para segunda dosis de covid19")
-                Appointment.create("Covid 19 Segunda Dosis", user_id=(user.id), **dict) 
+                Appointment.create("Covid 19 Segunda Dosis", user_id=(user.id), location_id=(user.location_id), **dict) 
         else:
             print("Turno Automatico para primera dosis de covid19")
-            Appointment.create("Covid 19 Primera Dosis", user_id=(user.id), **dict) 
+            Appointment.create("Covid 19 Primera Dosis", user_id=(user.id), location_id=(user.location_id), **dict) 
         
     @classmethod
     def twoweeks_fromnow(cls):
@@ -185,6 +190,16 @@ class User(db.Model):
     def valid_email(cls, email):
         exist = User.query.filter_by(email=email).scalar()
         return exist is None
+
+    @classmethod
+    def valid_dni(cls, dni):
+        user = User.query.filter_by(dni=dni).scalar()
+        if user is not None:
+            if (user.role_id == 3):
+                return True
+            else:
+                return False
+        
 
     @classmethod
     def update(cls, user_id, kwargs):

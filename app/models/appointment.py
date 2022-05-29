@@ -5,6 +5,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
 from app.models.vaccine import Vaccine
 from app.models.state import State
+from app.models.location import Location
 
 from fpdf import FPDF
 
@@ -16,18 +17,22 @@ class Appointment(db.Model):
     state = relationship(State)
     date = Column(Date)
     user_id = Column(Integer, ForeignKey("users.id"))
+    location_id = Column(Integer, ForeignKey("locations.id"))
+    location = relationship(Location)
 
-    def __init__(self, user_id=None, vaccine_name=None, date=None):
+    def __init__(self, user_id=None, vaccine_name=None, date=None, location_id=None):
         self.user_id = user_id
         self.vaccine_name = vaccine_name
         self.state_id = 1
         self.date = date
+        self.location_id=location_id
 
     @classmethod
-    def create(cls, vac_name, user_id, first_name, last_name, **kwargs):
+    def create(cls, vac_name, user_id, first_name, last_name, location_id, **kwargs):
         appointment = Appointment(vaccine_name=vac_name,
                                   date=kwargs["date"],
-                                  user_id=user_id)
+                                  user_id=user_id,
+                                  location_id=location_id)
         if (vac_name != "Fiebre Amarilla"):
             appointment.state_id = 2
         db.session.add(appointment)

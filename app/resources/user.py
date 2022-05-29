@@ -2,6 +2,7 @@ from flask import redirect, render_template, request, url_for, session, flash, F
 from app.models.user import User
 from app.models.role import Role
 from app.models.vaccine import Vaccine
+from app.models.location import Location
 from app.helpers.validations import validate
 from app.helpers.decorators import login_required, has_permission
 import json
@@ -56,7 +57,8 @@ def confirm_account():
 
 
 def new():
-    return render_template("user/new.html")
+    locations = Location.query.all()
+    return render_template("user/new.html", locations=locations)
 
 
 def create():
@@ -150,6 +152,12 @@ def create():
     if valid_mail is True and not User.valid_email(request.form["email"]):
         message.append(
             "Ya existe un usuario con ese email, por favor\
+            ingrese uno nuevo"
+        )
+
+    if not User.valid_dni(request.form["dni"]):
+        message.append(
+            "Ya existe un paciente con ese dni, por favor\
             ingrese uno nuevo"
         )
 
