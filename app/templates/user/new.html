@@ -47,7 +47,10 @@
       <label class="normal_font" for="location">Seleccione la Sede de preferencia</label>
       <select class="form-control" id="location" name='location'>
         {% for l in locations %}
-        <option value="{{ l.id }}">{{ l.name }}</option>
+          {% if l.id != 1 %}
+            <option value="{{ l.id }}">{{ l.name }}</option>
+          {% endif %}
+        {% endfor %}
       </select>
     </div>
 
