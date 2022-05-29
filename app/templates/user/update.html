@@ -11,17 +11,17 @@
   <form action="{{ url_for('users_update') }}" method="POST">
     <div class="form-group add_padding">
       <label for="first_name">Nombre</label>
-      <input class="form-control" type="text" id="first_name" name="first_name" placeholder="Ingrese su nombre" required>
+      <input class="form-control" type="text" id="first_name" name="first_name" placeholder="Ingrese su nombre" value="{{ user.first_name }}" required>
     </div>
 
     <div class="form-group add_padding">
       <label for="last_name">Apellido</label>
-      <input class="form-control" type="text" id="last_name" name="last_name" placeholder="Ingrese su apellido" required>
+      <input class="form-control" type="text" id="last_name" name="last_name" placeholder="Ingrese su apellido" value="{{ user.last_name }}" required>
     </div>
 
     <div class="form-group add_padding">
       <label for="telephone">Teléfono</label>
-      <input class="form-control" type="text" id="telephone" name="telephone" placeholder="Ingrese su teléfono" required>
+      <input class="form-control" type="text" id="telephone" name="telephone" placeholder="Ingrese su teléfono" value="{{ user.telephone }}" required>
     </div>
 
     <br>

@@ -73,7 +73,7 @@ class User(db.Model):
             date_of_birth=kwargs["date_of_birth"],
             dni=kwargs["dni"],
             telephone=kwargs["telephone"],
-            location_id=kwargs["location"])
+            location_id=int(kwargs["location"]))
         #Mandar email con el token
         db.session.add(user)
         db.session.commit()
