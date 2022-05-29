@@ -9,6 +9,7 @@ from app.models.location import Location
 
 from fpdf import FPDF
 
+
 class Appointment(db.Model):
     __tablename__ = "appointments"
     id = Column(Integer, primary_key=True)
@@ -123,26 +124,26 @@ class Appointment(db.Model):
 
     @classmethod
     def create_pdf(cls, name, appointment, name_line):
-        #path depende de donde tienen el repositorio localmente
-        path = 'C:/xampp/htdocs/'
-        
+        # path depende de donde tienen el repositorio localmente
+        path = 'D:/Programas/aaIS2/Project/'
+
         pdf = FPDF('P', 'mm', 'A4')
-        
+
         # Add a page
         pdf.add_page()
 
         # logo
-        pdf.image((path + 'ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png'), 10, 8, 25)
+        pdf.image(
+            (path + 'ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png'), 10, 8, 25)
         # font
         pdf.set_font('helvetica', 'B', 20)
         # text color
         pdf.set_text_color(150, 206, 122)
         # title
         pdf.cell(0, 25, 'Certificado De Vacunación',
-                  border=0, ln=1, align='C')
+                 border=0, ln=1, align='C')
         # line break
         pdf.ln(20)
-
 
         # Specify font
         pdf.set_font('times', '', 20)

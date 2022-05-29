@@ -11,8 +11,8 @@ from sqlalchemy.orm import relationship
 import hashlib
 import random
 import datetime
-import smtplib, ssl
-
+import smtplib
+import ssl
 
 class User(db.Model):
     __tablename__ = "users"
@@ -26,7 +26,7 @@ class User(db.Model):
     telephone = Column(String(30))
     role_id = Column(Integer, ForeignKey("roles.id"))
     role = relationship(Role)
-    #Only Pacients
+    # Only Pacients
     date_of_birth = Column(Date)
     list_vaccines = db.relationship("Vaccine")
     list_appointments = db.relationship("Appointment")
@@ -111,7 +111,7 @@ class User(db.Model):
     def get_token(cls, user_id):
         user = User.query.filter_by(id=user_id).first()
         return user.token
-    
+
     @classmethod
     def get_role(cls, user_id):
         user = cls.search_user_by_id(user_id)
@@ -122,7 +122,7 @@ class User(db.Model):
         user = cls.search_user_by_id(user_id)
         date = user.date_of_birth
         today = datetime.date.today()
-        one_or_zero = int ((today.month, today.day) < (date.month, date.day))
+        one_or_zero = int((today.month, today.day) < (date.month, date.day))
         difference = today.year - date.year
         age = difference - one_or_zero
         return age
@@ -130,13 +130,15 @@ class User(db.Model):
     @classmethod
     def add_vaccines(cls, dict, user):
         #user = cls.search_user_by_email(dict["email"])
-        if (dict["covid1"]=="Si"):
-            Vaccine.create("Covid 19 Primera Dosis", dict["covid1_date"], user.id)
-        if (dict["covid2"]=="Si"):
-            Vaccine.create("Covid 19 Segunda Dosis", dict["covid2_date"], user.id)
-        if (dict["gripe"]=="Si"):
+        if (dict["covid1"] == "Si"):
+            Vaccine.create("Covid 19 Primera Dosis",
+                           dict["covid1_date"], user.id)
+        if (dict["covid2"] == "Si"):
+            Vaccine.create("Covid 19 Segunda Dosis",
+                           dict["covid2_date"], user.id)
+        if (dict["gripe"] == "Si"):
             Vaccine.create("Gripe", dict["gripe_date"], user.id)
-        if (dict["fiebre"]=="Si"):
+        if (dict["fiebre"] == "Si"):
             Vaccine.create("Fiebre Amarilla", dict["fiebre_date"], user.id)
 
     @classmethod
@@ -151,21 +153,24 @@ class User(db.Model):
                 pass
             else:
                 print("Turno automatico para gripe")
-                Appointment.create("Gripe", user_id=(user.id), location_id=(user.location_id), **dict) 
+                Appointment.create("Gripe", user_id=(
+                    user.id), first_name=user.first_name, last_name=user.last_name, location_id=(user.location_id), ** dict)
         if ("Covid 19 Primera Dosis" in vaccines):
             if ("Covid 19 Segunda Dosis" in vaccines):
                 pass
             else:
                 print("Turno Automatico para segunda dosis de covid19")
-                Appointment.create("Covid 19 Segunda Dosis", user_id=(user.id), location_id=(user.location_id), **dict) 
+                Appointment.create("Covid 19 Segunda Dosis",
+                                   user_id=(user.id), first_name=user.first_name, last_name=user.last_name, location_id=(user.location_id), **dict)
         else:
             print("Turno Automatico para primera dosis de covid19")
-            Appointment.create("Covid 19 Primera Dosis", user_id=(user.id), location_id=(user.location_id), **dict) 
-        
+            Appointment.create("Covid 19 Primera Dosis",
+                               user_id=(user.id), first_name=user.first_name, last_name=user.last_name, location_id=(user.location_id), **dict)
+
     @classmethod
     def twoweeks_fromnow(cls):
         today = datetime.date.today()
-        after_15days = today + datetime.timedelta(days = 15)
+        after_15days = today + datetime.timedelta(days=15)
         print(after_15days)
         return after_15days
 
@@ -181,7 +186,6 @@ class User(db.Model):
             .first()
         )
         return consulta is not None
-
 
     '''def __repr__(self):
         return "<User %r>" % self.username'''
@@ -279,13 +283,13 @@ class User(db.Model):
     def send_plaintext_email(cls, receiver_email, message, email_type):
         sender_email = "infinityloop_33@hotmail.com"
         password = "Grupo33ing2"
-        if (email_type=="hotmail"):
-            conn = smtplib.SMTP('smtp-mail.outlook.com',587)
-        if (email_type=="gmail"):
-            conn = smtplib.SMTP('smtp.gmail.com',587)
-        type(conn)  
-        conn.ehlo()  
-        conn.starttls()  
-        conn.login(sender_email,password)  
-        conn.sendmail(sender_email,receiver_email,message)  
+        if (email_type == "hotmail"):
+            conn = smtplib.SMTP('smtp-mail.outlook.com', 587)
+        if (email_type == "gmail"):
+            conn = smtplib.SMTP('smtp.gmail.com', 587)
+        type(conn)
+        conn.ehlo()
+        conn.starttls()
+        conn.login(sender_email, password)
+        conn.sendmail(sender_email, receiver_email, message)
         conn.quit()
