@@ -161,10 +161,11 @@ def create():
             ingrese uno nuevo"
         )
 
+    locations = Location.query.all()
     if message:
         for mssg in message:
             flash(mssg)
-        return render_template("user/new.html")
+        return render_template("user/new.html", locations=locations)
 
     User.create_pacient(**request.form)
 

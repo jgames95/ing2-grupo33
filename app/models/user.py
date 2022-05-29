@@ -203,8 +203,9 @@ class User(db.Model):
                 return True
             else:
                 return False
+        else:
+            return True
         
-
     @classmethod
     def update(cls, user_id, kwargs):
         user = User.query.filter_by(id=user_id).first_or_404()
