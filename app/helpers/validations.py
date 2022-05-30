@@ -78,10 +78,10 @@ def validate(input_value, input_name, **kwargs):
         date2 = datetime.datetime.strptime(input_value["date2"], format).date()
         if (date2 > date1):
             difference = abs(date2 - date1)
-            if (difference.days >= 15):
+            if (difference.days >= 21):
                 pass
             else:
-                return "Tiene que haber pasado por lo menos 15 dias entre " + input_name
+                return "Tiene que haber pasado por lo menos 21 dias entre " + input_name
         else:
             return "La fecha de segunda " + input_name + " tiene que ser mayor a la fecha de la primera" + input_name
 
