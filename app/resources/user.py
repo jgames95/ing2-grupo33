@@ -299,3 +299,7 @@ def applicatedvac_from_user(user_id):
 def is_elder(user_id):
     consulta = User.is_elder(user_id)
     return consulta
+
+def return_fullname(user_id):
+    name = User.get_fullname(user_id)
+    return name

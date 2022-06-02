@@ -294,3 +294,9 @@ class User(db.Model):
         conn.login(sender_email, password)
         conn.sendmail(sender_email, receiver_email, message)
         conn.quit()
+
+    @classmethod
+    def get_fullname(cls, user_id):
+        u = cls.search_user_by_id(user_id)
+        full_name = (u.first_name).capitalize() + ' ' + (u.last_name).capitalize()
+        return full_name

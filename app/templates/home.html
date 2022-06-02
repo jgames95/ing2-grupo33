@@ -10,8 +10,47 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-  <h1>Bienvenido/a a VacunAssist</h1>
-  <p>Página de inicio de la aplicación</p>
+  {% if is_authenticated(session) %}
+    {% if is_pacient(session["user_id"]) %}
+      {% if is_active(session["user_id"]) %}
+        <h1>Bienvenido/a {{ full_name(session["user_id"]) }} al portal de pacientes de VacunAssist</h1>
+        <p>Página de inicio de la aplicación</p>
+        <br>
+        <p>En esta pagina usted puede realizar las siguientes actividades:</p>
+        <dl>
+          <dt>Sacar Turnos de las siguientes Vacunas:</dt>
+          <dd>- Covid19 Primera Dosis</dd>
+          <dd>- Covid19 Segunda Dosis</dd>
+          <dd>- Gripe</dd>
+          <dd>- Fiebre Amarilla</dd>
+          <dt>Gestionar Turnos pasados</dt>
+          <dd>- Cancelar Turnos activos</dd>
+          <dd>- Descargar Comprobante de Vacunación de Turnos Cerrados</dd>
+          <dd>- Ver el historial de turnos</dd>
+        </dl>
+      {% else %}
+        <h1>Bienvenido/a {{ full_name(session["user_id"]) }} al portal de pacientes de VacunAssist</h1>
+        <p>Página de inicio de la aplicación</p>
+        <br>
+        <p>Necesita activar su cuenta para poder usar todas las funcionalidades de la página</p>
+        <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('user_confirm') }}" style="text-decoration:none">CONFIRMAR CUENTA</a>
+      {% endif %}
+    {% endif %}
+    
+    {% if is_admin(session["user_id"]) %}
+      <h1>Bienvenido/a Administrador a VacunAssist</h1>
+      <p>Página de inicio de la aplicación</p>
+    {% endif %}
+    
+    {% if is_nurse(session["user_id"]) %}
+      <h1>Bienvenido/a {{ full_name(session["user_id"]) }} al portal de enfermeros de Vacunassist</h1>
+      <p>Página de inicio de la aplicación</p>
+    {% endif %}
+  
+  {% else %}
+    <h1>Bienvenido/a a VacunAssist</h1>
+    <p>Página de inicio de la aplicación</p>
+  {% endif %}
 {% endblock %}
 {% block footer %}
   {{ super() }}
