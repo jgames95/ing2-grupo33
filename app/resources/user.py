@@ -195,7 +195,8 @@ def create():
 @login_required
 def edit(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
-    return render_template("user/update.html", user=user)
+    locations = Location.query.all()
+    return render_template("user/update.html", user=user, locations=locations)
 
 
 @login_required
@@ -217,11 +218,13 @@ def update():
     )
     if condition is not True:
         message.append(condition)
-
+    
+    locations = Location.query.all()
+    
     if message:
         for mssg in message:
             flash(mssg)
-        return render_template("user/update.html", user=request.form)
+        return render_template("user/update.html", user=request.form, locations=locations)
 
     User.update(user_id=session["user_id"], kwargs=request.form)
     return redirect(url_for("user_profile"))
@@ -302,4 +305,8 @@ def is_elder(user_id):
 
 def return_fullname(user_id):
     name = User.get_fullname(user_id)
+    return name
+
+def return_location(user_id):
+    name = User.get_location(user_id)
     return name

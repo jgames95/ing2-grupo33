@@ -49,6 +49,7 @@ def create_app(environment="development"):
         applicatedvac_from_user=user.applicatedvac_from_user)
     app.jinja_env.globals.update(is_elder=user.is_elder)
     app.jinja_env.globals.update(full_name=user.return_fullname)
+    app.jinja_env.globals.update(location_name=user.return_location)
     app.jinja_env.globals.update(get_vaccines_names=vaccine.get_vaccines_names)
     app.jinja_env.globals.update(have_vaccine=vaccine.have_vaccine)
     app.jinja_env.globals.update(

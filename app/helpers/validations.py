@@ -28,6 +28,7 @@ def validate(input_value, input_name, **kwargs):
         and input_value.strip() == ""
     ):
         return "El campo " + input_name + " es requerido"
+    
     if (
         "natural_number" in kwargs
         and kwargs["natural_number"] is True
@@ -41,7 +42,7 @@ def validate(input_value, input_name, **kwargs):
         except:
             return "El campo " + input_name + " debe ser un numero Entero "
 
-    if "text" in kwargs and kwargs["text"] is True and not input_value.isalpha():
+    if "text" in kwargs and (kwargs["text"] is True) and (not (input_value.replace(" ", "")).isalpha()):
         return "El campo " + input_name + " debe contener solo letras "
 
     if "max_length" in kwargs and len(input_value) > int(kwargs["max_length"]):

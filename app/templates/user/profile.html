@@ -21,6 +21,7 @@
             <p> <strong> Email:</strong> <i> {{ user.email }}</i></p>
             <p> <strong> DNI:</strong> <i> {{ user.dni }}</i></p>
             <p> <strong> Teléfono:</strong> <i> {{ user.telephone }}</i></p>
+            <p> <strong> Sede de Preferencia:</strong> <i> {{ location_name(user.id) }}</i></p>
             <p> <strong> Vacunas Aplicadas:</strong>{% for vaccine in applicatedvac_from_user(user.id) %}
                   {{vaccine.name}}
                   -

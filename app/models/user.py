@@ -108,6 +108,12 @@ class User(db.Model):
         return usuario
 
     @classmethod
+    def get_location(cls, user_id):
+        user = cls.search_user_by_id(user_id)
+        name = Location.get_name(user.location_id)
+        return name
+
+    @classmethod
     def get_token(cls, user_id):
         user = User.query.filter_by(id=user_id).first()
         return user.token
@@ -154,7 +160,7 @@ class User(db.Model):
             else:
                 print("Turno automatico para gripe")
                 Appointment.create("Gripe", user_id=(
-                    user.id), first_name=user.first_name, last_name=user.last_name, location_id=(user.location_id), ** dict)
+                    user.id), first_name=user.first_name, last_name=user.last_name, location_id=(user.location_id), **dict)
         if ("Covid 19 Primera Dosis" in vaccines):
             if ("Covid 19 Segunda Dosis" in vaccines):
                 pass
@@ -213,6 +219,7 @@ class User(db.Model):
         user.first_name = form.get("first_name", user.first_name)
         user.last_name = form.get("last_name", user.last_name)
         user.telephone = form.get("telephone", user.telephone)
+        user.location_id = form.get("location", user.location_id)
         db.session.commit()
 
     '''@classmethod
