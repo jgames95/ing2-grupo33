@@ -26,13 +26,13 @@ class User(db.Model):
     telephone = Column(String(30))
     role_id = Column(Integer, ForeignKey("roles.id"))
     role = relationship(Role)
+    location_id = Column(Integer, ForeignKey("locations.id"))
+    location = relationship(Location)
     # Only Pacients
     date_of_birth = Column(Date)
     list_vaccines = db.relationship("Vaccine")
     list_appointments = db.relationship("Appointment")
     token = Column(Integer)
-    location_id = Column(Integer, ForeignKey("locations.id"))
-    location = relationship(Location)
 
     def __init__(
         self,

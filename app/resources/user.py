@@ -168,8 +168,12 @@ def create():
         return render_template("user/new.html", locations=locations)
 
     User.create_pacient(**request.form)
-
+    
     user = User.search_user_by_email(request.form["email"])
+    
+    User.add_vaccines(request.form, user)
+
+    User.add_automatic_appointments(user)
 
     message = ('Subject: Confirmar tu cuenta de Vacunassist\n\n Hola ' + 
     (user.first_name).capitalize() + ' ' + (user.last_name).capitalize()  + '. ' + 
@@ -184,10 +188,6 @@ def create():
     
     if (request.form["email"].endswith("@gmail.com")):
         User.send_plaintext_email(request.form["email"], message, "gmail")
-
-    User.add_vaccines(request.form, user)
-
-    User.add_automatic_appointments(user)
 
     return redirect(url_for("auth_login"))
 
