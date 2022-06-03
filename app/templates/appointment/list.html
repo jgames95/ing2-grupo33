@@ -54,6 +54,10 @@
           <td>No disponible</td>
           {% endif %}
         </tr>
+        {% else %}
+        <tr>
+          <td>Usted no posee turnos en esta categoría.</td>
+        </tr>
         {% endfor %}
       </tbody>
     </table>

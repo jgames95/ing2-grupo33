@@ -8,7 +8,7 @@ from app.models.state import State
 from app.models.location import Location
 
 from fpdf import FPDF
-
+import os
 
 class Appointment(db.Model):
     __tablename__ = "appointments"
@@ -125,7 +125,8 @@ class Appointment(db.Model):
     @classmethod
     def create_pdf(cls, name, appointment, name_line):
         # path depende de donde tienen el repositorio localmente
-        path = 'D:/Programas/aaIS2/Project/'
+        path = os.getcwd()
+        path = path.replace("\\","/")
 
         pdf = FPDF('P', 'mm', 'A4')
 
@@ -134,7 +135,7 @@ class Appointment(db.Model):
 
         # logo
         pdf.image(
-            (path + 'ing2-grupo33/app/static/Logo_VacunAssist_1_chico.png'), 10, 8, 25)
+            (path + '/app/static/Logo_VacunAssist_1_chico.png'), 10, 8, 25)
         # font
         pdf.set_font('helvetica', 'B', 20)
         # text color
@@ -157,6 +158,6 @@ class Appointment(db.Model):
         pdf.cell(0, 10, line1, ln=True, align='C')
         pdf.cell(0, 10, line2, align='C')
 
-        complete_path = path + "ing2-grupo33/app/static/uploads/"
+        complete_path = path + "/app/static/uploads/"
         # Generate output
         pdf.output(dest='F', name=(complete_path + name))
