@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block title %}Perfil{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+
+  <h1>Perfil</h1>
+
+  <div class="container">
+    <div class="card-container">
+      <div class="header">
+        <p class="center">
+          <i class="material-icons center" style="font-size:100px;color:black;" alt="imagen de perfil">badge</i>
+        </p>
+      </div>
+      <div class="description">
+            
+            <p> <strong> Nombre:</strong> <i> {{ user.first_name }}</i></p>
+            <p> <strong> Apellido:</strong> <i> {{ user.last_name }}</i></p>
+            <p> <strong> Email:</strong> <i> {{ user.email }}</i></p>
+            <p> <strong> DNI:</strong> <i> {{ user.dni }}</i></p>
+            <p> <strong> Teléfono:</strong> <i> {{ user.telephone }}</i></p>
+            <p> <strong> Sede Asignada:</strong> 
+              {% if user.location_id == 1 %}
+                <i> No tiene sede asignada </i>
+              {% else %}
+                <i> {{ location_name(user.id) }} </i>
+              {% endif %}
+            </p>
+            
+        </div>
+
+    </div>
+  </div>
+
+{% endblock %}

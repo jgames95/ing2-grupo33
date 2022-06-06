@@ -34,15 +34,13 @@ app = Flask(__name__)
         roles=roles,
     )'''
 
-# @login_required
-
-
+@login_required
+@has_permission(2)
 def confirm():
     return render_template("user/confirm.html")
 
-# @login_required
-
-
+@login_required
+@has_permission(2)
 def confirm_account():
     user_input = request.form["token"]
     user_logged_id = session["user_id"]
@@ -189,6 +187,7 @@ def create():
 
 
 @login_required
+@has_permission(2)
 def edit(user_id):
     user = User.query.filter_by(id=user_id).first_or_404()
     locations = Location.query.all()
@@ -196,6 +195,7 @@ def edit(user_id):
 
 
 @login_required
+@has_permission(2)
 def update():
     message = []
     condition = validate(
@@ -258,11 +258,88 @@ def update():
         prev_url=prev_url,
     )'''
 
-
 @login_required
+@has_permission(2)
 def profile():
     user = User.search_user_by_id(session["user_id"])
     return render_template("user/profile.html", user=user)
+
+@login_required
+@has_permission(1)
+def new_nurse():
+    return render_template("nurse/new.html")
+
+@login_required
+@has_permission(1)
+def create_nurse():
+    message = []
+    condition = validate(
+        request.form["email"], "Correo", required=True, email=True)
+    valid_mail = condition
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["password"], "Clave", required=True, min_length='6'
+    )
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["first_name"], "Nombre", required=True, text=True)
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["last_name"], "Apellido", required=True, text=True
+    )
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["dni"], "DNI", required=True, min_length='7'
+    )
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["telephone"], "Telefono", required=True
+    )
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["date_of_birth"], "Fecha de Nacimiento", required=True, date=True
+    )
+    if condition is not True:
+        message.append(condition)
+
+    if valid_mail is True and not User.valid_email(request.form["email"]):
+        message.append(
+            "Ya existe un usuario con ese email, por favor\
+            ingrese uno nuevo"
+        )
+
+    if not User.valid_nurse_dni(request.form["dni"]):
+        message.append(
+            "Ya existe un paciente con ese dni, por favor\
+            ingrese uno nuevo"
+        )
+
+    if message:
+        for mssg in message:
+            flash(mssg)
+        return render_template("nurse/new.html")
+
+    User.create_nurse(**request.form)
+
+    return redirect(url_for("home"))
+
+@login_required
+@has_permission(3)
+def profile_nurse():
+    user = User.search_user_by_id(session["user_id"])
+    return render_template("nurse/profile.html", user=user)
 
 
 def is_admin(user_id):

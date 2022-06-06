@@ -15,6 +15,10 @@ def new():
 def index():
     return render_template("appointment/list.html", appoint_list=Appointment.appoint_list_filter("Todos", session["user_id"]))
 
+def index_location():
+    user = User.search_user_by_id(session["user_id"])
+    return render_template("appointment/list_location.html", appoint_list=Appointment.appointments_from_location(user.location_id))
+
 
 def create():
     message = []
