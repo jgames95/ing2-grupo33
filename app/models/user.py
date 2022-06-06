@@ -63,9 +63,7 @@ class User(db.Model):
     @classmethod
     def create_pacient(cls, **kwargs):
         token = random.randrange(1,500)
-        user = User(active=False, 
-            role_id=2, 
-            token=token,
+        user = User(active=False, role_id=2, token=token,
             email=kwargs["email"],
             password=kwargs["password"],
             first_name=kwargs["first_name"],
@@ -91,9 +89,15 @@ class User(db.Model):
 
     @classmethod
     def create_nurse(cls, **kwargs):
-        user = User(active=True, **kwargs)
-        rol = Role.query.filter_by(id=3).first()
-        user.role = rol
+        user = User(active=True, role_id=3, 
+            email=kwargs["email"],
+            password=kwargs["password"],
+            first_name=kwargs["first_name"],
+            last_name=kwargs["last_name"],
+            date_of_birth=kwargs["date_of_birth"],
+            dni=kwargs["dni"],
+            telephone=kwargs["telephone"],
+            location_id=1)
         db.session.add(user)
         db.session.commit()
 
@@ -122,6 +126,10 @@ class User(db.Model):
     def get_role(cls, user_id):
         user = cls.search_user_by_id(user_id)
         return user.role_id
+
+    @classmethod
+    def has_role(cls, role_id, user_id):
+        return cls.get_role(user_id) == role_id
 
     @classmethod
     def get_age(cls, user_id):
@@ -211,6 +219,11 @@ class User(db.Model):
                 return False
         else:
             return True
+
+    @classmethod
+    def valid_nurse_dni(cls, dni):
+        user = User.query.filter_by(dni=dni).scalar()
+        return user is None
         
     @classmethod
     def update(cls, user_id, kwargs):

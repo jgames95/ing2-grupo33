@@ -30,6 +30,9 @@
           {% if is_pacient(session["user_id"]) and is_active(session["user_id"]) %}
           <li><button class="dropdown-item" type="button"><a href="{{ url_for('user_profile') }}" style="text-decoration:none" >PERFIL</a></button></li>
           {% endif %}
+          {% if is_nurse(session["user_id"]) %}
+          <li><button class="dropdown-item" type="button"><a href="{{ url_for('nurse_profile') }}" style="text-decoration:none" >PERFIL</a></button></li>
+          {% endif %}
           <li><button class="dropdown-item" type="button"><a href="{{ url_for('auth_logout') }}" style="text-decoration:none" >CERRAR SESION</a></button></li>
           {% else %}
           <li><button class="dropdown-item" type="button"><a href="{{ url_for('auth_login') }}" style="text-decoration:none" >INICIAR SESION</a></button></li>
@@ -49,13 +52,22 @@
           {% if is_authenticated(session) %}
           {% if is_admin(session["user_id"]) %}
           <li class="nav-item">
-            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('user_index') }}" style="text-decoration:none" >USUARIOS</a></button>
+            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('nurse_new') }}" style="text-decoration:none" >REGISTRAR ENFERMERO</a></button>
+          </li>
+          <li class="nav-item">
+            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('home') }}" style="text-decoration:none" >ENFERMEROS</a></button>
           </li>
           {% endif %} 
           
           {% if is_pacient(session["user_id"]) and is_active(session["user_id"]) %}
           <li class="nav-item">
             <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointments') }}" style="text-decoration:none" >TURNOS</a></button>
+          </li>
+          {% endif %}
+
+          {% if is_nurse(session["user_id"]) %}
+          <li class="nav-item">
+            <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointments_location') }}" style="text-decoration:none" >TURNOS</a></button>
           </li>
           {% endif %}
 

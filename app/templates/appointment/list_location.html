@@ -1,0 +1,39 @@
+{% extends "layout.html" %}
+{% block title %}Turnos{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block topnav %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<h2>Lista de turnos</h2>
+  <div class="table-responsive  table-bordered">
+    <table class="table" id="users">
+      <thead>
+        <tr>
+          <th scope="col">Vacuna</th>
+          <th scope="col">Fecha</th>
+          <th scope="col">Estado</th>
+          <th scope="col">Cancelar Turno</th>
+          <th scope="col">Cerrar Turno</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for appoint in appoint_list %}
+        <tr>
+          <td>{{ appoint.vaccine_name }}</td>
+          <td>{{ appoint.date }}</td>
+          <td>Aceptado</td>
+          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR</a></button> </td>
+          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CERRAR</a></button> </td>
+        </tr>
+        {% else %}
+        <tr>
+          <td>Usted no posee turnos en esta categoría.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

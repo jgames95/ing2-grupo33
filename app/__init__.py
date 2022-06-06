@@ -82,11 +82,17 @@ def create_app(environment="development"):
     )'''
     app.add_url_rule("/usuario/perfil", "user_profile", user.profile)
 
+    app.add_url_rule("/enfermero", "nurse_create", user.create_nurse, methods=["POST"])
+    app.add_url_rule("/enfermero/nuevo", "nurse_new", user.new_nurse)
+
+    app.add_url_rule("/enfermero/perfil", "nurse_profile", user.profile_nurse)
+
     # Rutas de Turnos
     app.add_url_rule("/turnos/nuevo", "appointment_new", appointment.new)
     app.add_url_rule("/turnos", "appointment_create",
                      appointment.create, methods=["POST"])
     app.add_url_rule("/turnos", "appointments", appointment.index)
+    app.add_url_rule("/turnos/sede", "appointments_location", appointment.index_location)
     #app.add_url_rule("/turnos", "appointment_download", appointment.download)
     app.add_url_rule("/turnos/<int:appointment_id>", "appointment_cancel", appointment.cancel, methods=["POST", "GET"])
     app.add_url_rule("/turnos/filtro", "appointmentfilter",

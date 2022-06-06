@@ -123,6 +123,11 @@ class Appointment(db.Model):
         return lista
 
     @classmethod
+    def appointments_from_location(cls, location_id):
+        appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2).all()
+        return appoint_list
+
+    @classmethod
     def create_pdf(cls, name, appointment, name_line):
         # path depende de donde tienen el repositorio localmente
         path = os.getcwd()

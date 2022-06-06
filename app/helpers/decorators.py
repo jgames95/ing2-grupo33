@@ -19,7 +19,7 @@ def login_required(view_function):
     return decorator
 
 
-def has_permission(permiso):
+def has_permission(role_id):
     """
     Si el usuario tiene el permiso para acceder a esa funcionalidad  y esta]
     activo, sigue con la ejecucion, sino muestra el error 401
@@ -29,7 +29,7 @@ def has_permission(permiso):
 
         # funcion envoltura
         def decorator(*args, **kwargs):
-            if not User.has_permission(session.get("user_id"), permiso):
+            if not User.has_role(user_id=session.get("user_id"), role_id=role_id):
                 return abort(401)
             return view_function(*args, **kwargs)
 
