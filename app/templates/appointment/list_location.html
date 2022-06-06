@@ -7,32 +7,43 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-<h2>Lista de turnos en: {{ return_location(session["user_id"]) }}</h2>
+<h2>Lista de turnos de hoy en: {{ return_location(session["user_id"]) }}</h2>
   <div class="table-responsive  table-bordered">
     <table class="table" id="users">
       <thead>
         <tr>
+          <th scope="col">Paciente</th>
           <th scope="col">Vacuna</th>
-          <th scope="col">Fecha</th>
-          <th scope="col">Estado</th>
+          <th scope="col">Ver Perfil</th>
           <th scope="col">Cerrar Turno</th>
           <th scope="col">Cancelar Turno</th>
         </tr>
       </thead>
       <tbody>
         {% for appoint in appoint_list %}
+        {% if is_active(appoint.user_id) %}
         <tr>
+          <td>
+            <div class="d-flex align-items-center">
+              <i class="material-icons center" style="font-size:45px;color:black;" alt="imagen de perfil">account_circle</i>
+              <div class="ms-3">
+                <p class="fw-bold mb-1">{{ full_name(appoint.user_id) }}</p>
+                <p class="text-muted mb-0">{{ get_email(appoint.user_id) }}</p>
+              </div>
+            </div>
+          </td>
           <td>{{ appoint.vaccine_name }}</td>
-          <td>{{ appoint.date }}</td>
-          <td>Aceptado</td>
+          <td><button type="button" class="btn btn-success change_color">
+            <a class="change_color_font" href="{{ url_for('appointment_user_profile', user_id=appoint.user_id) }}" style="text-decoration:none">PERFIL</a></button> </td>
           <td><button type="button" class="btn btn-success change_color">
             <a class="change_color_font" href="{{ url_for('appointment_close', appointment_id=appoint.id, user_id=appoint.user_id) }}" style="text-decoration:none">CERRAR</a></button> </td>
           <td><button type="button" class="btn btn-danger">
             <a class="change_color_font" href="{{ url_for('appointment_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR</a></button> </td>
         </tr>
+        {% endif %}
         {% else %}
         <tr>
-          <td>No existen turnos en esta sede.</td>
+          <td>No existen turnos en esta sede para el dia de hoy.</td>
         </tr>
         {% endfor %}
       </tbody>

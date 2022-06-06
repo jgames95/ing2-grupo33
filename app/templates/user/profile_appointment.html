@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Perfil{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+
+  <div class="container">
+    <div class="card-container">
+      <div class="header">
+        <p class="center">
+            <h2>Perfil de {{ full_name(user.id) }}</h2>
+            <i class="material-icons center" style="font-size:60px;color:black;" alt="imagen de perfil">account_circle</i>
+        </p>
+      </div>
+      <div class="description">
+            
+            <p> <strong> Fecha de Nacimiento:</strong> <i> {{ user.date_of_birth }}</i></p>
+            <p> <strong> Edad:</strong> <i> {{ get_age(user.id) }}</i></p>
+            <p> <strong> DNI:</strong> <i> {{ user.dni }}</i></p>
+            <p> <strong> Teléfono:</strong> <i> {{ user.telephone }}</i></p>
+            <p> <strong> Vacunas Aplicadas:</strong>{% for vaccine in applicatedvac_from_user(user.id) %}
+                  {{vaccine.name}}
+                  -
+                  {{vaccine.application_date}}
+                  |
+
+              {% endfor %}                
+            <i> </i></p>
+            
+    </div>
+    </div>
+    <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointments_location')}}" style="text-decoration:none" >VOLVER</a></button>
+  </div>
+
+{% endblock %}

@@ -65,7 +65,7 @@
           </li>
           {% endif %}
 
-          {% if is_nurse(session["user_id"]) %}
+          {% if is_nurse(session["user_id"]) and (return_location(session["user_id"])!="NotAssigned") %}
           <li class="nav-item">
             <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointments_location') }}" style="text-decoration:none" >TURNOS</a></button>
           </li>

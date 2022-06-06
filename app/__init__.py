@@ -47,8 +47,9 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(vaccines_from_user=user.vaccines_from_user)
     app.jinja_env.globals.update(applicatedvac_from_user=user.applicatedvac_from_user)
     app.jinja_env.globals.update(is_elder=user.is_elder)
+    app.jinja_env.globals.update(get_age=user.return_age)
+    app.jinja_env.globals.update(get_email=user.return_email)
     app.jinja_env.globals.update(full_name=user.return_fullname)
-    app.jinja_env.globals.update(location_name=user.return_location)
     app.jinja_env.globals.update(get_vaccines_names=vaccine.get_vaccines_names)
     app.jinja_env.globals.update(have_vaccine=vaccine.have_vaccine)
     app.jinja_env.globals.update(have_gripe_lastyear=vaccine.have_gripe_lastyear)
@@ -79,11 +80,11 @@ def create_app(environment="development"):
         "/usuarios/results", "user_search", user.search, methods=["POST", "GET"]
     )'''
     app.add_url_rule("/usuario/perfil", "user_profile", user.profile)
+    app.add_url_rule("/turnos/sede/perfil/<int:user_id>", "appointment_user_profile", user.profile_appointment)
+    app.add_url_rule("/enfermero/perfil", "nurse_profile", user.profile_nurse)
 
     app.add_url_rule("/enfermero", "nurse_create", user.create_nurse, methods=["POST"])
     app.add_url_rule("/enfermero/nuevo", "nurse_new", user.new_nurse)
-
-    app.add_url_rule("/enfermero/perfil", "nurse_profile", user.profile_nurse)
 
     # Rutas de Turnos
     app.add_url_rule("/turnos/nuevo", "appointment_new", appointment.new)

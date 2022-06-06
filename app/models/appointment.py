@@ -6,6 +6,7 @@ from sqlalchemy.sql.schema import ForeignKey
 from app.models.vaccine import Vaccine
 from app.models.state import State
 from app.models.location import Location
+from datetime import date
 
 from fpdf import FPDF
 import os
@@ -126,7 +127,8 @@ class Appointment(db.Model):
 
     @classmethod
     def appointments_from_location(cls, location_id):
-        appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2).all()
+        appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2, date=date.today()).all()
+        #appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2).all()
         return appoint_list
 
     @classmethod

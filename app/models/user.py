@@ -315,5 +315,20 @@ class User(db.Model):
     @classmethod
     def get_fullname(cls, user_id):
         u = cls.search_user_by_id(user_id)
-        full_name = (u.first_name).capitalize() + ' ' + (u.last_name).capitalize()
+        full_name = (u.first_name).title() + ' ' + (u.last_name).title()
         return full_name
+
+    @classmethod
+    def get_email(cls, user_id):
+        u = cls.search_user_by_id(user_id)
+        return u.email
+
+    '''@classmethod
+    def get_list_appointments(cls, location_id):
+        appointments = (db.session.query(User, Appointment)
+            .join(Appointment.user_id)
+            .where(User.active == True)
+            .where(Appointment.location_id == location_id)
+            .where(Appointment.state_id == 2)
+            .all())
+        return appointments'''

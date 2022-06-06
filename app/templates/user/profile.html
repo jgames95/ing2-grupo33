@@ -5,13 +5,12 @@
 {% endblock %}
 {% block content %}
 
-  <h1>Perfil</h1>
-
   <div class="container">
     <div class="card-container">
       <div class="header">
         <p class="center">
-          <i class="material-icons center" style="font-size:70px;color:black;" alt="imagen de perfil">account_circle</i>
+          <h2>Perfil</h2>
+          <i class="material-icons center" style="font-size:60px;color:black;" alt="imagen de perfil">account_circle</i>
         </p>
       </div>
       <div class="description">
@@ -21,7 +20,7 @@
             <p> <strong> Email:</strong> <i> {{ user.email }}</i></p>
             <p> <strong> DNI:</strong> <i> {{ user.dni }}</i></p>
             <p> <strong> Teléfono:</strong> <i> {{ user.telephone }}</i></p>
-            <p> <strong> Sede de Preferencia:</strong> <i> {{ location_name(user.id) }}</i></p>
+            <p> <strong> Sede de Preferencia:</strong> <i> {{ return_location(user.id) }}</i></p>
             <p> <strong> Vacunas Aplicadas:</strong>{% for vaccine in applicatedvac_from_user(user.id) %}
                   {{vaccine.name}}
                   -
@@ -29,13 +28,9 @@
                   |
 
               {% endfor %}
-                
-                
-                
                 <i> </i></p>
             
         </div>
-
     </div>
     <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('users_edit', user_id=session['user_id']) }}" style="text-decoration:none" >EDITAR</a></button>
   </div>

@@ -5,13 +5,12 @@
 {% endblock %}
 {% block content %}
 
-  <h1>Perfil</h1>
-
   <div class="container">
     <div class="card-container">
       <div class="header">
         <p class="center">
-          <i class="material-icons center" style="font-size:100px;color:black;" alt="imagen de perfil">badge</i>
+          <h2>Perfil</h2>
+          <i class="material-icons center" style="font-size:90px;color:black;" alt="imagen de perfil">badge</i>
         </p>
       </div>
       <div class="description">
@@ -25,7 +24,7 @@
               {% if user.location_id == 1 %}
                 <i> No tiene sede asignada </i>
               {% else %}
-                <i> {{ location_name(user.id) }} </i>
+                <i> {{ return_location(user.id) }} </i>
               {% endif %}
             </p>
             

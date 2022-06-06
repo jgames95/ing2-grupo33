@@ -10,45 +10,65 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
+<div class="container-fluid">
   {% if is_authenticated(session) %}
     {% if is_pacient(session["user_id"]) %}
       {% if is_active(session["user_id"]) %}
-        <h1>Bienvenido/a {{ full_name(session["user_id"]) }} al portal de pacientes de VacunAssist</h1>
-        <h3>Página de inicio de la aplicación</h3>
-        <dl>
-          <dt>En esta pagina usted puede realizar las siguientes actividades:</dt>
-          <dt>Sacar Turnos de las siguientes Vacunas:</dt>
-          <dd>- Covid19 Primera Dosis</dd>
-          <dd>- Covid19 Segunda Dosis</dd>
-          <dd>- Gripe</dd>
-          <dd>- Fiebre Amarilla</dd>
-          <dt>Gestionar Turnos pasados</dt>
-          <dd>- Cancelar Turnos activos</dd>
-          <dd>- Descargar Comprobante de Vacunación de Turnos Cerrados</dd>
-          <dd>- Ver el historial de turnos</dd>
-        </dl>
+        <h2>Bienvenido/a {{ full_name(session["user_id"]) }} al portal de pacientes de VacunAssist</h2>
+        <br>
+        <h4>En esta pagina usted puede realizar las siguientes actividades:</h4>
+        <div class="row row-cols-1 row-cols-md-2 g-4">
+          <div class="col">
+            <div class="card text-bg-light mb-3">
+              <div class="card-header">Sacar Turnos:</div>
+              <div class="card-body">
+                <h5 class="card-title">Vacunas Disponibles:</h5>
+                <p class="card-text">- Covid19 (Primera y Segunda Dosis)</p>
+                <p class="card-text">- Gripe</p>
+                <p class="card-text">- Fiebre Amarilla</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <div class="card text-bg-light mb-3">
+              <div class="card-header">Gestionar Turnos pasados:</div>
+              <div class="card-body">
+                <h5 class="card-title">Actividades:</h5>
+                <p class="card-text">- Cancelar Turnos activos</p>
+                <p class="card-text">- Descargar Comprobante de Vacunación de Turnos Cerrados</p>
+                <p class="card-text">- Ver el historial de turnos</p>
+              </div>
+            </div>
+          </div>
+        </div>
       {% else %}
-        <h1>Bienvenido/a {{ full_name(session["user_id"]) }} al portal de pacientes de VacunAssist</h1>
-        <h3>Página de inicio de la aplicación</h3>
-        <p>Necesita activar su cuenta para poder usar todas las funcionalidades de la página</p>
+        <h2>Bienvenido/a {{ full_name(session["user_id"]) }} al portal de pacientes de VacunAssist</h2>
+        <br>
+        <h3>Necesita activar su cuenta para poder usar todas las funcionalidades de la página</h3>
         <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('user_confirm') }}" style="text-decoration:none">CONFIRMAR CUENTA</a>
       {% endif %}
     {% endif %}
     
     {% if is_admin(session["user_id"]) %}
-      <h1>Bienvenido/a Administrador a VacunAssist</h1>
-      <h3>Página de inicio de la aplicación</h3>
+      <h2>Bienvenido/a Administrador a VacunAssist</h2>
+      <br>
+      <h4>Página de inicio de la aplicación</h4>
     {% endif %}
     
     {% if is_nurse(session["user_id"]) %}
-      <h1>Bienvenido/a {{ full_name(session["user_id"]) }} al portal de enfermeros de Vacunassist</h1>
-      <h3>Página de inicio de la aplicación</h3>
+      <h2>Bienvenido/a {{ full_name(session["user_id"]) }} al portal de enfermeros de Vacunassist</h2>
+      <br>
+      {% if (return_location(session["user_id"])=="NotAssigned") %}
+        <h4>No tiene sede asignada, contacte a un administrador.</h4>
+      {% endif %}
     {% endif %}
   
   {% else %}
-    <h1>Bienvenido/a a VacunAssist</h1>
-    <h3>Página de inicio de la aplicación</h3>
+    <h2>Bienvenido/a a VacunAssist</h2>
+    <br>
+    <h4>Página de inicio de la aplicación</h4>
   {% endif %}
+</div>
 {% endblock %}
 {% block footer %}
   {{ super() }}

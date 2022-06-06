@@ -341,6 +341,12 @@ def profile_nurse():
     user = User.search_user_by_id(session["user_id"])
     return render_template("nurse/profile.html", user=user)
 
+@login_required
+@has_permission(3)
+def profile_appointment(user_id):
+    user = User.search_user_by_id(user_id)
+    return render_template("user/profile_appointment.html", user=user)
+
 
 def is_admin(user_id):
     consulta = User.get_role(user_id)
@@ -383,3 +389,11 @@ def return_fullname(user_id):
 def return_location(user_id):
     name = User.get_location(user_id)
     return name
+
+def return_age(user_id):
+    age = User.get_age(user_id)
+    return age
+
+def return_email(user_id):
+    email = User.get_email(user_id)
+    return email
