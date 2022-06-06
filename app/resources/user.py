@@ -183,11 +183,7 @@ def create():
     '\n\nGracias,\nVacunassist' + '\n\n****' + 
     '\nSi no creaste una cuenta en nuestro sitio, por favor ignore este e-mail.').encode('utf-8')
 
-    if (request.form["email"].endswith("@hotmail.com")):
-        User.send_plaintext_email(request.form["email"], message, "hotmail")
-    
-    if (request.form["email"].endswith("@gmail.com")):
-        User.send_plaintext_email(request.form["email"], message, "gmail")
+    User.send_plaintext_email(request.form["email"], message)
 
     return redirect(url_for("auth_login"))
 
