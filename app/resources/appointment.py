@@ -64,4 +64,13 @@ def filter():
 
 def cancel(appointment_id):
     Appointment.cancel_appointment(appointment_id)
-    return redirect(url_for("appointments"))
+    rol = User.get_role(session["user_id"])
+    if rol == 3:
+        return redirect(url_for("appointments_location"))
+    else:
+        return redirect(url_for("appointments"))
+
+def close(appointment_id, user_id):
+    name = User.get_fullname(user_id)
+    Appointment.close_appointment(appointment_id, name)
+    return redirect(url_for("appointments_location"))

@@ -7,7 +7,7 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-<h2>Lista de turnos</h2>
+<h2>Lista de turnos en: {{ return_location(session["user_id"]) }}</h2>
   <div class="table-responsive  table-bordered">
     <table class="table" id="users">
       <thead>
@@ -15,8 +15,8 @@
           <th scope="col">Vacuna</th>
           <th scope="col">Fecha</th>
           <th scope="col">Estado</th>
-          <th scope="col">Cancelar Turno</th>
           <th scope="col">Cerrar Turno</th>
+          <th scope="col">Cancelar Turno</th>
         </tr>
       </thead>
       <tbody>
@@ -25,12 +25,14 @@
           <td>{{ appoint.vaccine_name }}</td>
           <td>{{ appoint.date }}</td>
           <td>Aceptado</td>
-          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR</a></button> </td>
-          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CERRAR</a></button> </td>
+          <td><button type="button" class="btn btn-success change_color">
+            <a class="change_color_font" href="{{ url_for('appointment_close', appointment_id=appoint.id, user_id=appoint.user_id) }}" style="text-decoration:none">CERRAR</a></button> </td>
+          <td><button type="button" class="btn btn-danger">
+            <a class="change_color_font" href="{{ url_for('appointment_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR</a></button> </td>
         </tr>
         {% else %}
         <tr>
-          <td>Usted no posee turnos en esta categoría.</td>
+          <td>No existen turnos en esta sede.</td>
         </tr>
         {% endfor %}
       </tbody>

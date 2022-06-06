@@ -45,18 +45,16 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(is_pacient=user.is_pacient)
     app.jinja_env.globals.update(is_active=user.is_active)
     app.jinja_env.globals.update(vaccines_from_user=user.vaccines_from_user)
-    app.jinja_env.globals.update(
-        applicatedvac_from_user=user.applicatedvac_from_user)
+    app.jinja_env.globals.update(applicatedvac_from_user=user.applicatedvac_from_user)
     app.jinja_env.globals.update(is_elder=user.is_elder)
     app.jinja_env.globals.update(full_name=user.return_fullname)
     app.jinja_env.globals.update(location_name=user.return_location)
     app.jinja_env.globals.update(get_vaccines_names=vaccine.get_vaccines_names)
     app.jinja_env.globals.update(have_vaccine=vaccine.have_vaccine)
-    app.jinja_env.globals.update(
-        have_gripe_lastyear=vaccine.have_gripe_lastyear)
+    app.jinja_env.globals.update(have_gripe_lastyear=vaccine.have_gripe_lastyear)
     app.jinja_env.globals.update(covid2_avalaible=vaccine.covid2_avalaible)
-    app.jinja_env.globals.update(
-        have_active_appointment=appointment.have_active_appointment)
+    app.jinja_env.globals.update(have_active_appointment=appointment.have_active_appointment)
+    app.jinja_env.globals.update(return_location=user.return_location)
 
     # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
@@ -94,7 +92,8 @@ def create_app(environment="development"):
     app.add_url_rule("/turnos", "appointments", appointment.index)
     app.add_url_rule("/turnos/sede", "appointments_location", appointment.index_location)
     #app.add_url_rule("/turnos", "appointment_download", appointment.download)
-    app.add_url_rule("/turnos/<int:appointment_id>", "appointment_cancel", appointment.cancel, methods=["POST", "GET"])
+    app.add_url_rule("/turnos/<int:appointment_id><int:user_id>", "appointment_close", appointment.close, methods=["GET"])
+    app.add_url_rule("/turnos/<int:appointment_id>", "appointment_cancel", appointment.cancel, methods=["GET"])
     app.add_url_rule("/turnos/filtro", "appointmentfilter",
                      appointment.filter, methods=["POST", "GET"])
 

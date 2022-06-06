@@ -37,11 +37,6 @@ class Appointment(db.Model):
         if (vac_name != "Fiebre Amarilla"):
             appointment.state_id = 2
         db.session.add(appointment)
-        unique_name = "usuario" + \
-            str(appointment.user_id) + "_vacuna" + \
-            appointment.vaccine_name + ".pdf"
-        name_line = first_name+" "+last_name
-        cls.create_pdf(unique_name, appointment, name_line)
         db.session.commit()
 
     @classmethod
@@ -63,8 +58,15 @@ class Appointment(db.Model):
         cls.change_status(appointment_id, 4)
 
     @classmethod
-    def close_appointment(cls, appointment_id):
-        cls.change_status(appointment_id, 5)
+    def close_appointment(cls, appointment_id, name):
+        appointment = Appointment.query.filter_by(id=appointment_id).first()
+        appointment.state_id = 5
+        db.session.commit()
+        Vaccine.create(appointment.vaccine_name, date.today(), appointment.user_id)
+        unique_name = "usuario" + \
+            str(appointment.user_id) + "_vacuna" + \
+            appointment.vaccine_name + ".pdf"
+        cls.create_pdf(unique_name, appointment, name)
 
     @classmethod
     def appoint_list(cls, user_id):
