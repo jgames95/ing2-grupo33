@@ -12,7 +12,6 @@ import hashlib
 import random
 import datetime
 import smtplib
-import ssl
 
 class User(db.Model):
     __tablename__ = "users"

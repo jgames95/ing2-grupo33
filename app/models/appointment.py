@@ -9,7 +9,11 @@ from app.models.location import Location
 from datetime import date
 
 from fpdf import FPDF
-import os
+import os, smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
+from email.mime.base import  MIMEBase
+from email.encoders import encode_base64
 
 class Appointment(db.Model):
     __tablename__ = "appointments"
@@ -59,7 +63,7 @@ class Appointment(db.Model):
         cls.change_status(appointment_id, 4)
 
     @classmethod
-    def close_appointment(cls, appointment_id, name):
+    def close_appointment(cls, appointment_id, lote, user):
         appointment = Appointment.query.filter_by(id=appointment_id).first()
         appointment.state_id = 5
         db.session.commit()
@@ -67,7 +71,9 @@ class Appointment(db.Model):
         unique_name = "usuario" + \
             str(appointment.user_id) + "_vacuna" + \
             appointment.vaccine_name + ".pdf"
-        cls.create_pdf(unique_name, appointment, name)
+        name = user.first_name + ' ' + user.last_name
+        path = cls.create_pdf(unique_name, appointment, name, lote)
+        cls.send_pdf(user, path)
 
     @classmethod
     def appoint_list(cls, user_id):
@@ -132,7 +138,7 @@ class Appointment(db.Model):
         return appoint_list
 
     @classmethod
-    def create_pdf(cls, name, appointment, name_line):
+    def create_pdf(cls, name, appointment, name_line, lote):
         # path depende de donde tienen el repositorio localmente
         path = os.getcwd()
         path = path.replace("\\","/")
@@ -162,11 +168,45 @@ class Appointment(db.Model):
         line1 = "Se certifica que " + str(name_line)
         line2 = "Recibio la vacuna " + \
             str(appointment.vaccine_name)+" el dia: "+str(appointment.date)
+        line3 = "Con lote: " + str(lote)
 
         # Add text
         pdf.cell(0, 10, line1, ln=True, align='C')
-        pdf.cell(0, 10, line2, align='C')
+        pdf.cell(0, 10, line2, ln=True, align='C')
+        pdf.cell(0, 10, line3, ln=True, align='C')
 
         complete_path = path + "/app/static/uploads/"
         # Generate output
         pdf.output(dest='F', name=(complete_path + name))
+
+        return complete_path + name
+
+    @classmethod
+    def send_pdf(cls, user, file_path):
+        conn = smtplib.SMTP('smtp.gmail.com', 587)
+        sender_email = "infinityloop33.help@gmail.com"
+        receiver_email = user.email
+        password = "vuiosiqvpwburvni"
+        subject = "Certificado de Vacunación - VacunAssist"
+        message = ('Hola ' + (user.first_name).capitalize() + ' ' + (user.last_name).capitalize()  + '. \n\n' +
+        'Te acercamos tu certificado de vacunación. \n\n' +
+        'También se encuentra disponible para descargar en la página web, en la sección de Turnos\n\n'+
+        'Gracias,\nVacunassist' + '\n\n****')
+        type(conn)
+        conn.ehlo()
+        conn.starttls()
+        conn.login(sender_email, password)
+        header = MIMEMultipart()
+        header['Subject'] = subject
+        header['From'] = sender_email
+        header['To'] = user.email
+        message = MIMEText(message, _subtype='plain')
+        header.attach(message)
+        if (os.path.isfile(file_path)):
+            attached = MIMEBase('application', 'octet-stream')
+            attached.set_payload(open(file_path, "rb").read())
+            encode_base64(attached)
+            attached.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(file_path))
+            header.attach(attached)
+        conn.sendmail(sender_email, receiver_email, header.as_string())
+        conn.quit()

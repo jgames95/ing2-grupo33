@@ -35,8 +35,31 @@
           <td>{{ appoint.vaccine_name }}</td>
           <td><button type="button" class="btn btn-success change_color">
             <a class="change_color_font" href="{{ url_for('appointment_user_profile', user_id=appoint.user_id) }}" style="text-decoration:none">PERFIL</a></button> </td>
-          <td><button type="button" class="btn btn-success change_color">
-            <a class="change_color_font" href="{{ url_for('appointment_close', appointment_id=appoint.id, user_id=appoint.user_id) }}" style="text-decoration:none">CERRAR</a></button> </td>
+          <td>
+            <!-- boton del popup -->
+            <a href="#a{{appoint.id|string() + appoint.user_id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">CERRAR</a>
+            <!-- ventana emergente -->
+            <div id='a{{appoint.id|string() + appoint.user_id|string()}}popup' class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h4 class="modal-title">Ingrese lote de la vacuna</h4>
+                            <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        </div>
+                        <div class="modal-body">
+                          <form action="{{ url_for('appointment_close', appointment_id=appoint.id, user_id=appoint.user_id) }}" method="POST">
+                            <div class="form-group add_padding">
+                              <label for="lote">Lote:</label>
+                              <input class="form-control" type="text" id="lote" name="lote" placeholder="Ingrese el lote" required>
+                            </div>
+                            <button type="submit" class="btn btn-success float-left">Enviar</button>
+                          </div>
+                          </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          </td>
           <td><button type="button" class="btn btn-danger">
             <a class="change_color_font" href="{{ url_for('appointment_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR</a></button> </td>
         </tr>

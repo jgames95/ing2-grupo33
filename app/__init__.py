@@ -93,7 +93,7 @@ def create_app(environment="development"):
     app.add_url_rule("/turnos", "appointments", appointment.index)
     app.add_url_rule("/turnos/sede", "appointments_location", appointment.index_location)
     #app.add_url_rule("/turnos", "appointment_download", appointment.download)
-    app.add_url_rule("/turnos/<int:appointment_id><int:user_id>", "appointment_close", appointment.close, methods=["GET"])
+    app.add_url_rule("/turnos/<int:appointment_id><int:user_id>", "appointment_close", appointment.close, methods=["GET", "POST"])
     app.add_url_rule("/turnos/<int:appointment_id>", "appointment_cancel", appointment.cancel, methods=["GET"])
     app.add_url_rule("/turnos/filtro", "appointmentfilter",
                      appointment.filter, methods=["POST", "GET"])
