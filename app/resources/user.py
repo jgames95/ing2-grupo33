@@ -397,3 +397,21 @@ def return_age(user_id):
 def return_email(user_id):
     email = User.get_email(user_id)
     return email
+
+def filter():
+    lista = User.nurse_list_filter(
+        request.form["sede"]) 
+    return render_template("nurse/list.html", nurse_list=lista)
+
+def change_location(user_id):
+    User.change_location(request.form["sede"], user_id)
+    return redirect(url_for("nurses_list"))
+
+def delete_location(user_id):
+    User.change_location("NotAssigned", user_id)
+    return redirect(url_for("nurses_list"))
+
+@login_required
+@has_permission(1)
+def index_filter():
+    return (render_template("nurse/list.html", nurse_list=User.nurse_list_filter("Todos")))

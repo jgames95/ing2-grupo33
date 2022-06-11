@@ -200,9 +200,6 @@ class User(db.Model):
         )
         return consulta is not None
 
-    '''def __repr__(self):
-        return "<User %r>" % self.username'''
-
     @classmethod
     def valid_email(cls, email):
         exist = User.query.filter_by(email=email).scalar()
@@ -234,6 +231,89 @@ class User(db.Model):
         user.location_id = form.get("location", user.location_id)
         db.session.commit()
 
+    @classmethod
+    def is_elder(cls, user_id):
+        age = cls.get_age(user_id)
+        consulta = False
+        if (age >= 60):
+            consulta = True
+        return consulta
+
+    @classmethod
+    def send_plaintext_email(cls, receiver_email, message):
+        conn = smtplib.SMTP('smtp.gmail.com', 587)
+        sender_email = "infinityloop33.help@gmail.com"
+        password = "vuiosiqvpwburvni"
+        type(conn)
+        conn.ehlo()
+        conn.starttls()
+        conn.login(sender_email, password)
+        conn.sendmail(sender_email, receiver_email, message)
+        conn.quit()
+
+    @classmethod
+    def get_fullname(cls, user_id):
+        u = cls.search_user_by_id(user_id)
+        full_name = (u.first_name).title() + ' ' + (u.last_name).title()
+        return full_name
+
+    @classmethod
+    def get_email(cls, user_id):
+        u = cls.search_user_by_id(user_id)
+        return u.email
+    
+    @classmethod
+    def nurse_list(cls):
+        lista = User.query.filter_by(role_id="3")
+        return lista
+
+    @classmethod
+    def nurse_list_filter(cls, sede):
+        nurses = User.nurse_list()
+        lista = []
+
+        if sede == "Sin Asignar":
+            for n in nurses:
+                if (n.location_id == 1):
+                    lista.append(n)
+        elif sede == "Terminal":
+            for n in nurses:
+                if (n.location_id == 2):
+                    lista.append(n)
+        elif sede == "Palacio Municipal":
+            for n in nurses:
+                if (n.location_id == 3):
+                    lista.append(n)
+        elif sede == "Cementerio":
+            for n in nurses:
+                if (n.location_id == 4):
+                    lista.append(n)
+        elif sede == "Todos":
+            lista = nurses
+
+        return lista
+
+    @classmethod
+    def change_location(cls, location, user_id):
+        user = User.query.filter_by(id=user_id).first()
+        user.location_id = Location.get_id(location)
+        db.session.commit()
+
+    '''Desde aca es todo comentarios'''
+    
+    '''def __repr__(self):
+        return "<User %r>" % self.username'''
+
+    '''@classmethod
+    def get_list_appointments(cls, location_id):
+        appointments = (db.session.query(User, Appointment)
+            .join(Appointment.user_id)
+            .where(User.active == True)
+            .where(Appointment.location_id == location_id)
+            .where(Appointment.state_id == 2)
+            .all())
+        return appointments'''
+    
     '''@classmethod
     def filter(cls, page, form):
 
@@ -290,44 +370,3 @@ class User(db.Model):
                 )
 
         return users'''
-
-    @classmethod
-    def is_elder(cls, user_id):
-        age = cls.get_age(user_id)
-        consulta = False
-        if (age >= 60):
-            consulta = True
-        return consulta
-
-    @classmethod
-    def send_plaintext_email(cls, receiver_email, message):
-        conn = smtplib.SMTP('smtp.gmail.com', 587)
-        sender_email = "infinityloop33.help@gmail.com"
-        password = "vuiosiqvpwburvni"
-        type(conn)
-        conn.ehlo()
-        conn.starttls()
-        conn.login(sender_email, password)
-        conn.sendmail(sender_email, receiver_email, message)
-        conn.quit()
-
-    @classmethod
-    def get_fullname(cls, user_id):
-        u = cls.search_user_by_id(user_id)
-        full_name = (u.first_name).title() + ' ' + (u.last_name).title()
-        return full_name
-
-    @classmethod
-    def get_email(cls, user_id):
-        u = cls.search_user_by_id(user_id)
-        return u.email
-
-    '''@classmethod
-    def get_list_appointments(cls, location_id):
-        appointments = (db.session.query(User, Appointment)
-            .join(Appointment.user_id)
-            .where(User.active == True)
-            .where(Appointment.location_id == location_id)
-            .where(Appointment.state_id == 2)
-            .all())
-        return appointments'''

@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+{% block title %}Turnos{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block topnav %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+  <h2>Lista de enfermeros</h2>
+  <!--Filtro-->
+  <form action="{{ url_for('nursefilter') }}" method='POST'>
+    <div class="form-group add_padding">
+      <p>
+        <label for="estado">Filtrar por sede:</label>
+        <select class="form-control" id="sede" name='sede'>
+            <option value='Todos'>Todos</option>
+            <option value='Sin Asignar'>Sin sede asignada</option>
+          <option value='Terminal'>Terminal</option>
+          <option value='Palacio Municipal'>Palacio Municipal</option>
+          <option value='Cementerio'>Cementerio</option>
+        </select>
+        <br>
+        <button type="submit" name="filtrar" class="btn btn-success change_color" >FILTRAR</button>
+      </p>
+    </div>
+  </form>
+  <div class="table-responsive  table-bordered">
+    <table class="table" id="users">
+      <thead>
+        <tr>
+          <th scope="col">Enfermero</th>
+          <th scope="col">Sede</th>
+          <th scope="col">Asignar sede</th>
+          <th scope="col">Desvincular de sede</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for nurse in nurse_list %}
+        <tr>
+            <td>
+              <div class="d-flex align-items-center">
+                <i class="material-icons center" style="font-size:45px;color:black;" alt="imagen de perfil">account_circle</i>
+                <div class="ms-3">
+                  <p class="fw-bold mb-1">{{ full_name(nurse.id) }}</p>
+                  <p class="text-muted mb-0">{{ get_email(nurse.id) }}</p>
+                </div>
+              </div>
+            </td>
+            {% if (return_location(nurse.id))=="NotAssigned" %}
+            <td>Sin Asignar</td>
+            {% else %}
+            <td>{{ return_location(nurse.id) }}</td>
+            {% endif %}
+            <td>
+                <!-- boton del popup -->
+                <a href="#a{{ nurse.id }}popup" class="btn btn-success change_color" data-toggle="modal">ASIGNAR SEDE</a>
+                <!-- ventana emergente -->
+                <div id='a{{ nurse.id }}popup' class="modal fade">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title">Asignar sede a {{ full_name(nurse.id) }}</h4>
+                                <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            </div>
+                            <div class="modal-body">
+                              <form action="{{ url_for('change_location', user_id=nurse.id) }}" method="POST">
+                                <div class="form-group add_padding">
+                                    <label for="estado">Seleccione una opcion:</label>
+                                    <select class="form-control" id="sede" name="sede" placeholder="Seleccione la sede">
+                                      {% if not return_location(nurse.id)=="Terminal" %}  
+                                      <option value='Terminal'>Terminal</option>
+                                      {% endif %}
+                                      {% if not return_location(nurse.id)=="Palacio Municipal" %} 
+                                      <option value='Palacio Municipal'>Palacio Municipal</option>
+                                      {% endif %}
+                                      {% if not return_location(nurse.id)=="Cementerio" %} 
+                                      <option value='Cementerio'>Cementerio</option>
+                                      {% endif %}
+                                    </select>
+                                </div>
+                                <button type="submit" class="btn btn-success float-left">Enviar</button>
+                              </div>
+                              </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </td>
+            {% if not return_location(nurse.id)=="NotAssigned" %}  
+            <td><button type="button" class="btn btn-danger">
+                <a class="change_color_font" href="{{ url_for('delete_location', user_id=nurse.id) }}" style="text-decoration:none">DESVINCULAR</a></button> </td>
+            {% else %}
+            <td>No tiene sede asignada.</td>
+            {% endif %}
+        </tr>
+        {% else %}
+        <tr>
+          <td>No existen enfermeros para la categoría del filtro, intente cambiarla.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+{% endblock %}

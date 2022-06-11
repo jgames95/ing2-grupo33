@@ -16,3 +16,8 @@ class Location(db.Model):
     def get_name(cls, id):
         loc = Location.query.filter_by(id=id).first()
         return loc.name
+    
+    @classmethod
+    def get_id(cls, loc_name):
+        loc = Location.query.filter_by(name=loc_name).first()
+        return loc.id
