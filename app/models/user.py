@@ -219,7 +219,13 @@ class User(db.Model):
     @classmethod
     def valid_nurse_dni(cls, dni):
         user = User.query.filter_by(dni=dni).scalar()
-        return user is None
+        if user is not None:
+            if (user.role_id == 2):
+                return True
+            else:
+                return False
+        else:
+            return True
         
     @classmethod
     def update(cls, user_id, kwargs):

@@ -333,7 +333,7 @@ def create_nurse():
 
     User.create_nurse(**request.form)
 
-    return redirect(url_for("home"))
+    return redirect(url_for("nurses_list"))
 
 @login_required
 @has_permission(3)
