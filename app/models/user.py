@@ -232,6 +232,15 @@ class User(db.Model):
         db.session.commit()
 
     @classmethod
+    def update_nurse(cls, user_id, kwargs):
+        user = User.query.filter_by(id=user_id).first_or_404()
+        form = kwargs
+        user.first_name = form.get("first_name", user.first_name)
+        user.last_name = form.get("last_name", user.last_name)
+        user.telephone = form.get("telephone", user.telephone)
+        db.session.commit()
+
+    @classmethod
     def is_elder(cls, user_id):
         age = cls.get_age(user_id)
         consulta = False
