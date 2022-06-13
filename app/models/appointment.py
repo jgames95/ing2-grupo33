@@ -9,11 +9,13 @@ from app.models.location import Location
 from datetime import date
 
 from fpdf import FPDF
-import os, smtplib
+import os
+import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.mime.base import  MIMEBase
+from email.mime.base import MIMEBase
 from email.encoders import encode_base64
+
 
 class Appointment(db.Model):
     __tablename__ = "appointments"
@@ -31,7 +33,7 @@ class Appointment(db.Model):
         self.vaccine_name = vaccine_name
         self.state_id = 1
         self.date = date
-        self.location_id=location_id
+        self.location_id = location_id
 
     @classmethod
     def create(cls, vac_name, user_id, first_name, last_name, location_id, **kwargs):
@@ -67,7 +69,8 @@ class Appointment(db.Model):
         appointment = Appointment.query.filter_by(id=appointment_id).first()
         appointment.state_id = 5
         db.session.commit()
-        Vaccine.create(appointment.vaccine_name, date.today(), appointment.user_id)
+        Vaccine.create(appointment.vaccine_name,
+                       date.today(), appointment.user_id)
         unique_name = "usuario" + \
             str(appointment.user_id) + "_vacuna" + \
             appointment.vaccine_name + ".pdf"
@@ -133,7 +136,8 @@ class Appointment(db.Model):
 
     @classmethod
     def appointments_from_location(cls, location_id):
-        appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2, date=date.today()).all()
+        appoint_list = Appointment.query.filter_by(
+            location_id=location_id, state_id=2, date=date.today()).all()
         #appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2).all()
         return appoint_list
 
@@ -141,7 +145,7 @@ class Appointment(db.Model):
     def create_pdf(cls, name, appointment, name_line, lote):
         # path depende de donde tienen el repositorio localmente
         path = os.getcwd()
-        path = path.replace("\\","/")
+        path = path.replace("\\", "/")
 
         pdf = FPDF('P', 'mm', 'A4')
 
@@ -188,10 +192,10 @@ class Appointment(db.Model):
         receiver_email = user.email
         password = "vuiosiqvpwburvni"
         subject = "Certificado de Vacunación - VacunAssist"
-        message = ('Hola ' + (user.first_name).capitalize() + ' ' + (user.last_name).capitalize()  + '. \n\n' +
-        'Te acercamos tu certificado de vacunación. \n\n' +
-        'También se encuentra disponible para descargar en la página web, en la sección de Turnos\n\n'+
-        'Gracias,\nVacunassist' + '\n\n****')
+        message = ('Hola ' + (user.first_name).capitalize() + ' ' + (user.last_name).capitalize() + '. \n\n' +
+                   'Te acercamos tu certificado de vacunación. \n\n' +
+                   'También se encuentra disponible para descargar en la página web, en la sección de Turnos\n\n' +
+                   'Gracias,\nVacunassist' + '\n\n****')
         type(conn)
         conn.ehlo()
         conn.starttls()
@@ -206,7 +210,8 @@ class Appointment(db.Model):
             attached = MIMEBase('application', 'octet-stream')
             attached.set_payload(open(file_path, "rb").read())
             encode_base64(attached)
-            attached.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(file_path))
+            attached.add_header(
+                'Content-Disposition', 'attachment; filename="%s"' % os.path.basename(file_path))
             header.attach(attached)
         conn.sendmail(sender_email, receiver_email, header.as_string())
         conn.quit()
