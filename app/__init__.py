@@ -81,9 +81,14 @@ def create_app(environment="development"):
     )'''
     app.add_url_rule("/usuario/perfil", "user_profile", user.profile)
     app.add_url_rule("/turnos/sede/perfil/<int:user_id>", "appointment_user_profile", user.profile_appointment)
+    
     app.add_url_rule("/enfermero/perfil", "nurse_profile", user.profile_nurse)
     app.add_url_rule("/enfermero", "nurse_create", user.create_nurse, methods=["POST"])
     app.add_url_rule("/enfermero/nuevo", "nurse_new", user.new_nurse)
+    app.add_url_rule("/enfermero/editar/<int:user_id>", "nurse_edit", user.edit_nurse)
+    app.add_url_rule(
+        "/enfermero/actualizar", "nurse_update", user.update_nurse, methods=["POST", "GET"]
+    )
     app.add_url_rule("/enfermero/lista", "nurses_list", user.index_filter)
     app.add_url_rule("/enfermero/filtro", "nursefilter", user.filter, methods=["POST", "GET"])                     
     app.add_url_rule("/enfermero/lista/<int:user_id>", "change_location", user.change_location, methods=["POST", "GET"])

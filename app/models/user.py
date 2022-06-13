@@ -219,7 +219,13 @@ class User(db.Model):
     @classmethod
     def valid_nurse_dni(cls, dni):
         user = User.query.filter_by(dni=dni).scalar()
-        return user is None
+        if user is not None:
+            if (user.role_id == 2):
+                return True
+            else:
+                return False
+        else:
+            return True
         
     @classmethod
     def update(cls, user_id, kwargs):
@@ -229,6 +235,15 @@ class User(db.Model):
         user.last_name = form.get("last_name", user.last_name)
         user.telephone = form.get("telephone", user.telephone)
         user.location_id = form.get("location", user.location_id)
+        db.session.commit()
+
+    @classmethod
+    def update_nurse(cls, user_id, kwargs):
+        user = User.query.filter_by(id=user_id).first_or_404()
+        form = kwargs
+        user.first_name = form.get("first_name", user.first_name)
+        user.last_name = form.get("last_name", user.last_name)
+        user.telephone = form.get("telephone", user.telephone)
         db.session.commit()
 
     @classmethod

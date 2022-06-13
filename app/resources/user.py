@@ -333,7 +333,7 @@ def create_nurse():
 
     User.create_nurse(**request.form)
 
-    return redirect(url_for("home"))
+    return redirect(url_for("nurses_list"))
 
 @login_required
 @has_permission(3)
@@ -346,6 +346,42 @@ def profile_nurse():
 def profile_appointment(user_id):
     user = User.search_user_by_id(user_id)
     return render_template("user/profile_appointment.html", user=user)
+
+@login_required
+@has_permission(3)
+def edit_nurse(user_id):
+    user = User.query.filter_by(id=user_id).first_or_404()
+    return render_template("nurse/update.html", user=user)
+
+
+@login_required
+@has_permission(3)
+def update_nurse():
+    message = []
+    condition = validate(
+        request.form["first_name"], "Nombre", required=True, text=True)
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["last_name"], "Apellido", required=True, text=True
+    )
+    if condition is not True:
+        message.append(condition)
+
+    condition = validate(
+        request.form["telephone"], "Telefono", required=True
+    )
+    if condition is not True:
+        message.append(condition)
+    
+    if message:
+        for mssg in message:
+            flash(mssg)
+        return render_template("nurse/update.html", user=request.form)
+
+    User.update_nurse(user_id=session["user_id"], kwargs=request.form)
+    return redirect(url_for("nurse_profile"))
 
 
 def is_admin(user_id):
