@@ -74,7 +74,7 @@ class Appointment(db.Model):
         unique_name = "usuario" + \
             str(appointment.user_id) + "_vacuna" + \
             appointment.vaccine_name + ".pdf"
-        name = user.first_name + ' ' + user.last_name
+        name = (user.first_name).title() + ' ' + (user.last_name).title()
         path = cls.create_pdf(unique_name, appointment, name, lote)
         cls.send_pdf(user, path)
 
@@ -192,7 +192,7 @@ class Appointment(db.Model):
         receiver_email = user.email
         password = "vuiosiqvpwburvni"
         subject = "Certificado de Vacunación - VacunAssist"
-        message = ('Hola ' + (user.first_name).capitalize() + ' ' + (user.last_name).capitalize() + '. \n\n' +
+        message = ('Hola ' + (user.first_name).title() + ' ' + (user.last_name).title() + '. \n\n' +
                    'Te acercamos tu certificado de vacunación. \n\n' +
                    'También se encuentra disponible para descargar en la página web, en la sección de Turnos\n\n' +
                    'Gracias,\nVacunassist' + '\n\n****')

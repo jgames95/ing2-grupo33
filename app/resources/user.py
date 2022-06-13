@@ -34,10 +34,12 @@ app = Flask(__name__)
         roles=roles,
     )'''
 
+
 @login_required
 @has_permission(2)
 def confirm():
     return render_template("user/confirm.html")
+
 
 @login_required
 @has_permission(2)
@@ -166,20 +168,20 @@ def create():
         return render_template("user/new.html", locations=locations)
 
     User.create_pacient(**request.form)
-    
+
     user = User.search_user_by_email(request.form["email"])
-    
+
     User.add_vaccines(request.form, user)
 
     User.add_automatic_appointments(user)
 
-    message = ('Subject: Confirmar tu cuenta de Vacunassist\n\n Hola ' + 
-    (user.first_name).capitalize() + ' ' + (user.last_name).capitalize()  + '. ' + 
-    'Ya creaste tu cuenta en Vacunassist. Ahora solo hay que confirmarla para poder utilizarla.\n\n' + 
-    'Cuando inicie sesion por primera vez le va a solicitar que ingrese un token para confirmar la cuenta. El numero que tiene que ingresar es el siguiente:\n\n'
-    'Token: ' + str(user.token) + 
-    '\n\nGracias,\nVacunassist' + '\n\n****' + 
-    '\nSi no creaste una cuenta en nuestro sitio, por favor ignore este e-mail.').encode('utf-8')
+    message = ('Subject: Confirmar tu cuenta de Vacunassist\n\n Hola ' +
+               (user.first_name).capitalize() + ' ' + (user.last_name).capitalize() + '. ' +
+               'Ya creaste tu cuenta en Vacunassist. Ahora solo hay que confirmarla para poder utilizarla.\n\n' +
+               'Cuando inicie sesion por primera vez le va a solicitar que ingrese un token para confirmar la cuenta. El numero que tiene que ingresar es el siguiente:\n\n'
+               'Token: ' + str(user.token) +
+               '\n\nGracias,\nVacunassist' + '\n\n****' +
+               '\nSi no creaste una cuenta en nuestro sitio, por favor ignore este e-mail.').encode('utf-8')
 
     User.send_plaintext_email(request.form["email"], message)
 
@@ -214,9 +216,9 @@ def update():
     )
     if condition is not True:
         message.append(condition)
-    
+
     locations = Location.query.all()
-    
+
     if message:
         for mssg in message:
             flash(mssg)
@@ -258,16 +260,19 @@ def update():
         prev_url=prev_url,
     )'''
 
+
 @login_required
 @has_permission(2)
 def profile():
     user = User.search_user_by_id(session["user_id"])
     return render_template("user/profile.html", user=user)
 
+
 @login_required
 @has_permission(1)
 def new_nurse():
     return render_template("nurse/new.html")
+
 
 @login_required
 @has_permission(1)
@@ -335,17 +340,20 @@ def create_nurse():
 
     return redirect(url_for("nurses_list"))
 
+
 @login_required
 @has_permission(3)
 def profile_nurse():
     user = User.search_user_by_id(session["user_id"])
     return render_template("nurse/profile.html", user=user)
 
+
 @login_required
 @has_permission(3)
 def profile_appointment(user_id):
     user = User.search_user_by_id(user_id)
     return render_template("user/profile_appointment.html", user=user)
+
 
 @login_required
 @has_permission(3)
@@ -374,7 +382,7 @@ def update_nurse():
     )
     if condition is not True:
         message.append(condition)
-    
+
     if message:
         for mssg in message:
             flash(mssg)
@@ -418,34 +426,56 @@ def is_elder(user_id):
     consulta = User.is_elder(user_id)
     return consulta
 
+
 def return_fullname(user_id):
     name = User.get_fullname(user_id)
     return name
+
 
 def return_location(user_id):
     name = User.get_location(user_id)
     return name
 
+
 def return_age(user_id):
     age = User.get_age(user_id)
     return age
+
 
 def return_email(user_id):
     email = User.get_email(user_id)
     return email
 
+
 def filter():
     lista = User.nurse_list_filter(
-        request.form["sede"]) 
+        request.form["sede"])
     return render_template("nurse/list.html", nurse_list=lista)
 
+
 def change_location(user_id):
-    User.change_location(request.form["sede"], user_id)
+    location = request.form["sede"]
+
+    User.change_location(location, user_id)
+
+    user = User.search_user_by_id(user_id)
+
+    message = ('Subject: Cambio de sede asignada\n\n Hola ' +
+               (user.first_name).title() + ' ' + (user.last_name).title() + '. ' +
+               'Te informamos que has sido asignado a la sede: ' + location + '.\n\n' +
+               'Frente a cualquier inconveniente pongase en contacto con un Administrador.'
+               +
+               '\n\nGracias,\nVacunassist' + '\n\n****').encode('utf-8')
+
+    User.send_plaintext_email(user.email, message)
+
     return redirect(url_for("nurses_list"))
+
 
 def delete_location(user_id):
     User.change_location("NotAssigned", user_id)
     return redirect(url_for("nurses_list"))
+
 
 @login_required
 @has_permission(1)
