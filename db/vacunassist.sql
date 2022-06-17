@@ -34,7 +34,7 @@ CREATE TABLE `appointments` (
   KEY `state_id` (`state_id`),
   KEY `user_id` (`user_id`),
   KEY `location_id` (`location_id`),
-  KEY `modified_by` (`modified_by`)
+  KEY `modified_by` (`modified_by`),
   CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`),
   CONSTRAINT `appointments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
   CONSTRAINT `appointments_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`)
