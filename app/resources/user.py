@@ -1,4 +1,5 @@
 from flask import redirect, render_template, request, url_for, session, flash, Flask
+from app.models.appointment import Appointment
 from app.models.user import User
 from app.models.role import Role
 from app.models.vaccine import Vaccine
@@ -155,7 +156,7 @@ def create():
             ingrese uno nuevo"
         )
 
-    if not User.valid_dni(request.form["dni"]):
+    if not User.valid_pacient_dni(request.form["dni"]):
         message.append(
             "Ya existe un paciente con ese dni, por favor\
             ingrese uno nuevo"
@@ -327,7 +328,7 @@ def create_nurse():
 
     if not User.valid_nurse_dni(request.form["dni"]):
         message.append(
-            "Ya existe un paciente con ese dni, por favor\
+            "Ya existe un enfermero con ese dni, por favor\
             ingrese uno nuevo"
         )
 

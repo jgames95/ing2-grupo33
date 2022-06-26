@@ -17,7 +17,14 @@ def index():
 
 def index_location():
     user = User.search_user_by_id(session["user_id"])
-    return render_template("appointment/list_location.html", appoint_list=Appointment.appointments_from_location(user.location_id))
+
+    dict_activity = Appointment.activity_list(
+        session["user_id"])
+
+    lista_canceled = dict_activity['canceled']
+    lista_closed = dict_activity['closed']
+
+    return render_template("appointment/list_location.html", appoint_list=Appointment.appointments_from_location(user.location_id), activity_canceled=lista_canceled, activity_closed=lista_closed)
 
 
 def create():
@@ -42,7 +49,7 @@ def create():
     user = User.search_user_by_id(user_id)
 
     Appointment.create(request.form["vaccine"], user_id,
-                       user.first_name, user.last_name, user.location_id, **request.form)
+                       user.location_id, **request.form)
 
     if (request.form["vaccine"] != "Fiebre Amarilla"):
         flash("Su turno ha sido registrado.")
@@ -63,7 +70,7 @@ def filter():
     return render_template("appointment/list.html", appoint_list=lista)
 
 def cancel(appointment_id):
-    Appointment.cancel_appointment(appointment_id)
+    Appointment.cancel_appointment(appointment_id, session["user_id"])
     rol = User.get_role(session["user_id"])
     if rol == 3:
         return redirect(url_for("appointments_location"))
@@ -73,5 +80,5 @@ def cancel(appointment_id):
 def close(appointment_id, user_id):
     user = User.query.filter_by(id=user_id).first()
     lote = request.form["lote"]
-    Appointment.close_appointment(appointment_id, lote, user)
+    Appointment.close_appointment(appointment_id, lote, user, session["user_id"])
     return redirect(url_for("appointments_location"))

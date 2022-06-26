@@ -112,3 +112,6 @@ flask_session
 coc-settings.json
 .vscode
 node_modules
+
+static/uploads
+
