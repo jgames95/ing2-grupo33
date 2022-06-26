@@ -17,23 +17,23 @@ def authenticate():
     ).first()
 
     if not user:
-        flash("Correo y/o clave incorrecto.")
+        flash("Correo y/o clave incorrecto.", "error")
         return redirect(url_for("auth_login"))
     
     session["user_id"] = user.id
     
     if int(user.active) != 1:
-        flash("Necesita confirmar su cuenta")
+        flash("Necesita confirmar su cuenta", "warning")
         return redirect(url_for("user_confirm"))
     else:
-        flash("La sesión se inició correctamente.")
+        flash("La sesión se inició correctamente.", "info")
         return redirect(url_for("home"))
 
 
 def logout():
     del session["user_id"]
     session.clear()
-    flash("La sesión se cerró correctamente.")
+    flash("La sesión se cerró correctamente.", "info")
 
     return redirect(url_for("auth_login"))
 

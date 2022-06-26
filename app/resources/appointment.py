@@ -42,7 +42,7 @@ def create():
 
     if message:
         for mssg in message:
-            flash(mssg)
+            flash(mssg, "warning")
         return render_template("appointment/new.html")
 
     user_id = session["user_id"]

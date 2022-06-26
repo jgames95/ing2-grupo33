@@ -165,7 +165,7 @@ def create():
     locations = Location.query.all()
     if message:
         for mssg in message:
-            flash(mssg)
+            flash(mssg, "warning")
         return render_template("user/new.html", locations=locations)
 
     User.create_pacient(**request.form)
@@ -222,7 +222,7 @@ def update():
 
     if message:
         for mssg in message:
-            flash(mssg)
+            flash(mssg, "warning")
         return render_template("user/update.html", user=request.form, locations=locations)
 
     User.update(user_id=session["user_id"], kwargs=request.form)
@@ -334,7 +334,7 @@ def create_nurse():
 
     if message:
         for mssg in message:
-            flash(mssg)
+            flash(mssg, "warning")
         return render_template("nurse/new.html")
 
     User.create_nurse(**request.form)
@@ -386,7 +386,7 @@ def update_nurse():
 
     if message:
         for mssg in message:
-            flash(mssg)
+            flash(mssg, "warning")
         return render_template("nurse/update.html", user=request.form)
 
     User.update_nurse(user_id=session["user_id"], kwargs=request.form)
