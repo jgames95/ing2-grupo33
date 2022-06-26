@@ -137,10 +137,15 @@ class Appointment(db.Model):
         return lista
 
     @classmethod
-    def appointments_from_location(cls, location_id):
+    def appointments_from_location_today(cls, location_id):
         appoint_list = Appointment.query.filter_by(
             location_id=location_id, state_id=2, date=date.today()).all()
         #appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2).all()
+        return appoint_list
+
+    @classmethod
+    def appointments_from_location(cls, location_id):
+        appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2).all()
         return appoint_list
 
     @classmethod

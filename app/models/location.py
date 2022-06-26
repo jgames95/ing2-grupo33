@@ -21,3 +21,9 @@ class Location(db.Model):
     def get_id(cls, loc_name):
         loc = Location.query.filter_by(name=loc_name).first()
         return loc.id
+
+    @classmethod
+    def set_address(cls, id, address):
+        loc = Location.query.filter_by(id=id).first()
+        loc.address = address
+        db.session.commit()

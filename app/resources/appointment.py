@@ -24,7 +24,7 @@ def index_location():
     lista_canceled = dict_activity['canceled']
     lista_closed = dict_activity['closed']
 
-    return render_template("appointment/list_location.html", appoint_list=Appointment.appointments_from_location(user.location_id), activity_canceled=lista_canceled, activity_closed=lista_closed)
+    return render_template("appointment/list_location.html", appoint_list=Appointment.appointments_from_location_today(user.location_id), activity_canceled=lista_canceled, activity_closed=lista_closed)
 
 
 def create():

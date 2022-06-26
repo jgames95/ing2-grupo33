@@ -57,6 +57,9 @@
             <li class="nav-item">
               <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('nurses_list') }}" style="text-decoration:none" >ENFERMEROS</a></button>
             </li>
+            <li class="nav-item">
+              <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('location_list') }}" style="text-decoration:none" >VER SEDES</a></button>
+            </li>
             {% endif %} 
           
             {% if is_pacient(session["user_id"]) and is_active(session["user_id"]) %}

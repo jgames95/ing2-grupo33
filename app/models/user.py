@@ -114,6 +114,11 @@ class User(db.Model):
         user = cls.search_user_by_id(user_id)
         name = Location.get_name(user.location_id)
         return name
+    
+    @classmethod
+    def user_from(cls, location_id):
+        lista = User.query.filter_by(role_id=2, location_id=location_id).all()
+        return lista
 
     @classmethod
     def get_token(cls, user_id):
@@ -287,7 +292,12 @@ class User(db.Model):
     
     @classmethod
     def nurse_list(cls):
-        lista = User.query.filter_by(role_id="3")
+        lista = User.query.filter_by(role_id=3).all()
+        return lista
+
+    @classmethod
+    def nurse_from(cls, location_id):
+        lista = User.query.filter_by(role_id=3, location_id=location_id).all()
         return lista
 
     @classmethod

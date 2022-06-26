@@ -5,7 +5,7 @@ from flask_session import Session
 from config import config
 from app import db
 
-from app.resources import auth, appointment, user, vaccine
+from app.resources import auth, appointment, location, user, vaccine
 
 from app.helpers import handler
 from app.helpers import auth as helper_auth
@@ -56,6 +56,8 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(covid2_avalaible=vaccine.covid2_avalaible)
     app.jinja_env.globals.update(have_active_appointment=appointment.have_active_appointment)
     app.jinja_env.globals.update(return_location=user.return_location)
+    app.jinja_env.globals.update(list_appointments_location=location.appointments_from_location)
+    app.jinja_env.globals.update(list_nurses_location=location.nurses_from_location)
 
     # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
@@ -106,6 +108,9 @@ def create_app(environment="development"):
     app.add_url_rule("/turnos/sede/<int:appointment_id>", "appointment_nurse_cancel", appointment.cancel, methods=["GET"])
     app.add_url_rule("/turnos/filtro", "appointmentfilter",
                      appointment.filter, methods=["POST", "GET"])
+
+    app.add_url_rule("/sedes/lista", "location_list", location.index_all)
+    app.add_url_rule("/sedes/<int:location_id>", "change_address", location.change_address, methods=["GET", "POST"])
 
     # Ruta para el Home (usando decorator)
 
