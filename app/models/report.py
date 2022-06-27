@@ -11,7 +11,7 @@ from app.models.appointment import Appointment
 class Report(db.Model):
     __tablename__ = "reports"
     id = Column(Integer, primary_key=True)
-    name = Column(String(30))
+    name = Column(String(50))
     campo_1 = Column(Integer)
     campo_2 = Column(Integer)
     campo_string = Column(String(40))
@@ -42,7 +42,6 @@ class Report(db.Model):
         path = os.getcwd()
         path = path.replace("\\", "/") 
         fechas = str(dates[0]) + "_" + str(dates[1])
-        fechas = fechas.replace("/", "-")
         resp = []
 
         if (tipo == "total"):
@@ -76,7 +75,7 @@ class Report(db.Model):
             total = Appointment.between_dates(dates[0], dates[1])
             aux = cls.search(name)
             if app:
-                campo_1 = len(vaccines)
+                campo_1 = len(app)
                 campo_2 = len(total)
                 campo_string = ""
                 if (aux):
@@ -94,35 +93,38 @@ class Report(db.Model):
                     db.session.commit()
                     flash("El reporte ha sido creado con éxito.", "info")  
             else:
-                flash("No existen turnos cancelados para el periodo de tiempo ingresado.", "error")  
+                flash("No existen turnos cancelados para el periodo de tiempo ingresado.", "error")
+                resp.append("error")
+                return resp
 
         if (tipo == "rango_edad"):
-            name = "RE--" + fechas + "--" + att[0] + "_" + att[1]
+            name = "RE--" + fechas + "--" + str(att[0]) + "_" + str(att[1])
             path = path + "/" + name
-            vaccines = User.rango_edad(dates[0], dates[1], att)
             total = Vaccine.between_dates(dates[0], dates[1])
+            vaccines = User.rango_edad(dates[0], dates[1], att)
             aux = cls.search(name)
-            if vaccines:
-                if vaccines[0]=="null":
-                    flash("No existen vacunas registradas para el rango de edad ingresado.", "error")
+            if vaccines:  
+                campo_1 = len(vaccines)
+                campo_2 = len(total)
+                campo_string = ("De " + att[0] + " a " + att[1] + " años de edad.")
+                if (aux):
+                    resp.append("actualizar")
+                    resp.append(aux.id)
+                    resp.append(tipo)
+                    resp.append(dates)
+                    resp.append(campo_1)
+                    resp.append(campo_2)
+                    resp.append(campo_string)
+                    return (resp)
                 else:
-                    campo_1 = len(vaccines)
-                    campo_2 = len(total)
-                    campo_string = ("De " + att[0] + " a " + att[1] + " años de edad.")
-                    if (aux):
-                        resp.append("actualizar")
-                        resp.append(aux.id)
-                        resp.append(tipo)
-                        resp.append(dates)
-                        resp.append(campo_1)
-                        resp.append(campo_2)
-                        resp.append(campo_string)
-                        return (resp)
-                    else:
-                        report = Report(name=name, campo_1=campo_1, campo_2=campo_2, campo_string=campo_string, date_start=dates[0], date_end=dates[1], path=path)
-                        db.session.add(report)
-                        db.session.commit()
-                        flash("El reporte ha sido creado con éxito.", "info") 
+                    report = Report(name=name, campo_1=campo_1, campo_2=campo_2, campo_string=campo_string, date_start=dates[0], date_end=dates[1], path=path)
+                    db.session.add(report)
+                    db.session.commit()
+                    flash("El reporte ha sido creado con éxito.", "info")
+            else:
+                flash("No existen vacunas registradas para el rango de edad ingresado.", "error")
+                resp.append("error")
+                return resp
 
         if (tipo == "enfermedad"):
             name = "E--" + fechas + "--" + att
@@ -150,6 +152,8 @@ class Report(db.Model):
                     flash("El reporte ha sido creado con éxito.", "info") 
             else:
                 flash("No existen vacunas registradas para la enfermedad ingresada.", "error")
+                resp.append("error")
+                return resp
         
         if (tipo == "sede"):
             name = "S--" + fechas + "--" + att
@@ -177,6 +181,8 @@ class Report(db.Model):
                     flash("El reporte ha sido creado con éxito.", "info") 
             else:
                 flash("No existen vacunas registradas para la sede ingresada.", "error")
+                resp.append("error")
+                return resp
     
     @classmethod
     def search(cls, name):

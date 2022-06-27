@@ -34,11 +34,10 @@ CREATE TABLE `appointments` (
   KEY `state_id` (`state_id`),
   KEY `user_id` (`user_id`),
   KEY `location_id` (`location_id`),
-  KEY `modified_by` (`attendedby_id`),
+  KEY `attendedby_id` (`attendedby_id`),
   CONSTRAINT `appointments_ibfk_1` FOREIGN KEY (`state_id`) REFERENCES `states` (`id`),
   CONSTRAINT `appointments_ibfk_2` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`),
-  CONSTRAINT `appointments_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`),
-  CONSTRAINT `appointments_ibfk_4` FOREIGN KEY (`attendedby_id`) REFERENCES `users` (`id`)
+  CONSTRAINT `appointments_ibfk_3` FOREIGN KEY (`location_id`) REFERENCES `locations` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -87,7 +86,7 @@ DROP TABLE IF EXISTS `reports`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `reports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `name` varchar(30) DEFAULT NULL,
+  `name` varchar(50) DEFAULT NULL,
   `campo_1` int(11) DEFAULT NULL,
   `campo_2` int(11) DEFAULT NULL,
   `campo_string` varchar(40) DEFAULT NULL,

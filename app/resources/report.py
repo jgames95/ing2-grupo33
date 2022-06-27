@@ -3,6 +3,8 @@ from flask import redirect, render_template, request, url_for, session, flash, F
 from app.helpers.decorators import login_required, has_permission
 
 from app.models.report import Report
+from app.models.vaccine import Vaccine
+from app.models.appointment import Appointment
 from app.helpers.validations import validate
 
 app = Flask(__name__)
@@ -11,13 +13,15 @@ app = Flask(__name__)
 @has_permission(1)
 def create():
     tipo = request.form["tipo"]
-    dates = (request.form["date_start"], request.form["date_end"])
+    dates = []
+    dates.append(request.form["date_start"])
+    dates.append(request.form["date_end"])
 
     message = []
-    condition = validate(request.form["date_start"], "Fecha inicial", required=True, date=True)
+    condition = validate(dates[0], "Fecha inicial", required=True, date=True)
     if condition is not True:
         message.append(condition)
-    condition = validate(request.form["date_end"], "Fecha final", required=True, date=True)
+    condition = validate(dates[1], "Fecha final", required=True)
     if condition is not True:
         message.append(condition)
     condition = validate(dates, "fechas", valid_period=True)
@@ -28,50 +32,72 @@ def create():
                 flash(mssg, "warning")
             return (redirect(url_for("report_new")))
     else:
-        if (tipo == "total"):
-            att = ""
-            resp = Report.create(tipo, dates, att)
-        elif (tipo == "cancelados"):
-            att = ""
-            resp = Report.create(tipo, dates, att)
-        elif (tipo == "rango_edad"):
-            condition = validate(request.form["edad_start"], "Edad inicial", required=True)
-            if condition is not True:
-                message.append(condition)
-            condition = validate(request.form["edad_end"], "Edad final", required=True)
-            if condition is not True:
-                message.append(condition)
-            att = (request.form["edad_start"], request.form["edad_end"])
-            condition = validate(att, "edades", range=True)
-            if condition is not True:   
-                message.append(condition)
-            if message:
-                for mssg in message:
-                    flash(mssg, "warning")
-                return (redirect(url_for("report_new")))
-            else:
+        if (tipo == "cancelados"):
+            app = Appointment.between_dates(dates[0], dates[1])
+            if app:
+                att = ""
                 resp = Report.create(tipo, dates, att)
-        elif (tipo == "enfermedad"):
-            att = request.form["selection"]
-            condition = validate(att, "Enfermedad", required=True)
-            if condition is not True:   
-                flash(condition, "warning")
-                return (redirect(url_for("report_new")))
+                if resp:
+                    if resp[0] == "actualizar":
+                        return (render_template("report/confirmation_update.html", report_id=resp[1], tipo=resp[2], dates=resp[3], campo_1=resp[4], campo_2=resp[5], campo_string=resp[6]))
+                    if resp[0] == "error":
+                        return (redirect(url_for("report_new")))
+                else:   
+                    return (render_template("report/list.html", report_list=report_list()))
             else:
-                resp = Report.create(tipo, dates, att)
-        elif (tipo == "sede"):
-            att = request.form["selection"]
-            condition = validate(att, "Enfermedad", required=True)
-            if condition is not True:   
-                flash(condition, "warning")
+                flash("No existen turnos registrados en el sistema para el periodo de tiempo ingresado.")
                 return (redirect(url_for("report_new")))
+        else:
+            vac = Vaccine.between_dates(dates[0], dates[1])
+            if vac:
+                if (tipo == "total"):
+                    att = ""
+                    resp = Report.create(tipo, dates, att)
+                elif (tipo == "rango_edad"):
+                    att = []
+                    att.append(request.form["edad_start"])
+                    att.append(request.form["edad_end"])
+                    condition = validate(att[0], "Edad inicial", required=True, integer=True)
+                    if condition is not True:
+                        message.append(condition)
+                    condition = validate(att[1], "Edad final", required=True, integer=True)
+                    if condition is not True:
+                        message.append(condition)
+                    condition = validate(att, "edades", range=True)
+                    if condition is not True:   
+                        message.append(condition)    
+                    if message:
+                        for mssg in message:
+                            flash(mssg, "warning")
+                        return (redirect(url_for("report_new")))
+                    else:
+                        resp = Report.create(tipo, dates, att)
+                elif (tipo == "enfermedad"):
+                    att = request.form["selection_enfermedad"]
+                    condition = validate(att, "Enfermedad", required=True)
+                    if condition is not True:   
+                        flash(condition, "warning")
+                        return (redirect(url_for("report_new")))
+                    else:
+                        resp = Report.create(tipo, dates, att)
+                elif (tipo == "sede"):
+                    att = request.form["selection_sede"]
+                    condition = validate(att, "Enfermedad", required=True)
+                    if condition is not True:   
+                        flash(condition, "warning")
+                        return (redirect(url_for("report_new")))
+                    else:
+                        resp = Report.create(tipo, dates, att)
+                if resp:
+                    if resp[0] == "actualizar":
+                        return (render_template("report/confirmation_update.html", report_id=resp[1], tipo=resp[2], dates=resp[3], campo_1=resp[4], campo_2=resp[5], campo_string=resp[6]))
+                    if resp[0] == "error":
+                        return (redirect(url_for("report_new")))
+                else:   
+                    return (render_template("report/list.html", report_list=report_list()))
             else:
-                resp = Report.create(tipo, dates, att)
-        if resp:
-            if resp[0] == "actualizar":
-                return (render_template("report/confirmation_update.html", report_id=resp[1], tipo=resp[2], dates=resp[3], campo_1=resp[4], campo_2=resp[5], campo_string=resp[6]))
-        else:   
-            return (render_template("report/list.html", report_list=report_list()))
+                flash("No existen vacunas registradas en el sistema para el periodo de tiempo ingresado.", "error")
+                return (redirect(url_for("report_new")))
 
 
 @login_required

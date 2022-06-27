@@ -56,8 +56,8 @@ function mostrar(id) {
                 </select>
                 </div>
                 <div class="form-group col">
-                <label for="date_start">Ingrese la fecha inicial deseada:</label>
-                <input type="date" class="form-control" id="date_start" name="date_start">
+                    <label for="date_start">Ingrese la fecha inicial deseada:</label>
+                    <input type="date" class="form-control" id="date_start" name="date_start">
                 </div>
                 <div class="form-group col">
                     <label for="date_end">Ingrese la fecha final deseada:</label>
@@ -69,18 +69,18 @@ function mostrar(id) {
                 <div class="form-group col">
                 <div class="form-group add_padding">
                     <label for="edad_start">Desde:</label>
-                    <input type="text" class="form-control" id="edad_start" name="edad_start" value="0" required>
+                    <input type="number" class="form-control" id="edad_start" name="edad_start" value="0" required>
                 </div>
                 <div class="form-group add_padding">
                     <label for="edad_end">Hasta:</label>
-                    <input type="text" class="form-control" id="edad_end" name="edad_end" value="150" required>
+                    <input type="number" class="form-control" id="edad_end" name="edad_end" value="150" required>
                 </div>
                 </div>
             </div>
             <div class="row" id="enfermedad" style="display: none;">
                 <div class="form-group col">
-                <label for="selection">Seleccione la enfermedad:</label>
-                <select class="form-control" id="selection" name='selection' value="Fiebre Amarilla">
+                <label for="selection_enfermedad">Seleccione la enfermedad:</label>
+                <select class="form-control" id="selection_enfermedad" name='selection_enfermedad' value="Fiebre Amarilla">
                 <option value="Fiebre Amarilla">Fiebre Amarilla</option>
                 <option value="Gripe">Gripe</option>
                 <option value="Covid 19 Primera Dosis">Covid 19 (Primera Dosis)</option>
@@ -91,8 +91,8 @@ function mostrar(id) {
             </div>
             <div id="sede" class="row" style="display: none;">
                 <div class="form-group col">
-                    <label for="selection">Seleccione la sede:</label>
-                    <select class="form-control" id="selection" name='selection' value="Palacio Municipal">
+                    <label for="selection_sede">Seleccione la sede:</label>
+                    <select class="form-control" id="selection_sede" name='selection_sede' value="Palacio Municipal">
                     <option value="Palacio Municipal">Palacio Municipal</option>
                     <option value="Cementerio">Cementerio</option>
                     <option value="Terminal">Terminal</option>

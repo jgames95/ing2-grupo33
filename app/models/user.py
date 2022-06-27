@@ -140,7 +140,7 @@ class User(db.Model):
         date = user.date_of_birth
         today = datetime.date.today()
         one_or_zero = int((today.month, today.day) < (date.month, date.day))
-        difference = today.year - date.year
+        difference = int(today.year - date.year)
         age = difference - one_or_zero
         return age
 
@@ -341,10 +341,7 @@ class User(db.Model):
                 age = User.get_age(v.user_id)
                 if ((age>=int(att[0]))and(age<=int(att[1]))):
                     lista.append(v)
-            return lista
-        else:
-            lista.append("null")
-            return lista
+        return lista
     
     '''Desde aca es todo comentarios'''
     

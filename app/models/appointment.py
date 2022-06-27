@@ -1,5 +1,6 @@
 from datetime import date
-from sqlalchemy import Column, Integer, Date, String, desc
+import datetime
+from sqlalchemy import Column, Integer, Date, String, desc, func
 from app.db import db
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.schema import ForeignKey
@@ -7,6 +8,7 @@ from app.models.vaccine import Vaccine
 from app.models.state import State
 from app.models.location import Location
 from datetime import date
+from flask import flash
 
 from fpdf import FPDF
 import os
@@ -71,15 +73,14 @@ class Appointment(db.Model):
     @classmethod
     def close_appointment(cls, appointment_id, lote, user, attended_by):
         appointment = cls.change_status(appointment_id, 5, attended_by)
-        Vaccine.create(appointment.vaccine_name,
-                       date.today(), appointment.user_id)
+        Vaccine.create(appointment.vaccine_name, date.today(), appointment.user_id)
         unique_name = "usuario" + \
             str(appointment.user_id) + "_vacuna" + \
             appointment.vaccine_name + ".pdf"
         name = (user.first_name).title() + ' ' + (user.last_name).title()
         path = cls.create_pdf(unique_name, appointment, name, lote)
         cls.send_pdf(user, path)
-
+    
     @classmethod
     def appoint_list(cls, user_id):
         appoint_list = (
@@ -87,7 +88,7 @@ class Appointment(db.Model):
             .select_from(Appointment)
             .join(State)
             .where(Appointment.user_id == user_id)
-            .order_by(Appointment.date.desc())
+            .order_by(Appointment.date.desc(), Appointment.state_id)
             .all()
         )
         return appoint_list
@@ -237,7 +238,7 @@ class Appointment(db.Model):
 
     @classmethod
     def get_cancelled(cls, date_start, date_end):
-        consulta = Appointment.query.filter(cls.date<=date_end, cls.date>=date_start, cls.state_id==4)
+        consulta = Appointment.query.filter(cls.date>=date_start, cls.date<=date_end, cls.state_id==4).order_by(cls.id).all()
         lista = []
         for a in consulta:
             lista.append(a)
@@ -245,8 +246,17 @@ class Appointment(db.Model):
     
     @classmethod
     def appoint_sede(cls, date_start, date_end, sede):
-        consulta = db.session.query(Appointment, Location).where(cls.date>=date_start, cls.date<=date_end, Location.name==sede)
+        id = Location.get_id(sede)
+        consulta = Appointment.query.filter(cls.location_id==id, cls.date>=date_start, cls.date<=date_end, cls.state_id==5).all()
         lista = []
         for v in consulta:
             lista.append(v)
         return lista
+    
+    @classmethod
+    def between_dates(cls, date_start, date_end):
+        consulta = Appointment.query.filter(cls.date>=date_start, cls.date<=date_end).all()
+        lista = []
+        for v in consulta:
+            lista.append(v)
+        return consulta

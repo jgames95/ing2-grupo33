@@ -89,7 +89,7 @@ def create_app(environment="development"):
     app.add_url_rule("/turnos", "appointment_create", appointment.create, methods=["POST"])
     app.add_url_rule("/turnos", "appointments", appointment.index)
     app.add_url_rule("/turnos/sede", "appointments_location", appointment.index_location)
-    app.add_url_rule("/turnos/<int:appointment_id><int:user_id>", "appointment_close", appointment.close, methods=["GET", "POST"])
+    app.add_url_rule("/turnos/<int:appointment_id>/<int:user_id>", "appointment_close", appointment.close, methods=["POST", "GET"])
     app.add_url_rule("/turnos/<int:appointment_id>", "appointment_cancel", appointment.cancel, methods=["GET"])
     app.add_url_rule("/turnos/sede/<int:appointment_id>", "appointment_nurse_cancel", appointment.cancel, methods=["GET"])
     app.add_url_rule("/turnos/filtro", "appointmentfilter", appointment.filter, methods=["POST", "GET"])
@@ -98,8 +98,9 @@ def create_app(environment="development"):
     app.add_url_rule("/reportes", "reports", report.report_list_index)
     app.add_url_rule("/reportes/nuevo", "report_new", report.new)
     app.add_url_rule("/reportes", "report_create", report.create, methods=["POST"])
-    app.add_url_rule("/reportes/actualizar/<int:id><int:campo_1><int:campo_2>", "report_update", report.update, methods=["GET"])
+    app.add_url_rule("/reportes/actualizar/<int:id>/<int:campo_1>/<int:campo_2>", "report_update", report.update, methods=["GET"])
 
+    # Rutas de Sedes
     app.add_url_rule("/sedes/lista", "location_list", location.index_all)
     app.add_url_rule("/sedes/<int:location_id>", "change_address", location.change_address, methods=["GET", "POST"])
 

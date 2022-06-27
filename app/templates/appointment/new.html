@@ -55,5 +55,7 @@
   </form>
   {% else %}
     <h2>No tiene turnos para pedir.</h2>
+    <br>
+    <button class="btn btn-secondary"><a class="change_color_font" href="{{ url_for('appointments') }}" style="text-decoration: none;">VOLVER</button></button>
   {% endif %}
 {% endblock %}

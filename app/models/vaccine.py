@@ -1,7 +1,7 @@
 from datetime import *
 from flask import flash, redirect, url_for, render_template
 from app.db import db
-from sqlalchemy import Column, Integer, String, Date
+from sqlalchemy import Column, Integer, String, Date, or_
 from sqlalchemy.sql.schema import ForeignKey
 import datetime 
 
@@ -89,17 +89,15 @@ class Vaccine(db.Model):
         lista = []
         for v in consulta:
             lista.append(v)
-        if not lista:
-            flash("No existen vacunas registradas para el periodo de tiempo ingresado.", "error")
         return lista
 
     @classmethod
     def enfermedad(cls, date_start, date_end, att):
+        lista = []
         if att == "Covid 19 Total":
-            consulta = Vaccine.query.filter(cls.application_date>=date_start, cls.application_date<=date_end, cls.name=="Covid 19 Primera Dosis", cls.name=="Covid 19 Segunda Dosis")
+            consulta = Vaccine.query.filter(cls.application_date>=date_start, cls.application_date<=date_end, or_(cls.name=="Covid 19 Primera Dosis", cls.name=="Covid 19 Segunda Dosis"))
         else:
             consulta = Vaccine.query.filter(cls.application_date>=date_start, cls.application_date<=date_end, cls.name==att)
-        lista = []
         for v in consulta:
             lista.append(v)
         return lista

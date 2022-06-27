@@ -49,8 +49,8 @@
           <td>No disponible</td>
           {% endif %}
           {% if ((appoint.state_id == 2) or (appoint.state_id == 1)) %}
-          <td><a href="#confirm_cancel" class="btn btn-danger" data-toggle="modal">CANCELAR</a>
-            <div id="confirm_cancel" class="modal fade">
+          <td><a href="#a{{ appoint.id }}confirm_cancel" class="btn btn-danger" data-toggle="modal">CANCELAR</a>
+            <div id="a{{ appoint.id }}confirm_cancel" class="modal fade">
               <div class="modal-dialog">
                 <div class="modal-content">
                   <div class="modal-header">
@@ -60,7 +60,7 @@
                   <div class="modal-body">
                     <h4>¿Desea cancelar el turno?</h4>
                     <button type="button" class="btn btn-danger">
-                      <a class="change_color_font" href="{{ url_for('appointment_nurse_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR TURNO</a>
+                      <a class="change_color_font" href="{{ url_for('appointment_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR TURNO</a>
                     </button>
                     <button data-dismiss="modal" type="button" class="btn btn-secondary">VOLVER</button>
                   </div>
