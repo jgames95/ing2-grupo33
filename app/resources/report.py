@@ -25,7 +25,7 @@ def create():
         message.append(condition)
     if message:
             for mssg in message:
-                flash(mssg)
+                flash(mssg, "warning")
             return (redirect(url_for("report_new")))
     else:
         if (tipo == "total"):
@@ -47,7 +47,7 @@ def create():
                 message.append(condition)
             if message:
                 for mssg in message:
-                    flash(mssg)
+                    flash(mssg, "warning")
                 return (redirect(url_for("report_new")))
             else:
                 resp = Report.create(tipo, dates, att)
@@ -55,7 +55,7 @@ def create():
             att = request.form["selection"]
             condition = validate(att, "Enfermedad", required=True)
             if condition is not True:   
-                flash(condition)
+                flash(condition, "warning")
                 return (redirect(url_for("report_new")))
             else:
                 resp = Report.create(tipo, dates, att)
@@ -63,13 +63,14 @@ def create():
             att = request.form["selection"]
             condition = validate(att, "Enfermedad", required=True)
             if condition is not True:   
-                flash(condition)
+                flash(condition, "warning")
                 return (redirect(url_for("report_new")))
             else:
                 resp = Report.create(tipo, dates, att)
-        if resp[0] == "actualizar":
-            return (render_template("report/confirmation_update.html", report_id=resp[1], tipo=resp[2], dates=resp[3], campo_1=resp[4], campo_2=resp[5], campo_string=resp[6]))
-        else:    
+        if resp:
+            if resp[0] == "actualizar":
+                return (render_template("report/confirmation_update.html", report_id=resp[1], tipo=resp[2], dates=resp[3], campo_1=resp[4], campo_2=resp[5], campo_string=resp[6]))
+        else:   
             return (render_template("report/list.html", report_list=report_list()))
 
 

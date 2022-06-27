@@ -67,6 +67,7 @@ class Report(db.Model):
                     report = Report(name=name, campo_1=campo_1, date_start=dates[0], date_end=dates[1], path=path)
                     db.session.add(report)
                     db.session.commit()
+                    flash("El reporte ha sido creado con éxito.", "info")
 
         if (tipo == "cancelados"):
             name = "C--" + fechas
@@ -90,9 +91,10 @@ class Report(db.Model):
                 else:
                     report = Report(name=name, campo_1=campo_1, campo_2=campo_2, date_start=dates[0], date_end=dates[1], path=path)
                     db.session.add(report)
-                    db.session.commit()  
+                    db.session.commit()
+                    flash("El reporte ha sido creado con éxito.", "info")  
             else:
-                flash("No existen turnos cancelados para el periodo de tiempo ingresado")  
+                flash("No existen turnos cancelados para el periodo de tiempo ingresado.", "error")  
 
         if (tipo == "rango_edad"):
             name = "RE--" + fechas + "--" + att[0] + "_" + att[1]
@@ -102,7 +104,7 @@ class Report(db.Model):
             aux = cls.search(name)
             if vaccines:
                 if vaccines[0]=="null":
-                    flash("No existen vacunas registradas para el rango de edad ingresado.")
+                    flash("No existen vacunas registradas para el rango de edad ingresado.", "error")
                 else:
                     campo_1 = len(vaccines)
                     campo_2 = len(total)
@@ -120,6 +122,7 @@ class Report(db.Model):
                         report = Report(name=name, campo_1=campo_1, campo_2=campo_2, campo_string=campo_string, date_start=dates[0], date_end=dates[1], path=path)
                         db.session.add(report)
                         db.session.commit()
+                        flash("El reporte ha sido creado con éxito.", "info") 
 
         if (tipo == "enfermedad"):
             name = "E--" + fechas + "--" + att
@@ -144,8 +147,9 @@ class Report(db.Model):
                     report = Report(name=name, campo_1=campo_1, campo_2=campo_2, campo_string=campo_string, date_start=dates[0], date_end=dates[1], path=path)
                     db.session.add(report)
                     db.session.commit()
+                    flash("El reporte ha sido creado con éxito.", "info") 
             else:
-                flash("No existen vacunas registradas para la enfermedad ingresada.")
+                flash("No existen vacunas registradas para la enfermedad ingresada.", "error")
         
         if (tipo == "sede"):
             name = "S--" + fechas + "--" + att
@@ -170,8 +174,9 @@ class Report(db.Model):
                     report = Report(name=name, campo_1=campo_1, campo_2=campo_2, campo_string=campo_string, date_start=dates[0], date_end=dates[1], path=path)
                     db.session.add(report)
                     db.session.commit()
+                    flash("El reporte ha sido creado con éxito.", "info") 
             else:
-                flash("No existen vacunas registradas para la sede ingresada.")
+                flash("No existen vacunas registradas para la sede ingresada.", "error")
     
     @classmethod
     def search(cls, name):
@@ -185,7 +190,7 @@ class Report(db.Model):
         report.campo_2 = campo_2
         db.session.commit()
         redirect(url_for("reports"))
-        flash("El reporte ha sido actualizado con éxito.")
+        flash("El reporte ha sido actualizado con éxito.", "info")
     
     @classmethod
     def report_list(cls):

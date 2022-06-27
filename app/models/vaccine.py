@@ -1,5 +1,5 @@
 from datetime import *
-from flask import flash, redirect, url_for
+from flask import flash, redirect, url_for, render_template
 from app.db import db
 from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.sql.schema import ForeignKey
@@ -90,8 +90,7 @@ class Vaccine(db.Model):
         for v in consulta:
             lista.append(v)
         if not lista:
-            flash("No existen vacunas registradas para el periodo de tiempo ingresado.")
-            redirect(url_for("reports"))
+            flash("No existen vacunas registradas para el periodo de tiempo ingresado.", "error")
         return lista
 
     @classmethod

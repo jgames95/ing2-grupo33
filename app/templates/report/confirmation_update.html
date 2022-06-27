@@ -4,13 +4,12 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-<h2>El reporte que solicitó ya fue generado con los parametros indicados:</h2>
-<p>Tipo: {{ tipo }}</p>
-<p>Fecha inicial: {{ dates[0] }}</p>
-<p>Fecha final: {{ dates[1] }}</p>
-<p>Atributos: {{ campo_string }}</p>
-<p>{{ campo_1 }}</p>
-<h3>¿Desea actualizar el existente?</h3> 
+<h3>El reporte que solicitó ya fue generado con los parametros indicados:</h2>
+<h3>Tipo: {{ tipo }}</h3>
+<h3>Fecha inicial: {{ dates[0] }}</h3>
+<h3>Fecha final: {{ dates[1] }}</h3>
+<h3>Atributos: {{ campo_string }}</h3>
+<h2>¿Desea actualizar el existente?</h2> 
 <button type="button" class="btn btn-succes change_color">
     <a class="change_color_font" href="{{ url_for('report_update', id=report_id, campo_1=campo_1, campo_2=campo_2) }}" style="text-decoration:none">ACTUALIZAR</a>
 </button>
