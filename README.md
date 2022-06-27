@@ -17,4 +17,6 @@ pip install -r requirements.txt
 set "FLASK_ENV=development"
 python run.py
 
-- [ ] Usar una hoja de estilos simple para que quede de ejemplo.
+exportar bd:
+mysqldump -u root nombrebasededatos > nombrebasededatos.sql
+(sobre la carpeta xampp/mysql/bin)
