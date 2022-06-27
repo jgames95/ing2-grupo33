@@ -1,0 +1,100 @@
+{% extends "layout.html" %}
+{% block title %}Sedes{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block topnav %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+
+    <h2>Sedes</h2>
+    {% for location in location_list %}
+        {% if location.id > 1 %}
+        <div class="p-3 my-3 border border-success">
+        <h3>{{ location.name }}</h3>
+
+        <h5>Turnos: {{ list_appointments_location(location.id)|length }}</h5>
+        <div class="table-responsive table-bordered">
+            <table class="table" id="users">
+              <thead>
+                <tr>
+                  <th scope="col">Paciente</th>
+                  <th scope="col">Vacuna</th>
+                  <th scope="col">Fecha</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% if list_appointments_location(location.id)|length > 0 %}
+              {% for appointment in list_appointments_location(location.id) %}
+              <tr>
+                <td>
+                  <p class="fw-bold mb-1">{{ full_name(appointment.user_id) }}</p>
+                  <p class="text-muted mb-0">{{ get_email(appointment.user_id) }}</p>
+                </td>
+                <td>{{ appointment.vaccine_name }}</td>
+                <td>{{ appointment.date }}</td>
+              </tr>
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td>No hay turnos activos para esta sede</td>
+              </tr>
+              {% endif %}
+              </tbody>
+            </table>
+        </div>
+
+        <h5>Enfermeros: {{ list_nurses_location(location.id)|length }}</h5>
+        <div class="table-responsive table-bordered">
+            <table class="table" id="users">
+              <thead>
+                <tr>
+                    <th scope="col">Enfermero</th>
+                </tr>
+              </thead>
+              <tbody>
+              {% if list_nurses_location(location.id)|length > 0 %}
+              {% for nurse in list_nurses_location(location.id) %}
+              <tr>
+                <td>
+                  <p class="fw-bold mb-1">{{ full_name(nurse.id) }}</p>
+                  <p class="text-muted mb-0">{{ get_email(nurse.id) }}</p>
+                </td>
+              </tr>
+              {% endfor %}
+              {% else %}
+              <tr>
+                <td>No hay enfermeros asignados a esta sede</td>
+              </tr>
+              {% endif %}
+              </tbody>
+            </table>
+        </div>
+        <h5>Dirección: {{ location.address }}</h5>
+        <!-- boton del popup -->
+        <a href="#a{{location.id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">CAMBIAR DIRECCION</a>
+        <!-- ventana emergente -->
+        <div id='a{{location.id|string()}}popup' class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Ingrese una nueva direccion para la sede {{ location.name }}</h4>
+                        <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="{{ url_for('change_address', location_id=location.id) }}" method="POST">
+                        <div class="form-group add_padding">
+                          <input class="form-control" type="text" id="address" name="address" value="{{ location.address }}" placeholder="Ingrese el lote" required>
+                        </div>
+                        <button type="submit" class="btn btn-success float-left">Enviar</button>
+                      </div>
+                      </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    {% endfor %}
+
+{% endblock %}

@@ -13,6 +13,7 @@ def config_db(app):
     def init_database():
         from app.models.role import Role
         from app.models.state import State
+        from app.models.location import Location
         from app.models.appointment import Appointment
         from app.models.vaccine import Vaccine
         from app.models.user import User

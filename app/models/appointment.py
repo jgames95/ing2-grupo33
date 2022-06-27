@@ -27,16 +27,18 @@ class Appointment(db.Model):
     user_id = Column(Integer, ForeignKey("users.id"))
     location_id = Column(Integer, ForeignKey("locations.id"))
     location = relationship(Location)
+    attendedby_id = Column(Integer)
 
-    def __init__(self, user_id=None, vaccine_name=None, date=None, location_id=None):
+    def __init__(self, user_id=None, vaccine_name=None, date=None, location_id=None, attendedby_id=None):
         self.user_id = user_id
         self.vaccine_name = vaccine_name
         self.state_id = 1
         self.date = date
         self.location_id = location_id
+        self.attendedby_id = attendedby_id
 
     @classmethod
-    def create(cls, vac_name, user_id, first_name, last_name, location_id, **kwargs):
+    def create(cls, vac_name, user_id, location_id, **kwargs):
         appointment = Appointment(vaccine_name=vac_name,
                                   date=kwargs["date"],
                                   user_id=user_id,
@@ -47,28 +49,28 @@ class Appointment(db.Model):
         db.session.commit()
 
     @classmethod
-    def change_status(cls, appointment_id, state_id):
+    def change_status(cls, appointment_id, state_id, attended_by=None):
         appointment = Appointment.query.filter_by(id=appointment_id).first()
         appointment.state_id = state_id
+        appointment.attendedby_id = int(attended_by)
         db.session.commit()
+        return appointment
 
     @classmethod
-    def approve_appointment(cls, appointment_id):
-        cls.change_status(appointment_id, 2)
+    def approve_appointment(cls, appointment_id, attended_by):
+        cls.change_status(appointment_id, 2, attended_by)
 
     @classmethod
-    def reject_appointment(cls, appointment_id):
-        cls.change_status(appointment_id, 3)
+    def reject_appointment(cls, appointment_id, attended_by):
+        cls.change_status(appointment_id, 3, attended_by)
 
     @classmethod
-    def cancel_appointment(cls, appointment_id):
-        cls.change_status(appointment_id, 4)
+    def cancel_appointment(cls, appointment_id, attended_by):
+        cls.change_status(appointment_id, 4, attended_by)
 
     @classmethod
-    def close_appointment(cls, appointment_id, lote, user):
-        appointment = Appointment.query.filter_by(id=appointment_id).first()
-        appointment.state_id = 5
-        db.session.commit()
+    def close_appointment(cls, appointment_id, lote, user, attended_by):
+        appointment = cls.change_status(appointment_id, 5, attended_by)
         Vaccine.create(appointment.vaccine_name,
                        date.today(), appointment.user_id)
         unique_name = "usuario" + \
@@ -135,11 +137,28 @@ class Appointment(db.Model):
         return lista
 
     @classmethod
-    def appointments_from_location(cls, location_id):
+    def appointments_from_location_today(cls, location_id):
         appoint_list = Appointment.query.filter_by(
             location_id=location_id, state_id=2, date=date.today()).all()
         #appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2).all()
         return appoint_list
+
+    @classmethod
+    def appointments_from_location(cls, location_id):
+        appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2).all()
+        return appoint_list
+
+    @classmethod
+    def activity_list(cls, attendedby_id):
+        activity_dict = {}
+        canceled_list = Appointment.query.filter_by(
+            attendedby_id=attendedby_id, state_id=4, date=date.today()).all()
+        closed_list = Appointment.query.filter_by(
+            attendedby_id=attendedby_id, state_id=5, date=date.today()).all()
+
+        activity_dict['canceled'] = canceled_list
+        activity_dict['closed'] = closed_list
+        return activity_dict
 
     @classmethod
     def create_pdf(cls, name, appointment, name_line, lote):

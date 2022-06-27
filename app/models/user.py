@@ -2,7 +2,6 @@ from app.db import db
 from sqlalchemy import Column, Integer, String, Boolean, Date
 from sqlalchemy.sql.schema import ForeignKey
 from app.models.role import Role
-from app.models.permission import Permission
 from app.models.state import State
 from app.models.vaccine import Vaccine
 from app.models.appointment import Appointment
@@ -115,6 +114,11 @@ class User(db.Model):
         user = cls.search_user_by_id(user_id)
         name = Location.get_name(user.location_id)
         return name
+    
+    @classmethod
+    def user_from(cls, location_id):
+        lista = User.query.filter_by(role_id=2, location_id=location_id).all()
+        return lista
 
     @classmethod
     def get_token(cls, user_id):
@@ -188,42 +192,51 @@ class User(db.Model):
         return after_15days
 
     @classmethod
-    def has_permission(cls, user_id, permission):
-        consulta = (
-            db.session.query(User, Role, Permission)
-            .join(User.role)
-            .join(Role.permissions)
-            .where(Permission.name == permission)
-            .where(User.id == user_id)
-            .where(User.active == 1)
-            .first()
-        )
-        return consulta is not None
-
-    @classmethod
     def valid_email(cls, email):
         exist = User.query.filter_by(email=email).scalar()
         return exist is None
 
     @classmethod
-    def valid_dni(cls, dni):
-        user = User.query.filter_by(dni=dni).scalar()
-        if user is not None:
-            if (user.role_id == 3):
-                return True
-            else:
-                return False
+    def valid_pacient_dni(cls, dni):
+        users = User.query.filter_by(dni=dni).all()
+        ok = True
+        if users is not None:
+            if isinstance(users, list):
+                for user in users:
+                    if (user.role_id != 2):
+                        ok = True
+                    elif (user.role_id == 2):
+                        ok = False
+                        break
+                return ok
+            elif isinstance(users, User):
+                if (user.role_id != 2):
+                        ok = True
+                elif (user.role_id == 2):
+                    ok = False
+                return ok
         else:
             return True
 
     @classmethod
     def valid_nurse_dni(cls, dni):
-        user = User.query.filter_by(dni=dni).scalar()
-        if user is not None:
-            if (user.role_id == 2):
-                return True
-            else:
-                return False
+        users = User.query.filter_by(dni=dni).all()
+        ok = True
+        if users is not None:
+            if isinstance(users, list):
+                for user in users:
+                    if (user.role_id != 3):
+                        ok = True
+                    elif (user.role_id == 3):
+                        ok = False
+                        break
+                return ok
+            elif isinstance(users, User):
+                if (user.role_id != 3):
+                        ok = True
+                elif (user.role_id == 3):
+                    ok = False
+                return ok
         else:
             return True
         
@@ -279,7 +292,12 @@ class User(db.Model):
     
     @classmethod
     def nurse_list(cls):
-        lista = User.query.filter_by(role_id="3")
+        lista = User.query.filter_by(role_id=3).all()
+        return lista
+
+    @classmethod
+    def nurse_from(cls, location_id):
+        lista = User.query.filter_by(role_id=3, location_id=location_id).all()
         return lista
 
     @classmethod

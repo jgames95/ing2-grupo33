@@ -1,4 +1,5 @@
 from flask import redirect, render_template, request, url_for, session, flash, Flask
+from app.models.appointment import Appointment
 from app.models.user import User
 from app.models.role import Role
 from app.models.vaccine import Vaccine
@@ -156,7 +157,7 @@ def create():
             ingrese uno nuevo"
         )
 
-    if not User.valid_dni(request.form["dni"]):
+    if not User.valid_pacient_dni(request.form["dni"]):
         message.append(
             "Ya existe un paciente con ese dni, por favor\
             ingrese uno nuevo"
@@ -165,7 +166,7 @@ def create():
     locations = Location.query.all()
     if message:
         for mssg in message:
-            flash(mssg)
+            flash(mssg, "warning")
         return render_template("user/new.html", locations=locations)
 
     User.create_pacient(**request.form)
@@ -222,7 +223,7 @@ def update():
 
     if message:
         for mssg in message:
-            flash(mssg)
+            flash(mssg, "warning")
         return render_template("user/update.html", user=request.form, locations=locations)
 
     User.update(user_id=session["user_id"], kwargs=request.form)
@@ -328,13 +329,13 @@ def create_nurse():
 
     if not User.valid_nurse_dni(request.form["dni"]):
         message.append(
-            "Ya existe un paciente con ese dni, por favor\
+            "Ya existe un enfermero con ese dni, por favor\
             ingrese uno nuevo"
         )
 
     if message:
         for mssg in message:
-            flash(mssg)
+            flash(mssg, "warning")
         return render_template("nurse/new.html")
 
     User.create_nurse(**request.form)
@@ -386,7 +387,7 @@ def update_nurse():
 
     if message:
         for mssg in message:
-            flash(mssg)
+            flash(mssg, "warning")
         return render_template("nurse/update.html", user=request.form)
 
     User.update_nurse(user_id=session["user_id"], kwargs=request.form)

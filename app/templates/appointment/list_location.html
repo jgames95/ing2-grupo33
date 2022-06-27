@@ -7,68 +7,129 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-<h2>Lista de turnos de hoy en: {{ return_location(session["user_id"]) }}</h2>
-  <div class="table-responsive  table-bordered">
-    <table class="table" id="users">
-      <thead>
-        <tr>
-          <th scope="col">Paciente</th>
-          <th scope="col">Vacuna</th>
-          <th scope="col">Ver Perfil</th>
-          <th scope="col">Cerrar Turno</th>
-          <th scope="col">Cancelar Turno</th>
-        </tr>
-      </thead>
-      <tbody>
-        {% for appoint in appoint_list %}
-        {% if is_active(appoint.user_id) %}
-        <tr>
-          <td>
-            <div class="d-flex align-items-center">
-              <i class="material-icons center" style="font-size:45px;color:black;" alt="imagen de perfil">account_circle</i>
-              <div class="ms-3">
-                <p class="fw-bold mb-1">{{ full_name(appoint.user_id) }}</p>
-                <p class="text-muted mb-0">{{ get_email(appoint.user_id) }}</p>
-              </div>
-            </div>
-          </td>
-          <td>{{ appoint.vaccine_name }}</td>
-          <td><button type="button" class="btn btn-success change_color">
-            <a class="change_color_font" href="{{ url_for('appointment_user_profile', user_id=appoint.user_id) }}" style="text-decoration:none">PERFIL</a></button> </td>
-          <td>
-            <!-- boton del popup -->
-            <a href="#a{{appoint.id|string() + appoint.user_id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">CERRAR</a>
-            <!-- ventana emergente -->
-            <div id='a{{appoint.id|string() + appoint.user_id|string()}}popup' class="modal fade">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <h4 class="modal-title">Ingrese lote de la vacuna</h4>
-                            <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                          <form action="{{ url_for('appointment_close', appointment_id=appoint.id, user_id=appoint.user_id) }}" method="POST">
-                            <div class="form-group add_padding">
-                              <input class="form-control" type="text" id="lote" name="lote" placeholder="Ingrese el lote" required>
-                            </div>
-                            <button type="submit" class="btn btn-success float-left">Enviar</button>
-                          </div>
-                          </form>
-                        </div>
-                    </div>
+  <h2>Lista de turnos de hoy en: {{ return_location(session["user_id"]) }}</h2>
+    <div class="table-responsive  table-bordered">
+      <table class="table" id="users">
+        <thead>
+          <tr>
+            <th scope="col">Paciente</th>
+            <th scope="col">Vacuna</th>
+            <th scope="col">Ver Perfil</th>
+            <th scope="col">Cerrar Turno</th>
+            <th scope="col">Cancelar Turno</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% if appoint_list|length > 0 %}
+          {% for appoint in appoint_list %}
+          <tr>
+            <td>
+              <div class="d-flex align-items-center">
+                <i class="material-icons center" style="font-size:45px;color:black;" alt="imagen de perfil">account_circle</i>
+                <div class="ms-3">
+                  <p class="fw-bold mb-1">{{ full_name(appoint.user_id) }}</p>
+                  <p class="text-muted mb-0">{{ get_email(appoint.user_id) }}</p>
                 </div>
-            </div>
-          </td>
-          <td><button type="button" class="btn btn-danger">
-            <a class="change_color_font" href="{{ url_for('appointment_nurse_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR</a></button> </td>
-        </tr>
-        {% endif %}
-        {% else %}
+              </div>
+            </td>
+            <td>{{ appoint.vaccine_name }}</td>
+            <td><button type="button" class="btn btn-success change_color">
+              <a class="change_color_font" href="{{ url_for('appointment_user_profile', user_id=appoint.user_id) }}" style="text-decoration:none">PERFIL</a></button> </td>
+            <td>
+              <!-- boton del popup -->
+              <a href="#a{{appoint.id|string() + appoint.user_id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">CERRAR</a>
+              <!-- ventana emergente -->
+              <div id='a{{appoint.id|string() + appoint.user_id|string()}}popup' class="modal fade">
+                  <div class="modal-dialog">
+                      <div class="modal-content">
+                          <div class="modal-header">
+                              <h4 class="modal-title">Ingrese lote de la vacuna</h4>
+                              <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
+                          </div>
+                          <div class="modal-body">
+                            <form action="{{ url_for('appointment_close', appointment_id=appoint.id, user_id=appoint.user_id) }}" method="POST">
+                              <div class="form-group add_padding">
+                                <input class="form-control" type="text" id="lote" name="lote" placeholder="Ingrese el lote" required>
+                              </div>
+                              <button type="submit" class="btn btn-success float-left">Enviar</button>
+                            </div>
+                            </form>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+            </td>
+            <td><button type="button" class="btn btn-danger">
+              <a class="change_color_font" href="{{ url_for('appointment_nurse_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR</a></button> </td>
+          </tr>
+          {% endfor %}
+          {% else %}
+          <tr>
+            <td>No existen turnos activos en esta sede para el dia de hoy.</td>
+          </tr>
+          {% endif %}
+        </tbody>
+      </table>
+    </div>
+
+  <div class="p-3 my-3 border border-success">
+    <h2>Actividades del día</h2>
+    <h5>Turnos Cancelados</h5>
+    <div class="table-responsive table-bordered">
+      <table class="table" id="users">
+        <thead>
+          <tr>
+            <th scope="col">Paciente</th>
+            <th scope="col">Vacuna</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% if activity_canceled|length > 0 %}
+        {% for canceled in activity_canceled %}
         <tr>
-          <td>No existen turnos en esta sede para el dia de hoy.</td>
+          <td>
+            <p class="fw-bold mb-1">{{ full_name(canceled.user_id) }}</p>
+            <p class="text-muted mb-0">{{ get_email(canceled.user_id) }}</p>
+          </td>
+          <td>{{ canceled.vaccine_name }}</td>
         </tr>
         {% endfor %}
-      </tbody>
-    </table>
+        {% else %}
+        <tr>
+          <td>No se cancelaron turnos en el dia de hoy</td>
+        </tr>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
+    
+    <h5>Turnos Cerrados</h5>
+    <div class="table-responsive table-bordered">
+      <table class="table" id="users">
+        <thead>
+          <tr>
+            <th scope="col">Paciente</th>
+            <th scope="col">Vacuna</th>
+          </tr>
+        </thead>
+        <tbody>
+        {% if activity_closed|length > 0 %}
+        {% for closed in activity_closed %}
+        <tr>
+          <td>
+            <p class="fw-bold mb-1">{{ full_name(closed.user_id) }}</p>
+            <p class="text-muted mb-0">{{ get_email(closed.user_id) }}</p>
+          </td>
+          <td>{{ closed.vaccine_name }}</td>
+        </tr>
+        {% endfor %}
+        {% else %}
+        <tr>
+          <td>No se cerraron turnos en el dia de hoy</td>
+        </tr>
+        {% endif %}
+        </tbody>
+      </table>
+    </div>
   </div>
 {% endblock %}
