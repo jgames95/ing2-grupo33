@@ -215,3 +215,19 @@ class Appointment(db.Model):
             header.attach(attached)
         conn.sendmail(sender_email, receiver_email, header.as_string())
         conn.quit()
+
+    @classmethod
+    def get_cancelled(cls, date_start, date_end):
+        consulta = Appointment.query.filter(cls.date<=date_end, cls.date>=date_start, cls.state_id==4)
+        lista = []
+        for a in consulta:
+            lista.append(a)
+        return lista
+    
+    @classmethod
+    def appoint_sede(cls, date_start, date_end, sede):
+        consulta = db.session.query(Appointment, Location).where(cls.date>=date_start, cls.date<=date_end, Location.name==sede)
+        lista = []
+        for v in consulta:
+            lista.append(v)
+        return lista

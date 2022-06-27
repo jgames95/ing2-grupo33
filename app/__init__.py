@@ -5,7 +5,7 @@ from flask_session import Session
 from config import config
 from app import db
 
-from app.resources import auth, appointment, user, vaccine
+from app.resources import auth, appointment, user, vaccine, report
 
 from app.helpers import handler
 from app.helpers import auth as helper_auth
@@ -56,39 +56,27 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(covid2_avalaible=vaccine.covid2_avalaible)
     app.jinja_env.globals.update(have_active_appointment=appointment.have_active_appointment)
     app.jinja_env.globals.update(return_location=user.return_location)
+    app.jinja_env.globals.update(appoint_avalaible=user.appoint_avalaible)
 
     # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
     app.add_url_rule("/cerrar_sesion", "auth_logout", auth.logout)
-    app.add_url_rule(
-        "/autenticacion", "auth_authenticate", auth.authenticate, methods=["POST"]
-    )
-    app.add_url_rule(
-        "/iniciar_sesion", "user_confirmation", user.confirm_account, methods=["POST"]
-    )
+    app.add_url_rule("/autenticacion", "auth_authenticate", auth.authenticate, methods=["POST"])
+    app.add_url_rule("/iniciar_sesion", "user_confirmation", user.confirm_account, methods=["POST"])
     app.add_url_rule("/confirmacion", "user_confirm", user.confirm)
 
     # Rutas de Usuarios
     app.add_url_rule("/usuario", "user_create", user.create, methods=["POST"])
     app.add_url_rule("/usuario/nuevo", "user_new", user.new)
-
     app.add_url_rule("/usuario/editar/<int:user_id>", "users_edit", user.edit)
-    app.add_url_rule(
-        "/usuario/actualizar", "users_update", user.update, methods=["POST", "GET"]
-    )
-    '''app.add_url_rule(
-        "/usuarios/results", "user_search", user.search, methods=["POST", "GET"]
-    )'''
+    app.add_url_rule("/usuario/actualizar", "users_update", user.update, methods=["POST", "GET"])
     app.add_url_rule("/usuario/perfil", "user_profile", user.profile)
     app.add_url_rule("/turnos/sede/perfil/<int:user_id>", "appointment_user_profile", user.profile_appointment)
-    
     app.add_url_rule("/enfermero/perfil", "nurse_profile", user.profile_nurse)
     app.add_url_rule("/enfermero", "nurse_create", user.create_nurse, methods=["POST"])
     app.add_url_rule("/enfermero/nuevo", "nurse_new", user.new_nurse)
     app.add_url_rule("/enfermero/editar/<int:user_id>", "nurse_edit", user.edit_nurse)
-    app.add_url_rule(
-        "/enfermero/actualizar", "nurse_update", user.update_nurse, methods=["POST", "GET"]
-    )
+    app.add_url_rule("/enfermero/actualizar", "nurse_update", user.update_nurse, methods=["POST", "GET"])
     app.add_url_rule("/enfermero/lista", "nurses_list", user.index_filter)
     app.add_url_rule("/enfermero/filtro", "nursefilter", user.filter, methods=["POST", "GET"])                     
     app.add_url_rule("/enfermero/lista/<int:user_id>", "change_location", user.change_location, methods=["POST", "GET"])
@@ -96,16 +84,19 @@ def create_app(environment="development"):
 
     # Rutas de Turnos
     app.add_url_rule("/turnos/nuevo", "appointment_new", appointment.new)
-    app.add_url_rule("/turnos", "appointment_create",
-                     appointment.create, methods=["POST"])
+    app.add_url_rule("/turnos", "appointment_create", appointment.create, methods=["POST"])
     app.add_url_rule("/turnos", "appointments", appointment.index)
     app.add_url_rule("/turnos/sede", "appointments_location", appointment.index_location)
-    #app.add_url_rule("/turnos", "appointment_download", appointment.download)
     app.add_url_rule("/turnos/<int:appointment_id><int:user_id>", "appointment_close", appointment.close, methods=["GET", "POST"])
     app.add_url_rule("/turnos/<int:appointment_id>", "appointment_cancel", appointment.cancel, methods=["GET"])
     app.add_url_rule("/turnos/sede/<int:appointment_id>", "appointment_nurse_cancel", appointment.cancel, methods=["GET"])
-    app.add_url_rule("/turnos/filtro", "appointmentfilter",
-                     appointment.filter, methods=["POST", "GET"])
+    app.add_url_rule("/turnos/filtro", "appointmentfilter", appointment.filter, methods=["POST", "GET"])
+
+    # Rutas de Reportes
+    app.add_url_rule("/reportes", "reports", report.report_list_index)
+    app.add_url_rule("/reportes/nuevo", "report_new", report.new)
+    app.add_url_rule("/reportes", "report_create", report.create, methods=["POST"])
+    app.add_url_rule("/reportes/actualizar/<int:id><int:campo_1><int:campo_2>", "report_update", report.update, methods=["GET"])
 
     # Ruta para el Home (usando decorator)
 

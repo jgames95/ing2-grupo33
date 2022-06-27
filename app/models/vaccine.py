@@ -1,4 +1,5 @@
 from datetime import *
+from flask import flash, redirect, url_for
 from app.db import db
 from sqlalchemy import Column, Integer, String, Date
 from sqlalchemy.sql.schema import ForeignKey
@@ -81,3 +82,25 @@ class Vaccine(db.Model):
             if(diff.days < 21):
                 consulta = False
         return consulta
+
+    @classmethod
+    def between_dates(cls, date_start, date_end):
+        consulta = Vaccine.query.filter(cls.application_date>=date_start, cls.application_date<=date_end).all()
+        lista = []
+        for v in consulta:
+            lista.append(v)
+        if not lista:
+            flash("No existen vacunas registradas para el periodo de tiempo ingresado.")
+            redirect(url_for("reports"))
+        return lista
+
+    @classmethod
+    def enfermedad(cls, date_start, date_end, att):
+        if att == "Covid 19 Total":
+            consulta = Vaccine.query.filter(cls.application_date>=date_start, cls.application_date<=date_end, cls.name=="Covid 19 Primera Dosis", cls.name=="Covid 19 Segunda Dosis")
+        else:
+            consulta = Vaccine.query.filter(cls.application_date>=date_start, cls.application_date<=date_end, cls.name==att)
+        lista = []
+        for v in consulta:
+            lista.append(v)
+        return lista

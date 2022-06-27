@@ -313,7 +313,21 @@ class User(db.Model):
         user = User.query.filter_by(id=user_id).first()
         user.location_id = Location.get_id(location)
         db.session.commit()
-
+    
+    @classmethod
+    def rango_edad(cls, date_start, date_end, att):
+        lista = []
+        vaccines = Vaccine.between_dates(date_start, date_end)
+        if vaccines:
+            for v in vaccines:
+                age = User.get_age(v.user_id)
+                if ((age>=int(att[0]))and(age<=int(att[1]))):
+                    lista.append(v)
+            return lista
+        else:
+            lista.append("null")
+            return lista
+    
     '''Desde aca es todo comentarios'''
     
     '''def __repr__(self):

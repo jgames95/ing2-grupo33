@@ -21,6 +21,8 @@ def validate(input_value, input_name, **kwargs):
         date (no puede estar en el futuro)
         futuredate (no puede estar en el pasado)
         appointmentdate (minimo 7 dias antes)
+        valid_period (recibe una tupla con dos fechas, fecha1<=fecha2)
+        range (recibe tupla con 2 numeros, num1<=num2)
     """
     if (
         "required" in kwargs
@@ -128,5 +130,17 @@ def validate(input_value, input_name, **kwargs):
                 return "Solo ingrese Si, si se aplicó la vacuna hace menos de un año"
         else:
             return "El valor de " + input_name + " no puede estar en el futuro"
+    
+    if "valid_period" in kwargs and kwargs["valid_period"] is True:
+        if (input_value[0]<=input_value[1]):
+            pass
+        else:
+            return "Periodo de tiempo inválido. \n\nLa fecha inicial debe estar antes que la final."
+    
+    if "range" in kwargs and kwargs["range"] is True:
+        if (input_value[0]<=input_value[1]):
+            pass
+        else:
+            return "Rango inválido."
 
     return True

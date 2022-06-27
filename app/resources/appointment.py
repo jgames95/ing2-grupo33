@@ -75,3 +75,4 @@ def close(appointment_id, user_id):
     lote = request.form["lote"]
     Appointment.close_appointment(appointment_id, lote, user)
     return redirect(url_for("appointments_location"))
+
