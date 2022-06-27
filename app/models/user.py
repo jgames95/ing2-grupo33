@@ -198,47 +198,13 @@ class User(db.Model):
 
     @classmethod
     def valid_pacient_dni(cls, dni):
-        users = User.query.filter_by(dni=dni).all()
-        ok = True
-        if users is not None:
-            if isinstance(users, list):
-                for user in users:
-                    if (user.role_id != 2):
-                        ok = True
-                    elif (user.role_id == 2):
-                        ok = False
-                        break
-                return ok
-            elif isinstance(users, User):
-                if (user.role_id != 2):
-                        ok = True
-                elif (user.role_id == 2):
-                    ok = False
-                return ok
-        else:
-            return True
+        user = User.query.filter_by(dni=dni, role_id=2).first()
+        return user is None
 
     @classmethod
     def valid_nurse_dni(cls, dni):
-        users = User.query.filter_by(dni=dni).all()
-        ok = True
-        if users is not None:
-            if isinstance(users, list):
-                for user in users:
-                    if (user.role_id != 3):
-                        ok = True
-                    elif (user.role_id == 3):
-                        ok = False
-                        break
-                return ok
-            elif isinstance(users, User):
-                if (user.role_id != 3):
-                        ok = True
-                elif (user.role_id == 3):
-                    ok = False
-                return ok
-        else:
-            return True
+        user = User.query.filter_by(dni=dni, role_id=3).first()
+        return user is None
         
     @classmethod
     def update(cls, user_id, kwargs):
