@@ -59,6 +59,7 @@ def create_app(environment="development"):
     app.jinja_env.globals.update(appoint_avalaible=user.appoint_avalaible)
     app.jinja_env.globals.update(list_appointments_location=location.appointments_from_location)
     app.jinja_env.globals.update(list_nurses_location=location.nurses_from_location)
+    app.jinja_env.globals.update(get_path=report.get_path)
 
     # Autenticación
     app.add_url_rule("/iniciar_sesion", "auth_login", auth.login)
@@ -98,7 +99,6 @@ def create_app(environment="development"):
     app.add_url_rule("/reportes", "reports", report.report_list_index)
     app.add_url_rule("/reportes/nuevo", "report_new", report.new)
     app.add_url_rule("/reportes", "report_create", report.create, methods=["POST"])
-    app.add_url_rule("/reportes/actualizar/<int:id>/<int:campo_1>/<int:campo_2>", "report_update", report.update, methods=["GET"])
 
     # Rutas de Sedes
     app.add_url_rule("/sedes/lista", "location_list", location.index_all)

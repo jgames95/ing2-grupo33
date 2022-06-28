@@ -15,6 +15,7 @@
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
+
 --
 -- Table structure for table `appointments`
 --
@@ -87,12 +88,13 @@ DROP TABLE IF EXISTS `reports`;
 CREATE TABLE `reports` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(50) DEFAULT NULL,
+  `type` varchar(20) DEFAULT NULL,
   `campo_1` int(11) DEFAULT NULL,
   `campo_2` int(11) DEFAULT NULL,
-  `campo_string` varchar(40) DEFAULT NULL,
+  `campo_3` int(11) DEFAULT NULL,
+  `campo_4` int(11) DEFAULT NULL,
   `date_start` date DEFAULT NULL,
   `date_end` date DEFAULT NULL,
-  `path` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=22 DEFAULT CHARSET=utf8mb4;
 /*!40101 SET character_set_client = @saved_cs_client */;

@@ -94,10 +94,7 @@ class Vaccine(db.Model):
     @classmethod
     def enfermedad(cls, date_start, date_end, att):
         lista = []
-        if att == "Covid 19 Total":
-            consulta = Vaccine.query.filter(cls.application_date>=date_start, cls.application_date<=date_end, or_(cls.name=="Covid 19 Primera Dosis", cls.name=="Covid 19 Segunda Dosis"))
-        else:
-            consulta = Vaccine.query.filter(cls.application_date>=date_start, cls.application_date<=date_end, cls.name==att)
+        consulta = Vaccine.query.filter(cls.application_date>=date_start, cls.application_date<=date_end, cls.name==att)
         for v in consulta:
             lista.append(v)
         return lista

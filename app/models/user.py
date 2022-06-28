@@ -299,13 +299,13 @@ class User(db.Model):
         db.session.commit()
     
     @classmethod
-    def rango_edad(cls, date_start, date_end, att):
+    def rango_edad(cls, date_start, date_end, age1, age2):
         lista = []
         vaccines = Vaccine.between_dates(date_start, date_end)
         if vaccines:
             for v in vaccines:
                 age = User.get_age(v.user_id)
-                if ((age>=int(att[0]))and(age<=int(att[1]))):
+                if ((age>=age1)and(age<=age2)):
                     lista.append(v)
         return lista
     

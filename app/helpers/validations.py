@@ -1,5 +1,6 @@
 import re
-import datetime 
+import datetime
+from datetime import timedelta, date 
 
 
 def validate(input_value, input_name, **kwargs):
@@ -22,7 +23,7 @@ def validate(input_value, input_name, **kwargs):
         futuredate (no puede estar en el pasado)
         appointmentdate (minimo 7 dias antes)
         valid_period (recibe una tupla con dos fechas, fecha1<=fecha2)
-        range (recibe tupla con 2 numeros, num1<=num2)
+        yesterday (la fecha ingresada tiene que ser ayer o anterior)
     """
     if (
         "required" in kwargs
@@ -137,10 +138,13 @@ def validate(input_value, input_name, **kwargs):
         else:
             return "Periodo de tiempo inválido. \n\nLa fecha inicial debe estar antes que la final."
     
-    if "range" in kwargs and kwargs["range"] is True:
-        if (input_value[0]<=input_value[1]):
+    if "yesterday" in kwargs and kwargs["yesterday"] is True:
+        yesterday = datetime.datetime.today() - timedelta(days=1)
+        format = "%Y-%m-%d"
+        date = datetime.datetime.strptime(input_value, format).date()
+        if (date<=yesterday.date()):
             pass
         else:
-            return "Rango inválido."
+            return "La fecha final debe ser del día de ayer o anterior."
 
     return True
