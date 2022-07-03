@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block title %}Reporte existente{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+<h4>El reporte que solicitó ya fue generado con los parametros indicados:</h4>
+<div class="group add_padding box">
+  <div class="row">
+    <div class="table-responsive table-bordered">
+      <table class="table" id="users">
+        <thead>
+          <tr>
+            <th scope="col">Nombre</th>
+            <th scope="col">Ver</th>
+            <th scope="col">Descargar</th>
+          </tr>
+        </thead>
+        <tbody>
+        <tr>
+          <td>{{ report.name }}</td>
+          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('reports') }}" style="text-decoration:none">VER</a></button></td>
+          <td><button type="button" class="btn btn-success change_color"><a href="{{ path }}" class="change_color_font" style="text-decoration: none;" download="Vacunassist_Reporte">DESCARGAR REPORTE</a></button></td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <br>
+  <button type="button" class="btn btn-danger">
+    <a class="change_color_font" href="{{ url_for('report_new') }}" style="text-decoration:none">VOLVER</a>
+  </button>
+{% endblock %}
+{% block footer %}
+  {{ super() }}
+{% endblock %}

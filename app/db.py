@@ -17,6 +17,7 @@ def config_db(app):
         from app.models.appointment import Appointment
         from app.models.vaccine import Vaccine
         from app.models.user import User
+        from app.models.report import Report
 
         db.create_all()
 

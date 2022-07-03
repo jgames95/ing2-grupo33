@@ -7,6 +7,7 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
+  {% if appoint_avalaible(session["user_id"]) %}
   <h2>Solicite un Turno</h2>
   <form action="{{ url_for('appointment_create') }}" method="POST">
     <div class="form-group add_padding box">
@@ -52,4 +53,9 @@
     <input type="submit" class="btn btn-success change_color" value="Crear">
   
   </form>
+  {% else %}
+    <h2>No tiene turnos para pedir.</h2>
+    <br>
+    <button class="btn btn-secondary"><a class="change_color_font" href="{{ url_for('appointments') }}" style="text-decoration: none;">VOLVER</button></button>
+  {% endif %}
 {% endblock %}

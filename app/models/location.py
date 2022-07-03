@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from app.db import db
+from flask import flash
 
 
 class Location(db.Model):

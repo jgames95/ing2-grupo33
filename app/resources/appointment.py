@@ -78,7 +78,8 @@ def cancel(appointment_id):
         return redirect(url_for("appointments"))
 
 def close(appointment_id, user_id):
-    user = User.query.filter_by(id=user_id).first()
+    user = User.query.filter_by(id=int(user_id)).first()
     lote = request.form["lote"]
     Appointment.close_appointment(appointment_id, lote, user, session["user_id"])
     return redirect(url_for("appointments_location"))
+

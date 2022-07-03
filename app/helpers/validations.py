@@ -1,5 +1,6 @@
 import re
-import datetime 
+import datetime
+from datetime import timedelta, date 
 
 
 def validate(input_value, input_name, **kwargs):
@@ -21,6 +22,8 @@ def validate(input_value, input_name, **kwargs):
         date (no puede estar en el futuro)
         futuredate (no puede estar en el pasado)
         appointmentdate (minimo 7 dias antes)
+        valid_period (recibe una tupla con dos fechas, fecha1<=fecha2)
+        yesterday (la fecha ingresada tiene que ser ayer o anterior)
     """
     if (
         "required" in kwargs
@@ -128,5 +131,20 @@ def validate(input_value, input_name, **kwargs):
                 return "Solo ingrese Si, si se aplicó la vacuna hace menos de un año"
         else:
             return "El valor de " + input_name + " no puede estar en el futuro"
+    
+    if "valid_period" in kwargs and kwargs["valid_period"] is True:
+        if (input_value[0]<=input_value[1]):
+            pass
+        else:
+            return "Periodo de tiempo inválido. \n\nLa fecha inicial debe estar antes que la final."
+    
+    if "yesterday" in kwargs and kwargs["yesterday"] is True:
+        yesterday = datetime.datetime.today() - timedelta(days=1)
+        format = "%Y-%m-%d"
+        date = datetime.datetime.strptime(input_value, format).date()
+        if (date<=yesterday.date()):
+            pass
+        else:
+            return "La fecha final debe ser del día de ayer o anterior."
 
     return True

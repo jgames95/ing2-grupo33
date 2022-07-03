@@ -140,7 +140,7 @@ class User(db.Model):
         date = user.date_of_birth
         today = datetime.date.today()
         one_or_zero = int((today.month, today.day) < (date.month, date.day))
-        difference = today.year - date.year
+        difference = int(today.year - date.year)
         age = difference - one_or_zero
         return age
 
@@ -297,7 +297,18 @@ class User(db.Model):
         user = User.query.filter_by(id=user_id).first()
         user.location_id = Location.get_id(location)
         db.session.commit()
-
+    
+    @classmethod
+    def rango_edad(cls, date_start, date_end, age1, age2):
+        lista = []
+        vaccines = Vaccine.between_dates(date_start, date_end)
+        if vaccines:
+            for v in vaccines:
+                age = User.get_age(v.user_id)
+                if ((age>=age1)and(age<=age2)):
+                    lista.append(v)
+        return lista
+    
     '''Desde aca es todo comentarios'''
     
     '''def __repr__(self):

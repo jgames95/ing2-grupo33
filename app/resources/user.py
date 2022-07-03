@@ -4,6 +4,7 @@ from app.models.user import User
 from app.models.role import Role
 from app.models.vaccine import Vaccine
 from app.models.location import Location
+from app.models.appointment import Appointment
 from app.helpers.validations import validate
 from app.helpers.decorators import login_required, has_permission
 import json
@@ -482,3 +483,12 @@ def delete_location(user_id):
 @has_permission(1)
 def index_filter():
     return (render_template("nurse/list.html", nurse_list=User.nurse_list_filter("Todos")))
+
+def appoint_avalaible(user_id):
+    resul = False
+    if (((not User.is_elder(user_id)) and (not (Vaccine.have_vaccine(user_id, "Fiebre Amarilla"))) and (not (Appointment.have_active_appointment(user_id, "Fiebre Amarilla"))))
+    or ((not (Vaccine.have_gripe_lastyear(user_id))) and (not (Appointment.have_active_appointment(user_id, "Gripe"))))
+    or ((not (Vaccine.have_vaccine(user_id, "Covid 19 Primera Dosis"))) and (not (Appointment.have_active_appointment(user_id, "Covid 19 Primera Dosis"))))
+    or ((not (Vaccine.have_vaccine(user_id, "Covid 19 Segunda Dosis"))) and (not (Appointment.have_active_appointment(user_id, "Covid 19 Segunda Dosis"))) and ((Vaccine.have_vaccine(user_id, "Covid 19 Primera Dosis")) and (Vaccine.covid2_avalaible(user_id))))):
+        resul = True
+    return resul

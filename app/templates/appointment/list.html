@@ -49,7 +49,24 @@
           <td>No disponible</td>
           {% endif %}
           {% if ((appoint.state_id == 2) or (appoint.state_id == 1)) %}
-          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('appointment_cancel', appointment_id=appoint.id, user_id=session['user_id']) }}" style="text-decoration:none">CANCELAR</a></button> </td>
+          <td><a href="#a{{ appoint.id }}confirm_cancel" class="btn btn-danger" data-toggle="modal">CANCELAR</a>
+            <div id="a{{ appoint.id }}confirm_cancel" class="modal fade">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title">Confirmar cancelación</h4>
+                    <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
+                  </div>
+                  <div class="modal-body">
+                    <h4>¿Desea cancelar el turno?</h4>
+                    <button type="button" class="btn btn-danger">
+                      <a class="change_color_font" href="{{ url_for('appointment_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR TURNO</a>
+                    </button>
+                    <button data-dismiss="modal" type="button" class="btn btn-secondary">VOLVER</button>
+                  </div>
+                </div>
+              </div>
+            </div></td>
           {% else %}
           <td>No disponible</td>
           {% endif %}
