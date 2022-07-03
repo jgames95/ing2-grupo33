@@ -12,8 +12,10 @@
     {% for location in location_list %}
         {% if location.id > 1 %}
         <div class="p-3 my-3 border border-success">
+
         <h3>{{ location.name }}</h3>
 
+        <div class="table-wrapper-scroll-y my-custom-scrollbar">
         <h5>Turnos: {{ list_appointments_location(location.id)|length }}</h5>
         <div class="table-responsive table-bordered">
             <table class="table" id="users">
@@ -71,6 +73,7 @@
               </tbody>
             </table>
         </div>
+
         <h5>Dirección: {{ location.address }}</h5>
         <!-- boton del popup -->
         <a href="#a{{location.id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">CAMBIAR DIRECCION</a>
@@ -93,6 +96,7 @@
                     </div>
                 </div>
             </div>
+          </div>
         </div>
         {% endif %}
     {% endfor %}
