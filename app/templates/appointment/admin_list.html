@@ -1,0 +1,164 @@
+{% extends "layout.html" %}
+{% block title %}Turnos{% endblock %}
+{% block head %}
+  {{ super() }}
+{% endblock %}
+{% block topnav %}
+  {{ super() }}
+{% endblock %}
+{% block content %}
+    <h2>Lista de turnos que deben Aceptarse o Rechazarse</h2>
+    <div class="table-responsive table-bordered">
+        <table class="table" >
+            <thead>
+                <tr>
+                    <th scope="col">Paciente</th>
+                    <th scope="col">Ver Perfil</th>
+                    <th scope="col">Aceptar Turno</th>
+                    <th scope="col">Rechazar Turno</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if requested_vaccine | length > 0 %}
+                {% for appoint in requested_vaccine %}
+                <tr>
+
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <i class="material-icons center" style="font-size:45px;color:black;" alt="imagen de perfil">account_circle</i> 
+                            <div class="ms-3">
+                                <p class="fw-bold mb-1">{{ full_name(appoint.user_id) }}</p>
+                                <p class="text-muted mb-0">{{ get_email(appoint.user_id) }}</p>
+                            </div>
+                        </div>    
+                    </td>
+
+                    <td>
+                        <button type="button" class="btn btn-success change_color">
+                        <a class="change_color_font" href="{{ url_for('appointment_user_profile', user_id=appoint.user_id) }}" style="text-decoration:none">PERFIL</a></button> 
+                    </td>
+                    
+                    <td>
+                        <!-- boton del popup -->
+                        <a href="#a{{appoint.id|string() + appoint.user_id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">Aceptar</a>
+                        <!-- ventana emergente -->
+                        <div id='a{{appoint.id|string() + appoint.user_id|string()}}popup' class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Ingrese lote de la vacuna</h4>
+                                        <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <form action="{{ url_for('appointment_close', appointment_id=appoint.id, user_id=appoint.user_id) }}" method="POST">
+                                        <div class="form-group add_padding">
+                                          <input class="form-control" type="text" id="lote" name="lote" placeholder="Ingrese el lote" required>
+                                        </div>
+                                        <button type="submit" class="btn btn-success float-left">Enviar</button>
+                                      </div>
+                                      </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+
+                    <td>
+                        <a href="#confirm_cancel" class="btn btn-danger" data-toggle="modal">CANCELAR</a>
+                        <div id="confirm_cancel" class="modal fade">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Confirmar cancelación</h4>
+                                <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
+                              </div>
+                              <div class="modal-body">
+                                <h4>¿Desea cancelar el turno?</h4>
+                                <button type="button" class="btn btn-danger">
+                                  <a class="change_color_font" href="{{ url_for('appointment_nurse_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR TURNO</a>
+                                </button>
+                                <button data-dismiss="modal" type="button" class="btn btn-secondary">VOLVER</button>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+                {% else %}
+                <tr>
+                    <td>No existen solicitudes pendientes de vacunas para Fiebre Amarrilla.</td>
+                </tr>
+                {% endif %}   
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="p-3 my-3 border border-success">
+
+        <h2>Turnos ya procesados</h2>
+
+        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+            <h5>Vacunas Canceladas</h5>
+            <div class="table-responsive table-bordered">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th scope="col">Paciente</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if activity_rejected | length > 0 %}
+                        {% for rejected in activity_rejected %}
+                        <tr>
+                            <td>
+                                <p class="fw-bold mb-1">{{ full_name(rejected.user_id) }}</p>
+                                <p class="text-muted mb-0">{{ get_email(rejected.user_id) }}</p>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                        {% else %}
+                        <tr>
+                            <td> No existen turnos rechazados</td>
+                        </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h5>Vacunas Aceptadas</h5>
+        <div class="table-responsive table-bordered">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Paciente</th>
+                        <th scope="col">Estado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% if activity_accepted | length > 0 %}
+                    {% for accepted in activity_accepted %}
+                    <tr>
+                        <td>
+                            <p class="fw-bold mb-1">{{ full_name(accepted.user_id) }}</p>
+                            <p class="text-muted mb-0">{{ get_email(accepted.user_id) }}</p>  
+                        </td>
+                        <td>{{ accepted.status }}</td>
+                    </tr>
+                    {% endfor %}
+                    {% else %}
+                    <tr>
+                        <td>No existen turnos aceptados</td>
+                    </tr>
+                    {% endif %}
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+
+{% endblock %}

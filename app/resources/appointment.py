@@ -15,6 +15,7 @@ def new():
 def index():
     return render_template("appointment/list.html", appoint_list=Appointment.appoint_list_filter("Todos", session["user_id"]))
 
+
 def index_location():
     user = User.search_user_by_id(session["user_id"])
 
@@ -65,9 +66,10 @@ def have_active_appointment(user_id, vac_name):
 
 def filter():
     lista = Appointment.appoint_list_filter(
-        request.form["estado"], session["user_id"]) 
+        request.form["estado"], session["user_id"])
 
     return render_template("appointment/list.html", appoint_list=lista)
+
 
 def cancel(appointment_id):
     Appointment.cancel_appointment(appointment_id, session["user_id"])
@@ -77,9 +79,18 @@ def cancel(appointment_id):
     else:
         return redirect(url_for("appointments"))
 
+
 def close(appointment_id, user_id):
     user = User.query.filter_by(id=int(user_id)).first()
     lote = request.form["lote"]
-    Appointment.close_appointment(appointment_id, lote, user, session["user_id"])
+    Appointment.close_appointment(
+        appointment_id, lote, user, session["user_id"])
     return redirect(url_for("appointments_location"))
 
+
+def requested_vaccine_index():
+    lista = Appointment.pending_appointments()
+    dict_activity = Appointment.admin_activity_list()
+    accepted_list = dict_activity["accepted"]
+    rejected_list = dict_activity["rejected"]
+    return (render_template("appointment/admin_list.html", requested_vaccines=lista, activity_accepted=accepted_list, activity_rejected=rejected_list))

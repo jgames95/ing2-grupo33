@@ -27,7 +27,7 @@
           <td>{{ report.name }}</td>
           <td>{{ report.date_start }}</td>
           <td>{{ report.date_end }}</td>
-          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('reports') }}" style="text-decoration:none">VER</a></button> </td>
+          <td><button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ get_path(report.id) }}" target="_blank" style="text-decoration:none">VER</a></button> </td>
           <td><button type="button" class="btn btn-success change_color"><a href="{{ get_path(report.id) }}" class="change_color_font" style="text-decoration: none;" download="Vacunassist_Reporte">DESCARGAR REPORTE</a></button></td>
         </tr>
         {% else %}

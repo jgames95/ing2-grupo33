@@ -63,6 +63,9 @@
             <li class="nav-item">
               <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('reports') }}" style="text-decoration:none" >REPORTES</a></button>
             </li>
+            <li class="nav-item">
+              <button type="button" class="btn btn-success change_color"><a class="change_color_font" href="{{ url_for('requested_vaccine') }}" style="text-decoration:none" >VACUNAS SOLICITADAS</a></button>
+            </li>
             {% endif %} 
           
             {% if is_pacient(session["user_id"]) and is_active(session["user_id"]) %}

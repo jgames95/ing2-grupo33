@@ -73,14 +73,15 @@ class Appointment(db.Model):
     @classmethod
     def close_appointment(cls, appointment_id, lote, user, attended_by):
         appointment = cls.change_status(appointment_id, 5, attended_by)
-        Vaccine.create(appointment.vaccine_name, date.today(), appointment.user_id)
+        Vaccine.create(appointment.vaccine_name,
+                       date.today(), appointment.user_id)
         unique_name = "usuario" + \
             str(appointment.user_id) + "_vacuna" + \
             appointment.vaccine_name + ".pdf"
         name = (user.first_name).title() + ' ' + (user.last_name).title()
         path = cls.create_pdf(unique_name, appointment, name, lote)
         cls.send_pdf(user, path)
-    
+
     @classmethod
     def appoint_list(cls, user_id):
         appoint_list = (
@@ -146,7 +147,8 @@ class Appointment(db.Model):
 
     @classmethod
     def appointments_from_location(cls, location_id):
-        appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2).all()
+        appoint_list = Appointment.query.filter_by(
+            location_id=location_id, state_id=2).all()
         return appoint_list
 
     @classmethod
@@ -160,6 +162,27 @@ class Appointment(db.Model):
         activity_dict['canceled'] = canceled_list
         activity_dict['closed'] = closed_list
         return activity_dict
+
+    @classmethod
+    def admin_activity_list(cls):
+        activity_dict = {}
+        accepted_list = Appointment.query.filter_by(
+            state_id=2, vaccine_name="Fiebre Amarilla"
+        ).all()
+        rejected_list = Appointment.query.filter_by(
+            state_id=3, vaccine_name="Fiebre Amarilla"
+        ).all()
+
+        activity_dict['accepted'] = accepted_list
+        activity_dict['rejected'] = rejected_list
+        return activity_dict
+
+    @classmethod
+    def pending_appointments(cls):
+        appoint_list = Appointment.query.filter_by(
+            vaccine_name="Fiebre Amarilla", state_id=1
+        ).all()
+        return appoint_list
 
     @classmethod
     def create_pdf(cls, name, appointment, name_line, lote):
@@ -238,24 +261,27 @@ class Appointment(db.Model):
 
     @classmethod
     def get_cancelled(cls, date_start, date_end):
-        consulta = Appointment.query.filter(cls.date>=date_start, cls.date<=date_end, cls.state_id==4).order_by(cls.id).all()
+        consulta = Appointment.query.filter(
+            cls.date >= date_start, cls.date <= date_end, cls.state_id == 4).order_by(cls.id).all()
         lista = []
         for a in consulta:
             lista.append(a)
         return lista
-    
+
     @classmethod
     def appoint_sede(cls, date_start, date_end, sede):
         id = Location.get_id(sede)
-        consulta = Appointment.query.filter(cls.location_id==id, cls.date>=date_start, cls.date<=date_end, cls.state_id==5).all()
+        consulta = Appointment.query.filter(
+            cls.location_id == id, cls.date >= date_start, cls.date <= date_end, cls.state_id == 5).all()
         lista = []
         for v in consulta:
             lista.append(v)
         return lista
-    
+
     @classmethod
     def between_dates(cls, date_start, date_end):
-        consulta = Appointment.query.filter(cls.date>=date_start, cls.date<=date_end).all()
+        consulta = Appointment.query.filter(
+            cls.date >= date_start, cls.date <= date_end).all()
         lista = []
         for v in consulta:
             lista.append(v)
