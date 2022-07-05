@@ -351,7 +351,6 @@ def profile_nurse():
 
 
 @login_required
-@has_permission(3)
 def profile_appointment(user_id):
     user = User.search_user_by_id(user_id)
     return render_template("user/profile_appointment.html", user=user)
@@ -484,11 +483,12 @@ def delete_location(user_id):
 def index_filter():
     return (render_template("nurse/list.html", nurse_list=User.nurse_list_filter("Todos")))
 
+
 def appoint_avalaible(user_id):
     resul = False
     if (((not User.is_elder(user_id)) and (not (Vaccine.have_vaccine(user_id, "Fiebre Amarilla"))) and (not (Appointment.have_active_appointment(user_id, "Fiebre Amarilla"))))
-    or ((not (Vaccine.have_gripe_lastyear(user_id))) and (not (Appointment.have_active_appointment(user_id, "Gripe"))))
-    or ((not (Vaccine.have_vaccine(user_id, "Covid 19 Primera Dosis"))) and (not (Appointment.have_active_appointment(user_id, "Covid 19 Primera Dosis"))))
-    or ((not (Vaccine.have_vaccine(user_id, "Covid 19 Segunda Dosis"))) and (not (Appointment.have_active_appointment(user_id, "Covid 19 Segunda Dosis"))) and ((Vaccine.have_vaccine(user_id, "Covid 19 Primera Dosis")) and (Vaccine.covid2_avalaible(user_id))))):
+        or ((not (Vaccine.have_gripe_lastyear(user_id))) and (not (Appointment.have_active_appointment(user_id, "Gripe"))))
+        or ((not (Vaccine.have_vaccine(user_id, "Covid 19 Primera Dosis"))) and (not (Appointment.have_active_appointment(user_id, "Covid 19 Primera Dosis"))))
+            or ((not (Vaccine.have_vaccine(user_id, "Covid 19 Segunda Dosis"))) and (not (Appointment.have_active_appointment(user_id, "Covid 19 Segunda Dosis"))) and ((Vaccine.have_vaccine(user_id, "Covid 19 Primera Dosis")) and (Vaccine.covid2_avalaible(user_id))))):
         resul = True
     return resul

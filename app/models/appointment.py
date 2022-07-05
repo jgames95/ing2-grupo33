@@ -179,9 +179,7 @@ class Appointment(db.Model):
 
     @classmethod
     def pending_appointments(cls):
-        appoint_list = Appointment.query.filter_by(
-            vaccine_name="Fiebre Amarilla", state_id=1
-        ).all()
+        appoint_list = Appointment.query.filter_by(state_id=1).all()
         return appoint_list
 
     @classmethod
