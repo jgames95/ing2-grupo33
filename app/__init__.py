@@ -99,6 +99,8 @@ def create_app(environment="development"):
                      user.change_location, methods=["POST", "GET"])
     app.add_url_rule("/enfermero/lista<int:user_id>",
                      "delete_location", user.delete_location, methods=["GET"])
+    app.add_url_rule("/perfil/<int:user_id>",
+                     "admin_user_profile", user.profile_admin)
 
     # Rutas de Turnos
     app.add_url_rule("/turnos/nuevo", "appointment_new", appointment.new)

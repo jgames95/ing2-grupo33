@@ -356,6 +356,11 @@ def profile_appointment(user_id):
     return render_template("user/profile_appointment.html", user=user)
 
 
+def profile_admin(user_id):
+    user = User.search_user_by_id(user_id)
+    return render_template("user/profile_admin.html", user=user)
+
+
 @login_required
 @has_permission(3)
 def edit_nurse(user_id):
