@@ -80,6 +80,16 @@ def cancel(appointment_id):
         return redirect(url_for("appointments"))
 
 
+def reject(appointment_id):
+    Appointment.reject_appointment(appointment_id, session["user_id"])
+    return redirect(url_for("requested_vaccine"))
+
+
+def accept(appointment_id):
+    Appointment.approve_appointment(appointment_id, session["user_id"])
+    return redirect(url_for("requested_vaccine"))
+
+
 def close(appointment_id, user_id):
     user = User.query.filter_by(id=int(user_id)).first()
     lote = request.form["lote"]

@@ -1,5 +1,6 @@
-from datetime import date
+from datetime import date, timedelta
 import datetime
+from xmlrpc.client import DateTime
 from sqlalchemy import Column, Integer, Date, String, desc, func
 from app.db import db
 from sqlalchemy.orm import relationship
@@ -165,12 +166,17 @@ class Appointment(db.Model):
 
     @classmethod
     def admin_activity_list(cls):
+        today = datetime.date.today()
+        date_start = today + timedelta(days=1)
+        date_ends = today + timedelta(days=31)
         activity_dict = {}
-        accepted_list = Appointment.query.filter_by(
-            state_id=2, vaccine_name="Fiebre Amarilla"
+        accepted_list = Appointment.query.filter(
+            cls.date >= date_start, cls.date <= date_ends,
+            cls.state_id == 2, cls.vaccine_name == "Fiebre Amarilla"
         ).all()
-        rejected_list = Appointment.query.filter_by(
-            state_id=3, vaccine_name="Fiebre Amarilla"
+        rejected_list = Appointment.query.filter(
+            cls.date >= date_start, cls.date <= date_ends,
+            cls.state_id == 3, cls.vaccine_name == "Fiebre Amarilla"
         ).all()
 
         activity_dict['accepted'] = accepted_list
@@ -179,7 +185,11 @@ class Appointment(db.Model):
 
     @classmethod
     def pending_appointments(cls):
-        appoint_list = Appointment.query.filter_by(state_id=1).all()
+        today = datetime.date.today()
+        date_start = today + timedelta(days=1)
+        date_ends = today + timedelta(days=31)
+        appoint_list = Appointment.query.filter(
+            cls.date >= date_start, cls.date <= date_ends, cls.state_id == 1).all()
         return appoint_list
 
     @classmethod

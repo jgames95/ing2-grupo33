@@ -37,7 +37,7 @@
               <a class="change_color_font" href="{{ url_for('appointment_user_profile', user_id=appoint.user_id) }}" style="text-decoration:none">PERFIL</a></button> </td>
             <td>
               <!-- boton del popup -->
-              <a href="#a{{appoint.id|string() + appoint.user_id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">CERRAR</a>
+              <a href="#a{{appoint.id|string() + appoint.user_id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">CERRAR</a> 
               <!-- ventana emergente -->
               <div id='a{{appoint.id|string() + appoint.user_id|string()}}popup' class="modal fade">
                   <div class="modal-dialog">

@@ -1,6 +1,6 @@
 import re
 import datetime
-from datetime import timedelta, date 
+from datetime import timedelta, date
 
 
 def validate(input_value, input_name, **kwargs):
@@ -31,7 +31,7 @@ def validate(input_value, input_name, **kwargs):
         and input_value.strip() == ""
     ):
         return "El campo " + input_name + " es requerido"
-    
+
     if (
         "natural_number" in kwargs
         and kwargs["natural_number"] is True
@@ -77,7 +77,7 @@ def validate(input_value, input_name, **kwargs):
 
     if "coviddate" in kwargs and kwargs["coviddate"] is True:
         # date2 - date1 >= 15 dias
-        format = "%Y-%m-%d" 
+        format = "%Y-%m-%d"
         date1 = datetime.datetime.strptime(input_value["date1"], format).date()
         date2 = datetime.datetime.strptime(input_value["date2"], format).date()
         if (date2 > date1):
@@ -91,7 +91,7 @@ def validate(input_value, input_name, **kwargs):
 
     if "date" in kwargs and kwargs["date"] is True:
         # date <= date.today
-        format = "%Y-%m-%d" 
+        format = "%Y-%m-%d"
         date = datetime.datetime.strptime(input_value, format).date()
         if (date <= datetime.date.today()):
             pass
@@ -100,7 +100,7 @@ def validate(input_value, input_name, **kwargs):
 
     if "futuredate" in kwargs and kwargs["futuredate"] is True:
         # date > date.today
-        format = "%Y-%m-%d" 
+        format = "%Y-%m-%d"
         date = datetime.datetime.strptime(input_value, format).date()
         if (date > datetime.date.today()):
             pass
@@ -121,7 +121,7 @@ def validate(input_value, input_name, **kwargs):
         else:
             return "La fecha no puede estar en el pasado"
     if "lessthanayear" in kwargs and kwargs["lessthanayear"] is True:
-        format = "%Y-%m-%d" 
+        format = "%Y-%m-%d"
         date = datetime.datetime.strptime(input_value, format).date()
         difference = abs(datetime.date.today() - date)
         if (date <= datetime.date.today()):
@@ -131,18 +131,18 @@ def validate(input_value, input_name, **kwargs):
                 return "Solo ingrese Si, si se aplicó la vacuna hace menos de un año"
         else:
             return "El valor de " + input_name + " no puede estar en el futuro"
-    
+
     if "valid_period" in kwargs and kwargs["valid_period"] is True:
-        if (input_value[0]<=input_value[1]):
+        if (input_value[0] <= input_value[1]):
             pass
         else:
             return "Periodo de tiempo inválido. \n\nLa fecha inicial debe estar antes que la final."
-    
+
     if "yesterday" in kwargs and kwargs["yesterday"] is True:
         yesterday = datetime.datetime.today() - timedelta(days=1)
         format = "%Y-%m-%d"
         date = datetime.datetime.strptime(input_value, format).date()
-        if (date<=yesterday.date()):
+        if (date <= yesterday.date()):
             pass
         else:
             return "La fecha final debe ser del día de ayer o anterior."

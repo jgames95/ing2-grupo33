@@ -39,43 +39,39 @@
                     </td>
                     
                     <td>
-                        <!-- boton del popup -->
-                        <a href="#a{{appoint.id|string() + appoint.user_id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">Aceptar</a>
-                        <!-- ventana emergente -->
-                        <div id='a{{appoint.id|string() + appoint.user_id|string()}}popup' class="modal fade">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <h4 class="modal-title">Ingrese lote de la vacuna</h4>
-                                        <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                    </div>
-                                    <div class="modal-body">
-                                      <form action="{{ url_for('appointment_close', appointment_id=appoint.id, user_id=appoint.user_id) }}" method="POST">
-                                        <div class="form-group add_padding">
-                                          <input class="form-control" type="text" id="lote" name="lote" placeholder="Ingrese el lote" required>
-                                        </div>
-                                        <button type="submit" class="btn btn-success float-left">Enviar</button>
-                                      </div>
-                                      </form>
-                                    </div>
-                                </div>
+                        <a href="#accpet_appointment" class="btn btn-success change_color" data-toggle="modal">ACEPTAR</a>
+                        <div id="accpet_appointment" class="modal fade">
+                          <div class="modal-dialog">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h4 class="modal-title">Aceptar turno</h4>
+                                <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
+                              </div>
+                              <div class="modal-body">
+                                <h4>¿Desea aceptar el turno?</h4>
+                                <button type="button" class="btn btn-success change_color">
+                                  <a class="change_color_font" href="{{ url_for('appointment_admin_accept', appointment_id=appoint.id) }}" style="text-decoration:none">ACEPTAR TURNO</a>
+                                </button>
+                                <button data-dismiss="modal" type="button" class="btn btn-secondary">VOLVER</button>
+                              </div>
                             </div>
+                          </div>
                         </div>
                     </td>
 
                     <td>
-                        <a href="#confirm_cancel" class="btn btn-danger" data-toggle="modal">CANCELAR</a>
+                        <a href="#confirm_cancel" class="btn btn-danger" data-toggle="modal">RECHAZAR</a>
                         <div id="confirm_cancel" class="modal fade">
                           <div class="modal-dialog">
                             <div class="modal-content">
                               <div class="modal-header">
-                                <h4 class="modal-title">Confirmar cancelación</h4>
+                                <h4 class="modal-title">Confirmar rechazo</h4>
                                 <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
                               </div>
                               <div class="modal-body">
                                 <h4>¿Desea cancelar el turno?</h4>
                                 <button type="button" class="btn btn-danger">
-                                  <a class="change_color_font" href="{{ url_for('appointment_nurse_cancel', appointment_id=appoint.id) }}" style="text-decoration:none">CANCELAR TURNO</a>
+                                  <a class="change_color_font" href="{{ url_for('appointment_admin_reject', appointment_id=appoint.id) }}" style="text-decoration:none">RECHAZAR TURNO</a>
                                 </button>
                                 <button data-dismiss="modal" type="button" class="btn btn-secondary">VOLVER</button>
                               </div>
@@ -89,7 +85,7 @@
                 {% endfor %}
                 {% else %}
                 <tr>
-                    <td>No existen solicitudes pendientes de vacunas para Fiebre Amarrilla.</td>
+                    <td>No existen solicitudes pendientes de vacunas para Fiebre Amarrilla para los proximos 30 dias.</td>
                 </tr>
                 {% endif %}   
 
@@ -108,6 +104,7 @@
                     <thead>
                         <tr>
                             <th scope="col">Paciente</th>
+                            <th scope="col">Fecha del Turno</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -118,11 +115,14 @@
                                 <p class="fw-bold mb-1">{{ full_name(rejected.user_id) }}</p>
                                 <p class="text-muted mb-0">{{ get_email(rejected.user_id) }}</p>
                             </td>
+                            <td>
+                                <p class="fw-bold mb-1">{{ rejected.date }}</p>
+                            </td>
                         </tr>
                         {% endfor %}
                         {% else %}
                         <tr>
-                            <td> No existen turnos rechazados</td>
+                            <td> No existen turnos rechazados en los proximos 30 dias</td>
                         </tr>
                         {% endif %}
                     </tbody>
@@ -136,7 +136,7 @@
                 <thead>
                     <tr>
                         <th scope="col">Paciente</th>
-                        <th scope="col">Estado</th>
+                        <th scope="col">Fecha del Turno</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -147,12 +147,14 @@
                             <p class="fw-bold mb-1">{{ full_name(accepted.user_id) }}</p>
                             <p class="text-muted mb-0">{{ get_email(accepted.user_id) }}</p>  
                         </td>
-                        <td>{{ accepted.status }}</td>
+                        <td>
+                            <p class="fw-bold mb-1">{{ accepted.date }}</p>
+                        </td>
                     </tr>
                     {% endfor %}
                     {% else %}
                     <tr>
-                        <td>No existen turnos aceptados</td>
+                        <td>No existen turnos aceptados en los proximos 30 dias</td>
                     </tr>
                     {% endif %}
                 </tbody>

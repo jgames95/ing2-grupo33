@@ -118,6 +118,12 @@ def create_app(environment="development"):
     app.add_url_rule("/turnos/filtro", "appointmentfilter",
                      appointment.filter, methods=["POST", "GET"])
 
+    app.add_url_rule("/vacunas/<int:appointment_id>",
+                     "appointment_admin_reject", appointment.reject, methods=["GET"])
+
+    app.add_url_rule("/<int:appointment_id>",
+                     "appointment_admin_accept", appointment.accept, methods=["GET"])
+
     # Rutas de Reportes
     app.add_url_rule("/reportes", "reports", report.report_list_index)
     app.add_url_rule("/reportes/nuevo", "report_new", report.new)
