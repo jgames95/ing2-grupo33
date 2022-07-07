@@ -7,7 +7,8 @@
   {{ super() }}
 {% endblock %}
 {% block content %}
-    <h2>Lista de turnos que deben Aceptarse o Rechazarse</h2>
+    <h2>Turnos solicitados de fiebre amarilla</h2>
+    <h5><i>Con fecha en los proximos 30 días. </i></h5>
     <div class="table-responsive table-bordered">
         <table class="table" >
             <thead>
@@ -22,7 +23,6 @@
                 {% if requested_vaccines | length > 0 %}
                 {% for appoint in requested_vaccines %}
                 <tr>
-
                     <td>
                         <div class="d-flex align-items-center">
                             <i class="material-icons center" style="font-size:45px;color:black;" alt="imagen de perfil">account_circle</i> 
@@ -32,12 +32,10 @@
                             </div>
                         </div>    
                     </td>
-
                     <td>
                         <button type="button" class="btn btn-success change_color">
                         <a class="change_color_font" href="{{ url_for('admin_user_profile', user_id=appoint.user_id) }}" style="text-decoration:none">PERFIL</a></button> 
                     </td>
-                    
                     <td>
                         <a href="#accpet_appointment" class="btn btn-success change_color" data-toggle="modal">ACEPTAR</a>
                         <div id="accpet_appointment" class="modal fade">
@@ -58,7 +56,6 @@
                           </div>
                         </div>
                     </td>
-
                     <td>
                         <a href="#confirm_cancel" class="btn btn-danger" data-toggle="modal">RECHAZAR</a>
                         <div id="confirm_cancel" class="modal fade">
@@ -79,25 +76,18 @@
                           </div>
                         </div>
                     </td>
-
                 </tr>
-
                 {% endfor %}
                 {% else %}
                 <tr>
                     <td>No existen solicitudes pendientes de vacunas para Fiebre Amarrilla para los proximos 30 dias.</td>
                 </tr>
                 {% endif %}   
-
             </tbody>
         </table>
     </div>
-
     <div class="p-3 my-3 border border-success">
-
-        <h2>Turnos ya procesados</h2>
-
-        <div class="table-wrapper-scroll-y my-custom-scrollbar">
+        <h2>Turnos procesados</h2>
             <h5>Vacunas Canceladas</h5>
             <div class="table-responsive table-bordered">
                 <table class="table">
@@ -122,14 +112,12 @@
                         {% endfor %}
                         {% else %}
                         <tr>
-                            <td> No existen turnos rechazados en los proximos 30 dias</td>
+                            <td>No existen turnos rechazados en los proximos 30 dias</td>
                         </tr>
                         {% endif %}
                     </tbody>
                 </table>
             </div>
-        </div>
-
         <h5>Vacunas Aceptadas</h5>
         <div class="table-responsive table-bordered">
             <table class="table">

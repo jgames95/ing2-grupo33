@@ -309,6 +309,15 @@ class User(db.Model):
                     lista.append(v)
         return lista
     
+    @classmethod
+    def get_cancelled_bynurse(cls, appointments):
+        lista = []
+        for a in appointments:
+            role =  cls.get_role(a.attendedby_id)
+            if (role == 3):
+                lista.append(a)
+        return lista
+    
     '''Desde aca es todo comentarios'''
     
     '''def __repr__(self):

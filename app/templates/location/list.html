@@ -15,6 +15,29 @@
 
         <h3>{{ location.name }}</h3>
 
+        <h5>Dirección: {{ location.address }}</h5>
+        <!-- boton del popup -->
+        <a href="#a{{location.id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">CAMBIAR DIRECCION</a>
+        <!-- ventana emergente -->
+        <div id='a{{location.id|string()}}popup' class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Ingrese una nueva direccion para la sede {{ location.name }}</h4>
+                        <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="{{ url_for('change_address', location_id=location.id) }}" method="POST">
+                        <div class="form-group add_padding">
+                          <input class="form-control" type="text" id="address" name="address" value="{{ location.address }}" placeholder="Ingrese el lote" required>
+                        </div>
+                        <button type="submit" class="btn btn-success float-left">Enviar</button>
+                      </div>
+                      </form>
+                    </div>
+                </div>
+        </div>
+        <hr>
         <div class="table-wrapper-scroll-y my-custom-scrollbar">
         <h5>Turnos: {{ list_appointments_location(location.id)|length }}</h5>
         <div class="table-responsive table-bordered">
@@ -73,30 +96,7 @@
               </tbody>
             </table>
         </div>
-
-        <h5>Dirección: {{ location.address }}</h5>
-        <!-- boton del popup -->
-        <a href="#a{{location.id|string()}}popup" class="btn btn-success change_color" data-toggle="modal">CAMBIAR DIRECCION</a>
-        <!-- ventana emergente -->
-        <div id='a{{location.id|string()}}popup' class="modal fade">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h4 class="modal-title">Ingrese una nueva direccion para la sede {{ location.name }}</h4>
-                        <button type="button" class="close change_color" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                      <form action="{{ url_for('change_address', location_id=location.id) }}" method="POST">
-                        <div class="form-group add_padding">
-                          <input class="form-control" type="text" id="address" name="address" value="{{ location.address }}" placeholder="Ingrese el lote" required>
-                        </div>
-                        <button type="submit" class="btn btn-success float-left">Enviar</button>
-                      </div>
-                      </form>
-                    </div>
-                </div>
-            </div>
-          </div>
+        </div>
         </div>
         {% endif %}
     {% endfor %}

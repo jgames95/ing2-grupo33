@@ -269,8 +269,7 @@ class Appointment(db.Model):
 
     @classmethod
     def get_cancelled(cls, date_start, date_end):
-        consulta = Appointment.query.filter(
-            cls.date >= date_start, cls.date <= date_end, cls.state_id == 4).order_by(cls.id).all()
+        consulta = Appointment.query.filter(cls.date >= date_start, cls.date <= date_end, cls.state_id == 4).order_by(cls.id).all()
         lista = []
         for a in consulta:
             lista.append(a)
@@ -288,8 +287,7 @@ class Appointment(db.Model):
 
     @classmethod
     def between_dates(cls, date_start, date_end):
-        consulta = Appointment.query.filter(
-            cls.date >= date_start, cls.date <= date_end).all()
+        consulta = Appointment.query.filter(cls.date >= date_start, cls.date <= date_end).all()
         lista = []
         for v in consulta:
             lista.append(v)

@@ -40,7 +40,10 @@ def change_address(location_id):
                '\nSi no tiene una cuenta en nuestro sitio, por favor ignore este e-mail.').encode('utf-8')
         User.send_plaintext_email(nurse.email, message_nurse)
     
-    users = User.user_from(location_id)
+    appointments = Appointment.appointments_from_location(location_id)
+    users = []
+    for appointment in appointments:
+        users.append(User.query.filter_by(id=appointment.user_id))
     for user in users:
         message_user = ('Subject: Cambio de direccion de sede asignada\n\n Hola ' +
                (user.first_name).capitalize() + ' ' + (user.last_name).capitalize() + '. ' +
