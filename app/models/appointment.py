@@ -1,18 +1,18 @@
-from datetime import date, timedelta
-import datetime
-from xmlrpc.client import DateTime
-from sqlalchemy import Column, Integer, Date, String, desc, func
 from app.db import db
 from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, Date, String
 from sqlalchemy.sql.schema import ForeignKey
+
 from app.models.vaccine import Vaccine
 from app.models.state import State
 from app.models.location import Location
-from datetime import date
-from flask import flash
+
+from datetime import date, timedelta
+import datetime
 
 from fpdf import FPDF
 import os
+
 import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
@@ -143,13 +143,12 @@ class Appointment(db.Model):
     def appointments_from_location_today(cls, location_id):
         appoint_list = Appointment.query.filter_by(
             location_id=location_id, state_id=2, date=date.today()).all()
-        #appoint_list = Appointment.query.filter_by(location_id=location_id, state_id=2).all()
         return appoint_list
 
     @classmethod
     def appointments_from_location(cls, location_id):
-        appoint_list = Appointment.query.filter_by(
-            location_id=location_id, state_id=2).all()
+        appoint_list = Appointment.query.filter(
+            cls.location_id==location_id, cls.state_id==2).order_by(cls.date).all()
         return appoint_list
 
     @classmethod
