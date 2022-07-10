@@ -4,7 +4,10 @@ from flask import redirect, url_for, flash, render_template
 from app.db import db
 import os
 from fpdf import FPDF
+import matplotlib
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
+import time
 
 from app.models.vaccine import Vaccine
 from app.resources import report
