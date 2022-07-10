@@ -134,16 +134,16 @@ class User(db.Model):
     def has_role(cls, role_id, user_id):
         return cls.get_role(user_id) == role_id
 
-    '''@classmethod
+    @classmethod
     def user_with_appointments_in(cls, location_id):
         users = (
-            db.session.query(Appointment, User)
-            .select_from(Appointment)
-            .join(User)
+            db.session.query(User, Appointment)
+            .select_from(User)
+            .join(Appointment)
             .where((Appointment.location_id == location_id) and (Appointment.state_id == 2) and (User.active == 1))
             .all()
         )
-        return users '''
+        return users
 
     @classmethod
     def get_age(cls, user_id):
