@@ -82,11 +82,38 @@ def cancel(appointment_id):
 
 def reject(appointment_id):
     Appointment.reject_appointment(appointment_id, session["user_id"])
+
+    appoint = Appointment.query.filter_by(id=int(appointment_id)).first()
+    user = User.query.filter_by(id=int(appoint.user_id)).first()
+    message = ('Subject: Turno Rechazado\n\n Hola ' +
+               (user.first_name).title() + ' ' + (user.last_name).title() + '. ' +
+               'Te informamos que el turno solicitado para la vacuna contra Fiebre Amarilla con fecha para el dia: ' +
+               str(appoint.date) + ' fue rechazado.\n\n' +
+               'A cualquier inconveniente pongase en contacto con un Administrador.'
+               +
+               '\n\nGracias,\nVacunassist' + '\n\n****').encode('utf-8')
+    User.send_plaintext_email(user.email, message)
+
     return redirect(url_for("requested_vaccine"))
 
 
 def accept(appointment_id):
     Appointment.approve_appointment(appointment_id, session["user_id"])
+
+    appoint = Appointment.query.filter_by(id=int(appointment_id)).first()
+    user = User.query.filter_by(id=int(appoint.user_id)).first()
+    message = ('Subject: Turno Aceptado\n\n Hola ' +
+               (user.first_name).title() + ' ' + (user.last_name).title() + '. ' +
+               'Te informamos que el turno solicitado para la vacuna contra Fiebre Amarilla con fecha para el dia: ' +
+               str(appoint.date) + ' fue aceptado.\n\n' +
+               'A cualquier inconveniente pongase en contacto con un Administrador.'
+               +
+               '\n\nGracias,\nVacunassist' + '\n\n****').encode('utf-8')
+    User.send_plaintext_email(user.email, message)
+
+    # print('////////////////////////////////////////////////////////////////////////////////////////')
+    # print(user.email)
+
     return redirect(url_for("requested_vaccine"))
 
 
