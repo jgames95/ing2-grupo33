@@ -134,6 +134,17 @@ class User(db.Model):
     def has_role(cls, role_id, user_id):
         return cls.get_role(user_id) == role_id
 
+    '''@classmethod
+    def user_with_appointments_in(cls, location_id):
+        users = (
+            db.session.query(Appointment, User)
+            .select_from(Appointment)
+            .join(User)
+            .where((Appointment.location_id == location_id) and (Appointment.state_id == 2) and (User.active == 1))
+            .all()
+        )
+        return users '''
+
     @classmethod
     def get_age(cls, user_id):
         user = cls.search_user_by_id(user_id)
@@ -318,74 +329,3 @@ class User(db.Model):
                 lista.append(a)
         return lista
     
-    '''Desde aca es todo comentarios'''
-    
-    '''def __repr__(self):
-        return "<User %r>" % self.username'''
-
-    '''@classmethod
-    def get_list_appointments(cls, location_id):
-        appointments = (db.session.query(User, Appointment)
-            .join(Appointment.user_id)
-            .where(User.active == True)
-            .where(Appointment.location_id == location_id)
-            .where(Appointment.state_id == 2)
-            .all())
-        return appointments'''
-    
-    '''@classmethod
-    def filter(cls, page, form):
-
-        users = User.query.order_by(User.first_name.asc()).paginate(
-                page, 5, False
-            )
-
-        if form["search_username"] != "":
-            if form["active"] == "Activo":
-                users = (
-                        User.query.filter(
-                            (
-                                User.username.contains(form["search_username"])
-                                & (User.active is True)
-                            )
-                        )
-                        .order_by(User.first_name.asc())
-                        .paginate(page, 5, False)
-                    )
-
-            elif form["active"] == "Bloqueado":
-                users = (
-                        User.query.filter(
-                            (
-                                User.username.contains(form["search_username"])
-                                & (User.active is False)
-                            )
-                        )
-                        .order_by(User.first_name.asc())
-                        .paginate(page, 5, False)
-                    )
-            
-            else:
-                users = (
-                        User.query.filter(
-                            User.username.contains(form["search_username"])
-                        )
-                        .order_by(User.first_name.asc())
-                        .paginate(page, 5, False)
-                    )
-                
-        elif form["active"] == "Activo":
-            users = (
-                    User.query.filter(User.active is True)
-                    .order_by(User.first_name.asc())
-                    .paginate(page, 5, False)
-                )
-            
-        elif form["active"] == "Bloqueado":
-            users = (
-                    User.query.filter(User.active is False)
-                    .order_by(User.first_name.asc())
-                    .paginate(page, 5, False)
-                )
-
-        return users'''

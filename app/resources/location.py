@@ -47,7 +47,7 @@ def change_address(location_id):
     for user in users:
         message_user = ('Subject: Cambio de direccion de sede asignada\n\n Hola ' +
                (user.first_name).capitalize() + ' ' + (user.last_name).capitalize() + '. ' +
-               'Enviamos este correo para avisar que la sede que tiene como preferencia ' + User.get_location(user.id) + ' cambio de direccion.\n\n' +
+               'Enviamos este correo para avisar que la sede en la que tiene turnos activos ' + User.get_location(user.id) + ' cambio de direccion.\n\n' +
                'La nueva direccion es: ' + address +
                '\n\nGracias,\nVacunassist' + '\n\n****' +
                '\nSi no tiene una cuenta en nuestro sitio, por favor ignore este e-mail.').encode('utf-8')
